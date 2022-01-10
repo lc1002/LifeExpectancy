@@ -9,9 +9,10 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="AnMei Chen" />
 
 
-<title>Project Report</title>
+<title>cross_validation</title>
 
 <script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -29,9 +30,6 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
-<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
-<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
-<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
@@ -227,69 +225,6 @@ $(document).ready(function () {
 
 
 
-<style type="text/css">
-
-#TOC {
-  margin: 25px 0px 20px 0px;
-}
-@media (max-width: 768px) {
-#TOC {
-  position: relative;
-  width: 100%;
-}
-}
-
-@media print {
-.toc-content {
-  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
-  float: right;
-}
-}
-
-.toc-content {
-  padding-left: 30px;
-  padding-right: 40px;
-}
-
-div.main-container {
-  max-width: 1200px;
-}
-
-div.tocify {
-  width: 20%;
-  max-width: 260px;
-  max-height: 85%;
-}
-
-@media (min-width: 768px) and (max-width: 991px) {
-  div.tocify {
-    width: 25%;
-  }
-}
-
-@media (max-width: 767px) {
-  div.tocify {
-    width: 100%;
-    max-width: none;
-  }
-}
-
-.tocify ul, .tocify li {
-  line-height: 20px;
-}
-
-.tocify-subheader .tocify-item {
-  font-size: 0.90em;
-}
-
-.tocify .list-group-item {
-  border-radius: 0px;
-}
-
-
-</style>
-
-
 
 </head>
 
@@ -297,16 +232,6 @@ div.tocify {
 
 
 <div class="container-fluid main-container">
-
-
-<!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row">
-<div class="col-xs-12 col-sm-4 col-md-3">
-<div id="TOC" class="tocify">
-</div>
-</div>
-
-<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -361,59 +286,133 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Project Report</h1>
-<h3 class="subtitle">Life Expectancy</h3>
+<h1 class="title toc-ignore">cross_validation</h1>
+<h4 class="author">AnMei Chen</h4>
+<h4 class="date">1/10/2022</h4>
 
 </div>
 
 
-<div id="project-motivation" class="section level2">
-<h2>Project Motivation</h2>
-<p><br></p>
-</div>
-<div id="research-questions" class="section level2">
-<h2>Research Questions</h2>
-<p><br></p>
-</div>
-<div id="data" class="section level2">
-<h2>Data</h2>
-<div id="data-sources" class="section level3">
-<h3>Data Sources</h3>
-<p><br></p>
-</div>
-<div id="data-cleaning" class="section level3">
-<h3>Data Cleaning</h3>
-<p><br></p>
-</div>
-</div>
-<div id="exploratory-analysis" class="section level2">
-<h2>Exploratory Analysis</h2>
-<p><br></p>
-</div>
-<div id="key-findings" class="section level2">
-<h2>Key Findings</h2>
-<p><br></p>
-</div>
-<div id="discussions" class="section level2">
-<h2>Discussions</h2>
-<p><br></p>
-</div>
-<div id="conclusion" class="section level2">
-<h2>Conclusion</h2>
-<p><br></p>
-</div>
-<div id="contributors" class="section level2">
-<h2>Contributors</h2>
-<ul>
-<li>AnMei Chen</li>
-<li>Lynn Chen</li>
-</ul>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──</code></pre>
+<pre><code>## ✓ ggplot2 3.3.5     ✓ purrr   0.3.4
+## ✓ tibble  3.1.6     ✓ dplyr   1.0.7
+## ✓ tidyr   1.1.4     ✓ stringr 1.4.0
+## ✓ readr   2.1.1     ✓ forcats 0.5.1</code></pre>
+<pre><code>## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>library(modelr)
+library(mgcv)</code></pre>
+<pre><code>## Loading required package: nlme</code></pre>
+<pre><code>## 
+## Attaching package: &#39;nlme&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:dplyr&#39;:
+## 
+##     collapse</code></pre>
+<pre><code>## This is mgcv 1.8-38. For overview type &#39;help(&quot;mgcv-package&quot;)&#39;.</code></pre>
+<pre class="r"><code>library(corrplot)</code></pre>
+<pre><code>## corrplot 0.92 loaded</code></pre>
+<pre class="r"><code>knitr::opts_chunk$set(
+  echo = TRUE,
+  fig.asp = .6,
+  fig.width = 6,
+  fig.height = 4,
+  out.height = 400,
+  dpi = 800,
+  out.width = &quot;90%&quot;
+)
+
+theme_set(theme_minimal())
+
+options(
+  ggplot2.continuous.colour = &quot;viridis&quot;,
+  ggplot2.continuous.fill = &quot;viridis&quot;
+)
+
+scale_colour_discrete = scale_colour_viridis_d
+scale_fill_discrete = scale_fill_viridis_d</code></pre>
+<pre class="r"><code>le_df = 
+  read_csv(&quot;./data/Complete_Data.CSV&quot;) %&gt;% 
+  rename(&quot;HDI&quot; = &quot;incomecompositionofresources&quot;, &quot;percent_exp&quot; = &quot;percentageexpenditure&quot;, &quot;total_exp&quot; = &quot;totalexpenditure&quot;, &quot;le&quot; = &quot;lifeexpectancy&quot;, &quot;adult_mort&quot; = &quot;adult_mortality&quot;, &quot;thin_1_19&quot; = &quot;thinness1_19years&quot;, &quot;thin_5_9&quot; = &quot;thinness5_9years&quot;, &quot;under_five&quot; = &quot;under_fivedeaths&quot;)</code></pre>
+<pre><code>## Rows: 2938 Columns: 23</code></pre>
+<pre><code>## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr  (3): country, continent, status
+## dbl (20): year, lifeexpectancy, adult_mortality, infantdeaths, alcohol, perc...</code></pre>
+<pre><code>## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<div id="correlation-matrix" class="section level1">
+<h1>Correlation Matrix</h1>
+<pre class="r"><code>cm_df =
+  le_df %&gt;%
+  dplyr::select(-c(country,continent,year,status))
+
+corrplot(cor(cm_df), type = &quot;upper&quot;, diag = FALSE, method = &quot;square&quot;, addCoef.col = &quot;black&quot;, number.cex = .5, tl.col = &quot;black&quot;, tl.cex = .9)</code></pre>
+<p><img src="regression_files/figure-html/unnamed-chunk-3-1.png" width="90%" height="400" /></p>
+<pre class="r"><code>mod_1 = lm(le ~ adult_mort + bmi + polio + diphtheria + hiv_aids + thin_5_9 + HDI, data = le_df)
+
+mod_2 = lm(le ~ status + bmi + population + thin_1_19 + thin_5_9 + status * bmi + status * thin_1_19 + status * thin_5_9, data = le_df)
+             
+mod_3 = lm(le ~ status + polio + total_exp + diphtheria + gdp + schooling + total_exp * gdp, data = le_df)
+
+mod_4 = lm(le ~ polio + total_exp + diphtheria + hiv_aids + thin_1_19, data = le_df)
+
+mod_5 = lm(le ~ adult_mort + bmi, data = le_df)
+
+mod_6 = lm(le ~ year + adult_mort + infantdeaths + percent_exp + bmi + under_five + polio + diphtheria + hiv_aids + gdp + thin_5_9, data = le_df)</code></pre>
+<pre class="r"><code>set.seed(2)
+
+cv_df = 
+  crossv_mc(le_df,100) %&gt;% 
+  mutate(
+    train = map(train, as_tibble),
+    test = map(test, as_tibble)
+  ) %&gt;% 
+  mutate(
+    mod_1 = map(train, ~lm(formula = formula(mod_1), data = .x)),
+    mod_2 = map(train, ~lm(formula = formula(mod_2), data = .x)),
+    mod_3 = map(train, ~lm(formula = formula(mod_3), data = .x)),
+    mod_4 = map(train, ~lm(formula = formula(mod_4), data = .x)),
+    mod_5 = map(train, ~lm(formula = formula(mod_5), data = .x)),
+    mod_6 = map(train, ~lm(formula = formula(mod_6), data = .x))
+    ) %&gt;% 
+  mutate(
+    rmse_1 = map2_dbl(mod_1, test, ~rmse(model = .x, data = .y)),
+    rmse_2 = map2_dbl(mod_2, test, ~rmse(model = .x, data = .y)),
+    rmse_3 = map2_dbl(mod_3, test, ~rmse(model = .x, data = .y)),
+    rmse_4 = map2_dbl(mod_4, test, ~rmse(model = .x, data = .y)),
+    rmse_5 = map2_dbl(mod_5, test, ~rmse(model = .x, data = .y)),
+    rmse_6 = map2_dbl(mod_6, test, ~rmse(model = .x, data = .y))
+    )</code></pre>
+<pre class="r"><code>cv_df %&gt;% 
+  pivot_longer(
+    rmse_1:rmse_6,
+    names_to = &quot;model&quot;, 
+    values_to = &quot;rmse&quot;,
+    names_prefix = &quot;rmse_&quot;) %&gt;% 
+  mutate(model = fct_inorder(model),
+         model = fct_recode(model, &quot;Model 1&quot; = &quot;1&quot;,
+                                   &quot;Model 2&quot; = &quot;2&quot;,
+                                   &quot;Model 3&quot; = &quot;3&quot;,
+                                   &quot;Model 4&quot; = &quot;4&quot;,
+                                   &quot;Model 5&quot; = &quot;5&quot;,
+                                   &quot;Model 6&quot; = &quot;6&quot;)
+         ) %&gt;% 
+  ggplot(aes(x = model, y = rmse, fill = model)) + 
+  geom_violin() + 
+  labs(x = &quot;Model&quot;,
+       y = &quot;RMSE&quot;, 
+       title = &quot;Cross Validation&quot;) +
+  scale_fill_brewer(type = &#39;seq&#39;, palette = &#39;Blues&#39;) +
+  theme(legend.position = &#39;none&#39;,
+        plot.title = element_text(hjust = 0.5))</code></pre>
+<p><img src="regression_files/figure-html/unnamed-chunk-6-1.png" width="90%" height="400" /></p>
 </div>
 
 
 
-</div>
-</div>
 
 </div>
 
@@ -451,35 +450,6 @@ $(document).ready(function () {
 });
 </script>
 
-<script>
-$(document).ready(function ()  {
-
-    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
-    $('.unlisted.unnumbered').addClass('toc-ignore')
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

@@ -100,7 +100,7 @@ radioButtons(
 Column {data-width=650}
 -----------------------------------------------------------------------
 
-### Chart A
+### World Life Expectancy
 
 ```{r}
 pal =
@@ -122,29 +122,6 @@ renderLeaflet({
     addLegend(position = "bottomright", pal = pal, values = map_df$lifeexpectancy,
           title = "life expectancy",
           opacity = 0.5)
-  
-})
-```
-
-Column {data-width=350}
------------------------------------------------------------------------
-
-### Chart B
-
-```{r}
-renderPrint({
-  
-  input[["continent_choice"]]
-  
-})
-```
-
-### Chart C
-
-```{r}
-renderPrint({
-  
-  input[["status_choice"]]
   
 })
 ```
