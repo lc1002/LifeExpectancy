@@ -1,11 +1,9 @@
 ---
-title: "cross_validation"
-author: "AnMei Chen"
-date: "1/10/2022"
+title: "Regression Analysis"
 output: html_document
 ---
 
-```{r}
+```{r include=FALSE, message=FALSE}
 library(tidyverse)
 library(modelr)
 library(mgcv)
@@ -33,13 +31,13 @@ scale_fill_discrete = scale_fill_viridis_d
 ```
 
 
-```{r}
+```{r include=FALSE, message=FALSE}
 le_df = 
   read_csv("./data/Complete_Data.CSV") %>% 
   rename("HDI" = "incomecompositionofresources", "percent_exp" = "percentageexpenditure", "total_exp" = "totalexpenditure", "le" = "lifeexpectancy", "adult_mort" = "adult_mortality", "thin_1_19" = "thinness1_19years", "thin_5_9" = "thinness5_9years", "under_five" = "under_fivedeaths")
 ```
 
-# Correlation Matrix
+## Correlation Matrix
 ```{r}
 cm_df =
   le_df %>%
@@ -47,6 +45,9 @@ cm_df =
 
 corrplot(cor(cm_df), type = "upper", diag = FALSE, method = "square", addCoef.col = "black", number.cex = .5, tl.col = "black", tl.cex = .9)
 ```
+
+
+## Model building 
 
 
 ```{r}
@@ -63,6 +64,7 @@ mod_5 = lm(le ~ adult_mort + bmi, data = le_df)
 mod_6 = lm(le ~ year + adult_mort + infantdeaths + percent_exp + bmi + under_five + polio + diphtheria + hiv_aids + gdp + thin_5_9, data = le_df)
 ```
 
+## Cross Validation
 
 ```{r}
 set.seed(2)
@@ -115,5 +117,13 @@ cv_df %>%
   scale_fill_brewer(type = 'seq', palette = 'Blues') +
   theme(legend.position = 'none',
         plot.title = element_text(hjust = 0.5))
+```
+
+## Results
+
+```{r}
+mod_1 %>% 
+  broom::tidy() %>% 
+  knitr::kable()
 ```
 

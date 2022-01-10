@@ -3,7 +3,7 @@ title: "Exploratory Analysis"
 output: html_document
 ---
 
-```{r}
+```{r include=FALSE, message=FALSE}
 library(tidyverse)
 library(plotly)
 library(RColorBrewer)
@@ -34,7 +34,7 @@ scale_fill_discrete = scale_fill_viridis_d
 ```
 
 
-```{r}
+```{r include=FALSE, message=FALSE}
 life_exp_df = 
   read_csv("data/Complete_Data.CSV") %>% 
   mutate(
@@ -44,7 +44,7 @@ life_exp_df =
 
 ## Global Trend of Life Expectancy From 2000 to 2015
 
-```{r}
+```{r message=FALSE}
 world_life_exp =
   life_exp_df %>% 
   group_by(year) %>% 
@@ -67,7 +67,7 @@ animate(world_life_exp, duration = 10, renderer = gifski_renderer())
 ## World Life Expectancy From 2000 to 2015 By Continent
 
 
-```{r}
+```{r message=FALSE}
 life_exp_continent =
   life_exp_df %>%
   group_by(continent,year) %>% 
@@ -88,7 +88,7 @@ animate(life_exp_continent, duration = 10, renderer = gifski_renderer())
 
 ## World Life Expectancy From 2000 to 2015 By Development Status
 
-```{r}
+```{r message=FALSE}
 life_exp_status =
   life_exp_df %>%
   group_by(status,year) %>% 
@@ -109,7 +109,7 @@ animate(life_exp_status, duration = 10, renderer = gifski_renderer())
 
 ## To vizualize correlation between the development status of a country and Life expectancy
 
-```{r}
+```{r message=FALSE}
 develop_plt = 
   life_exp_df %>% 
   ggplot(aes(x = status, y = lifeexpectancy, fill = status))+
@@ -131,7 +131,7 @@ develop_plt
 
 ## World life Expectancy by Countries with GDP Values
 
-```{r}
+```{r message=FALSE}
 gdp_le =
   life_exp_df %>%
   mutate(

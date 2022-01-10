@@ -9,10 +9,9 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="AnMei Chen" />
 
 
-<title>cross_validation</title>
+<title>Regression Analysis</title>
 
 <script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -286,71 +285,22 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">cross_validation</h1>
-<h4 class="author">AnMei Chen</h4>
-<h4 class="date">1/10/2022</h4>
+<h1 class="title toc-ignore">Regression Analysis</h1>
 
 </div>
 
 
-<pre class="r"><code>library(tidyverse)</code></pre>
-<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──</code></pre>
-<pre><code>## ✓ ggplot2 3.3.5     ✓ purrr   0.3.4
-## ✓ tibble  3.1.6     ✓ dplyr   1.0.7
-## ✓ tidyr   1.1.4     ✓ stringr 1.4.0
-## ✓ readr   2.1.1     ✓ forcats 0.5.1</code></pre>
-<pre><code>## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-## x dplyr::filter() masks stats::filter()
-## x dplyr::lag()    masks stats::lag()</code></pre>
-<pre class="r"><code>library(modelr)
-library(mgcv)</code></pre>
-<pre><code>## Loading required package: nlme</code></pre>
-<pre><code>## 
-## Attaching package: &#39;nlme&#39;</code></pre>
-<pre><code>## The following object is masked from &#39;package:dplyr&#39;:
-## 
-##     collapse</code></pre>
-<pre><code>## This is mgcv 1.8-38. For overview type &#39;help(&quot;mgcv-package&quot;)&#39;.</code></pre>
-<pre class="r"><code>library(corrplot)</code></pre>
-<pre><code>## corrplot 0.92 loaded</code></pre>
-<pre class="r"><code>knitr::opts_chunk$set(
-  echo = TRUE,
-  fig.asp = .6,
-  fig.width = 6,
-  fig.height = 4,
-  out.height = 400,
-  dpi = 800,
-  out.width = &quot;90%&quot;
-)
-
-theme_set(theme_minimal())
-
-options(
-  ggplot2.continuous.colour = &quot;viridis&quot;,
-  ggplot2.continuous.fill = &quot;viridis&quot;
-)
-
-scale_colour_discrete = scale_colour_viridis_d
-scale_fill_discrete = scale_fill_viridis_d</code></pre>
-<pre class="r"><code>le_df = 
-  read_csv(&quot;./data/Complete_Data.CSV&quot;) %&gt;% 
-  rename(&quot;HDI&quot; = &quot;incomecompositionofresources&quot;, &quot;percent_exp&quot; = &quot;percentageexpenditure&quot;, &quot;total_exp&quot; = &quot;totalexpenditure&quot;, &quot;le&quot; = &quot;lifeexpectancy&quot;, &quot;adult_mort&quot; = &quot;adult_mortality&quot;, &quot;thin_1_19&quot; = &quot;thinness1_19years&quot;, &quot;thin_5_9&quot; = &quot;thinness5_9years&quot;, &quot;under_five&quot; = &quot;under_fivedeaths&quot;)</code></pre>
-<pre><code>## Rows: 2938 Columns: 23</code></pre>
-<pre><code>## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: &quot;,&quot;
-## chr  (3): country, continent, status
-## dbl (20): year, lifeexpectancy, adult_mortality, infantdeaths, alcohol, perc...</code></pre>
-<pre><code>## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<div id="correlation-matrix" class="section level1">
-<h1>Correlation Matrix</h1>
+<div id="correlation-matrix" class="section level2">
+<h2>Correlation Matrix</h2>
 <pre class="r"><code>cm_df =
   le_df %&gt;%
   dplyr::select(-c(country,continent,year,status))
 
 corrplot(cor(cm_df), type = &quot;upper&quot;, diag = FALSE, method = &quot;square&quot;, addCoef.col = &quot;black&quot;, number.cex = .5, tl.col = &quot;black&quot;, tl.cex = .9)</code></pre>
 <p><img src="regression_files/figure-html/unnamed-chunk-3-1.png" width="90%" height="400" /></p>
+</div>
+<div id="model-building" class="section level2">
+<h2>Model building</h2>
 <pre class="r"><code>mod_1 = lm(le ~ adult_mort + bmi + polio + diphtheria + hiv_aids + thin_5_9 + HDI, data = le_df)
 
 mod_2 = lm(le ~ status + bmi + population + thin_1_19 + thin_5_9 + status * bmi + status * thin_1_19 + status * thin_5_9, data = le_df)
@@ -362,6 +312,9 @@ mod_4 = lm(le ~ polio + total_exp + diphtheria + hiv_aids + thin_1_19, data = le
 mod_5 = lm(le ~ adult_mort + bmi, data = le_df)
 
 mod_6 = lm(le ~ year + adult_mort + infantdeaths + percent_exp + bmi + under_five + polio + diphtheria + hiv_aids + gdp + thin_5_9, data = le_df)</code></pre>
+</div>
+<div id="cross-validation" class="section level2">
+<h2>Cross Validation</h2>
 <pre class="r"><code>set.seed(2)
 
 cv_df = 
@@ -409,6 +362,81 @@ cv_df =
   theme(legend.position = &#39;none&#39;,
         plot.title = element_text(hjust = 0.5))</code></pre>
 <p><img src="regression_files/figure-html/unnamed-chunk-6-1.png" width="90%" height="400" /></p>
+</div>
+<div id="results" class="section level2">
+<h2>Results</h2>
+<pre class="r"><code>mod_1 %&gt;% 
+  broom::tidy() %&gt;% 
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">55.9723894</td>
+<td align="right">0.4915970</td>
+<td align="right">113.858273</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">adult_mort</td>
+<td align="right">-0.0200800</td>
+<td align="right">0.0008521</td>
+<td align="right">-23.566515</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">bmi</td>
+<td align="right">0.0565064</td>
+<td align="right">0.0052147</td>
+<td align="right">10.835925</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">polio</td>
+<td align="right">0.0355643</td>
+<td align="right">0.0047027</td>
+<td align="right">7.562500</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">diphtheria</td>
+<td align="right">0.0355136</td>
+<td align="right">0.0047024</td>
+<td align="right">7.552237</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">hiv_aids</td>
+<td align="right">-0.4716051</td>
+<td align="right">0.0186585</td>
+<td align="right">-25.275684</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">thin_5_9</td>
+<td align="right">-0.1629007</td>
+<td align="right">0.0215414</td>
+<td align="right">-7.562232</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">HDI</td>
+<td align="right">16.3963663</td>
+<td align="right">0.4807545</td>
+<td align="right">34.105484</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
 </div>
 
 

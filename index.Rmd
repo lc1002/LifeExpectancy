@@ -1,5 +1,5 @@
 ---
-title: "Life Expectancy"
+title: "Life Expectancy Analysis"
 output:
   html_document
 ---
@@ -21,7 +21,7 @@ output:
 
 <br>
 <br>
-
+<font size="2"> ---------------------------------------------------------------------------------------------------------------------------</font><br>
 <font size="2"> Contributors: </font> 
 <font size="2">AnMei Chen, Lynn Chen</font> 
 
