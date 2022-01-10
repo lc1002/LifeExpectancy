@@ -1,0 +1,18 @@
+name: "Life Expectancy"
+output_dir: "."
+navbar:
+  title: "Home"
+  right:
+    - text: "Project Report"
+      href: report.html
+    - text: "Exploratory Analysis"
+      href: exploratory.html
+    - text: "Regression Analysis"
+      href: regression.html
+    - text: "map"
+      href: 
+      
+output:
+  html_document:
+    code_folding: hide
+    theme: flatly

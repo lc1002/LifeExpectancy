@@ -1,0 +1,54 @@
+---
+title: "Project Report"
+subtitle: "Life Expectancy"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+---
+## Project Motivation
+
+
+<br>
+
+## Research Questions
+
+
+<br>
+
+## Data
+### Data Sources
+
+
+<br>
+
+### Data Cleaning
+
+
+
+<br>
+
+## Exploratory Analysis
+
+<br>
+
+## Key Findings
+
+
+<br>
+
+## Discussions
+
+
+<br>
+
+## Conclusion
+
+
+
+<br>
+
+## Contributors
+* AnMei Chen 
+* Lynn Chen
+
