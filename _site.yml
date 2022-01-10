@@ -9,10 +9,11 @@ navbar:
       href: exploratory.html
     - text: "Regression Analysis"
       href: regression.html
-    - text: "map"
-      href: 
-      
+    - text: "Interactive Map"
+      href: https://anmei18.shinyapps.io/interactive_map/
+    - icon: fa-github fa-lg
+      href: https://github.com/lc1002/LifeExpectancy
 output:
   html_document:
     code_folding: hide
-    theme: flatly
+    theme: Yeti

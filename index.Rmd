@@ -11,4 +11,18 @@ output:
 <br>
 <br>
 
-## Introduction
+### Introduction
+
+
+### Website Overview
+
+
+
+
+<br>
+<br>
+
+<font size="2"> Contributors: </font> 
+<font size="2">AnMei Chen, Lynn Chen</font> 
+
+<font size="2">The Github repository for this website can be found [here ](https://github.com/lc1002/LifeExpectancy), and the corresponding Github repository for this project is located [here](https://github.com/lc1002/LifeExpectancyAnalysis)</font> 
