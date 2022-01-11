@@ -1,13 +1,9 @@
-<<<<<<< HEAD
 name: "Project Website"
-=======
 name: "Life Expectancy"
->>>>>>> cc8cd1b2bb2e7c3ef6f08f4904f5202152f80887
 output_dir: "."
 navbar:
   title: "Home"
   right:
-<<<<<<< HEAD
     - text: "Data Explorer"
       href: 
     - text: "Project Report"
@@ -23,7 +19,6 @@ output:
   html_document:
     code_folding: hide
     theme: flatly
-=======
     - text: "Project Report"
       href: report.html
     - text: "Exploratory Analysis"
@@ -38,4 +33,4 @@ output:
   html_document:
     code_folding: hide
     theme: yeti
->>>>>>> cc8cd1b2bb2e7c3ef6f08f4904f5202152f80887
+
