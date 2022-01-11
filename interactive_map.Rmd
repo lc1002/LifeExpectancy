@@ -2,6 +2,9 @@
 title: "Interactive Map"
 output:
   flexdashboard::flex_dashboard:
+    theme: 
+      bg: black
+      fg: white
     orientation: columns
     vertical_layout: fill
 runtime: shiny
