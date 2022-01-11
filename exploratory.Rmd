@@ -59,7 +59,7 @@ world_life_exp =
   ) +
   transition_reveal(as.integer(year))
 
-animate(world_life_exp, duration = 10, renderer = gifski_renderer())
+animate(world_life_exp, duration = 8, renderer = gifski_renderer())
 
 #ggplotly(world_life_exp)
 ```
@@ -81,7 +81,7 @@ life_exp_continent =
   ) +
   transition_reveal(as.integer(year))
 
-animate(life_exp_continent, duration = 10, renderer = gifski_renderer())
+animate(life_exp_continent, duration = 8, renderer = gifski_renderer())
 
 #ggplotly(life_exp_continent)
 ```
@@ -102,7 +102,7 @@ life_exp_status =
   ) +
   transition_reveal(as.integer(year))
 
-animate(life_exp_status, duration = 10, renderer = gifski_renderer())
+animate(life_exp_status, duration = 8, renderer = gifski_renderer())
 
 #ggplotly(life_exp_status)
 ```
