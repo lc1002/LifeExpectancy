@@ -1,0 +1,32 @@
+---
+title: "World Life Expectancy Analysis"
+output: 
+  html_document
+---
+
+
+<br>
+<br>
+
+### Introduction
+
+
+<br>
+
+### Website Overview
+
+
+* **Project Report:** A written report with detailed explanation of our methods, findings and conclusions [(here)](https://rhopala.github.io/USArgTrdvsCvd-19/project_report.html).
+
+* **Exploratory Analysis:** Exploratory statistical analyses of life expectancy with interactive visualizations.
+
+
+
+
+<br>
+<br>
+
+<font size="2"> Contributors: </font> 
+<font size="2">AnMei Chen and Lynn Chen</font> 
+
+<font size="2">The Github repository for this website can be found [here ](https://github.com/lc1002/LifeExpectancyAnalysis). </font> 

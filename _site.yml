@@ -1,0 +1,20 @@
+name: "Project Website"
+output_dir: "."
+navbar:
+  title: "Home"
+  right:
+    - text: "Data Explorer"
+      href: 
+    - text: "Project Report"
+      href: 
+    - text: "Exploratory Analysis"
+      menu:
+      - text: "Section 1"
+      - text: 
+    - icon: fa-github fa-lg
+      href: https://github.com/lc1002/LifeExpectancyAnalysis
+
+output:
+  html_document:
+    code_folding: hide
+    theme: flatly
