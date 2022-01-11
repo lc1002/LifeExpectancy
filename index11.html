@@ -11,7 +11,7 @@
 
 
 
-<title>Regression Analysis</title>
+<title>World Life Expectancy Analysis</title>
 
 <script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -306,158 +306,36 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Regression Analysis</h1>
+<h1 class="title toc-ignore">World Life Expectancy Analysis</h1>
 
 </div>
 
 
-<div id="correlation-matrix" class="section level2">
-<h2>Correlation Matrix</h2>
-<pre class="r"><code>cm_df =
-  le_df %&gt;%
-  dplyr::select(-c(country,continent,year,status))
-
-corrplot(cor(cm_df), type = &quot;upper&quot;, diag = FALSE, method = &quot;square&quot;, addCoef.col = &quot;black&quot;, number.cex = .5, tl.col = &quot;black&quot;, tl.cex = .9)</code></pre>
-<p><img src="regression_files/figure-html/unnamed-chunk-3-1.png" width="90%" height="400" /></p>
+<p>title: “Life Expectancy Analysis” output: html_document</p>
+<center>
+<br><br><img src="image/LE.jpeg" alt="logo" style="width:60%; border:10px solid"><br>
+</center>
+<p><br> <br></p>
+<div id="introduction" class="section level3">
+<h3>Introduction</h3>
+<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD <br></p>
 </div>
-<div id="model-building" class="section level2">
-<h2>Model building</h2>
-<pre class="r"><code>mod_1 = lm(le ~ adult_mort + bmi + polio + diphtheria + hiv_aids + thin_5_9 + HDI, data = le_df)
-
-mod_2 = lm(le ~ status + bmi + population + thin_1_19 + thin_5_9 + status * bmi + status * thin_1_19 + status * thin_5_9, data = le_df)
-             
-mod_3 = lm(le ~ status + polio + total_exp + diphtheria + gdp + schooling + total_exp * gdp, data = le_df)
-
-mod_4 = lm(le ~ polio + total_exp + diphtheria + hiv_aids + thin_1_19, data = le_df)
-
-mod_5 = lm(le ~ adult_mort + bmi, data = le_df)
-
-mod_6 = lm(le ~ year + adult_mort + infantdeaths + percent_exp + bmi + under_five + polio + diphtheria + hiv_aids + gdp + thin_5_9, data = le_df)</code></pre>
+<div id="website-overview" class="section level3">
+<h3>Website Overview</h3>
+<ul>
+<li><p><strong>Project Report:</strong> A written report with detailed explanation of our methods, findings and conclusions <a href="https://rhopala.github.io/USArgTrdvsCvd-19/project_report.html">(here)</a>.</p></li>
+<li><p><strong>Exploratory Analysis:</strong> Exploratory statistical analyses of life expectancy with interactive visualizations.</p></li>
+</ul>
 </div>
-<div id="cross-validation" class="section level2">
-<h2>Cross Validation</h2>
-<pre class="r"><code>set.seed(2)
-
-cv_df = 
-  crossv_mc(le_df,100) %&gt;% 
-  mutate(
-    train = map(train, as_tibble),
-    test = map(test, as_tibble)
-  ) %&gt;% 
-  mutate(
-    mod_1 = map(train, ~lm(formula = formula(mod_1), data = .x)),
-    mod_2 = map(train, ~lm(formula = formula(mod_2), data = .x)),
-    mod_3 = map(train, ~lm(formula = formula(mod_3), data = .x)),
-    mod_4 = map(train, ~lm(formula = formula(mod_4), data = .x)),
-    mod_5 = map(train, ~lm(formula = formula(mod_5), data = .x)),
-    mod_6 = map(train, ~lm(formula = formula(mod_6), data = .x))
-    ) %&gt;% 
-  mutate(
-    rmse_1 = map2_dbl(mod_1, test, ~rmse(model = .x, data = .y)),
-    rmse_2 = map2_dbl(mod_2, test, ~rmse(model = .x, data = .y)),
-    rmse_3 = map2_dbl(mod_3, test, ~rmse(model = .x, data = .y)),
-    rmse_4 = map2_dbl(mod_4, test, ~rmse(model = .x, data = .y)),
-    rmse_5 = map2_dbl(mod_5, test, ~rmse(model = .x, data = .y)),
-    rmse_6 = map2_dbl(mod_6, test, ~rmse(model = .x, data = .y))
-    )</code></pre>
-<pre class="r"><code>cv_df %&gt;% 
-  pivot_longer(
-    rmse_1:rmse_6,
-    names_to = &quot;model&quot;, 
-    values_to = &quot;rmse&quot;,
-    names_prefix = &quot;rmse_&quot;) %&gt;% 
-  mutate(model = fct_inorder(model),
-         model = fct_recode(model, &quot;Model 1&quot; = &quot;1&quot;,
-                                   &quot;Model 2&quot; = &quot;2&quot;,
-                                   &quot;Model 3&quot; = &quot;3&quot;,
-                                   &quot;Model 4&quot; = &quot;4&quot;,
-                                   &quot;Model 5&quot; = &quot;5&quot;,
-                                   &quot;Model 6&quot; = &quot;6&quot;)
-         ) %&gt;% 
-  ggplot(aes(x = model, y = rmse, fill = model)) + 
-  geom_violin() + 
-  labs(x = &quot;Model&quot;,
-       y = &quot;RMSE&quot;, 
-       title = &quot;Cross Validation&quot;) +
-  scale_fill_brewer(type = &#39;seq&#39;, palette = &#39;Blues&#39;) +
-  theme(legend.position = &#39;none&#39;,
-        plot.title = element_text(hjust = 0.5))</code></pre>
-<p><img src="regression_files/figure-html/unnamed-chunk-6-1.png" width="90%" height="400" /></p>
+<div id="website-overview-1" class="section level3">
+<h3>Website Overview</h3>
+<p><br> <br> &lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</p>
+<p><font size="2"> Contributors: </font> <font size="2">AnMei Chen and Lynn Chen</font></p>
 </div>
-<div id="results" class="section level2">
-<h2>Results</h2>
-<pre class="r"><code>mod_1 %&gt;% 
-  broom::tidy() %&gt;% 
-  knitr::kable()</code></pre>
-<table>
-<thead>
-<tr class="header">
-<th align="left">term</th>
-<th align="right">estimate</th>
-<th align="right">std.error</th>
-<th align="right">statistic</th>
-<th align="right">p.value</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">(Intercept)</td>
-<td align="right">55.9723894</td>
-<td align="right">0.4915970</td>
-<td align="right">113.858273</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td align="left">adult_mort</td>
-<td align="right">-0.0200800</td>
-<td align="right">0.0008521</td>
-<td align="right">-23.566515</td>
-<td align="right">0</td>
-</tr>
-<tr class="odd">
-<td align="left">bmi</td>
-<td align="right">0.0565064</td>
-<td align="right">0.0052147</td>
-<td align="right">10.835925</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td align="left">polio</td>
-<td align="right">0.0355643</td>
-<td align="right">0.0047027</td>
-<td align="right">7.562500</td>
-<td align="right">0</td>
-</tr>
-<tr class="odd">
-<td align="left">diphtheria</td>
-<td align="right">0.0355136</td>
-<td align="right">0.0047024</td>
-<td align="right">7.552237</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td align="left">hiv_aids</td>
-<td align="right">-0.4716051</td>
-<td align="right">0.0186585</td>
-<td align="right">-25.275684</td>
-<td align="right">0</td>
-</tr>
-<tr class="odd">
-<td align="left">thin_5_9</td>
-<td align="right">-0.1629007</td>
-<td align="right">0.0215414</td>
-<td align="right">-7.562232</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td align="left">HDI</td>
-<td align="right">16.3963663</td>
-<td align="right">0.4807545</td>
-<td align="right">34.105484</td>
-<td align="right">0</td>
-</tr>
-</tbody>
-</table>
+<div id="the-github-repository-for-this-website-can-be-found-here." class="section level1">
+<h1><font size="2">The Github repository for this website can be found <a href="https://github.com/lc1002/LifeExpectancyAnalysis">here</a>. </font></h1>
+<p><font size="2"> —————————————————————————————————————————</font><br> <font size="2"> Contributors: </font> <font size="2">AnMei Chen, Lynn Chen</font></p>
+<p><font size="2">The Github repository for this website can be found <a href="https://github.com/lc1002/LifeExpectancy">here</a>, and the corresponding Github repository for this project is located <a href="https://github.com/lc1002/LifeExpectancyAnalysis">here</a></font></p>
 </div>
 
 
