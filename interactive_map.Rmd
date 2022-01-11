@@ -1,0 +1,128 @@
+---
+title: "Interactive Map"
+output:
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+runtime: shiny
+resource_files:
+- data/TM_WORLD_BORDERS-0
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(shiny)
+library(tidyverse)
+library(leaflet)
+library(sf)
+
+life_exp_df = 
+  read_csv("data/Complete_Data.CSV") %>% 
+  mutate(
+    country = recode(country, 
+                     "United Kingdom of Great Britain and Northern Ireland" = "United Kingdom",
+                     "Bolivia (Plurinational State of)" = "Bolivia",
+                     "Cabo Verde" = "Cape Verde",
+                     "Korea (Democratic People's Republic of)" = "Korea, Democratic People's Republic of",
+                     "Congo (Democratic Republic of the)" = "Democratic Republic of the Congo",
+                     "Libya" = "Liberia",
+                     "Micronesia (Federated States of)" = "Micronesia, Federated States of",
+                     "Myanmar" = "Burma",
+                     "Korea (Republic of)" = "Korea, Republic of",
+                     "Moldova (Republic of)" = "Republic of Moldova",
+                     "Russian Federation" = "Russia",
+                     "Macedonia (the former Yugoslav Republic of)" = "The former Yugoslav Republic of Macedonia",
+                     "Tanzania, United Republic of" = "United Republic of Tanzania",
+                     "United States of America" = "United States",
+                     "Venezuela (Bolivarian Republic of)" = "Venezuela"),
+    click_label = 
+      str_c(country, "</b><br>", "Life expectancy: ", lifeexpectancy,"<br>", "Population: ", population,"<br>", "GDP Values: ", gdp, "<br>")) %>% 
+  rename("NAME" = "country")
+
+world_spdf =
+  st_read(dsn = path.expand("./data/TM_WORLD_BORDERS-0"),
+             layer = "TM_WORLD_BORDERS-0.3")
+
+map_df = 
+  st_as_sf(world_spdf) %>% 
+  right_join(life_exp_df, by = "NAME")
+
+```
+
+Column {.sidebar}
+-----------------------------------------------------------------------
+
+```{r}
+continent_choice = 
+  life_exp_df %>% 
+  distinct(continent) %>% 
+  pull()
+
+selectInput(
+  "continent_choice",
+  label = h3("Select Continent"),
+  choices = continent_choice,
+  selected = "Asia"
+)
+
+min_le = 
+  life_exp_df %>% 
+  distinct(lifeexpectancy) %>% 
+  min()
+
+max_le = 
+  life_exp_df %>% 
+  distinct(lifeexpectancy) %>% 
+  max()
+
+sliderInput(
+  "le_choice",
+  label = h3("Life Expectancy Range"),
+  min = min_le,
+  max = max_le,
+  value = c(min_le,max_le)
+)
+
+status_choice = 
+  life_exp_df %>% 
+  distinct(status) %>% 
+  pull()
+
+radioButtons(
+  "status_choice",
+  label = h3("Development Status"),
+  choices = status_choice,
+  selected = "Developing"
+)
+
+```
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### World Life Expectancy
+
+```{r}
+pal =
+  colorNumeric(
+  palette = "YlOrBr",
+  domain = map_df$lifeexpectancy)
+
+renderLeaflet({
+  map_df %>% 
+    dplyr::filter(
+      continent == input[["continent_choice"]],
+      lifeexpectancy > input[["le_choice"]][1], lifeexpectancy < input[["le_choice"]][2],
+      status == input[["status_choice"]]
+    ) %>% 
+    leaflet() %>% 
+    addTiles() %>%
+    setView(0, 0, zoom = 1) %>%
+    addPolygons(fillColor = ~pal(lifeexpectancy),popup = ~click_label,stroke = FALSE) %>% 
+    addLegend(position = "bottomright", pal = pal, values = map_df$lifeexpectancy,
+          title = "life expectancy",
+          opacity = 0.5)
+  
+})
+```
+

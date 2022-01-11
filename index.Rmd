@@ -1,9 +1,20 @@
 ---
+<<<<<<< HEAD
 title: "World Life Expectancy Analysis"
 output: 
   html_document
 ---
 
+=======
+title: "Life Expectancy Analysis"
+output:
+  html_document
+---
+
+<center>
+<br><br><img src="image/LE.jpeg" alt="logo" style="width:60%; border:10px solid"><br>
+</center>
+>>>>>>> cc8cd1b2bb2e7c3ef6f08f4904f5202152f80887
 
 <br>
 <br>
@@ -11,6 +22,7 @@ output:
 ### Introduction
 
 
+<<<<<<< HEAD
 <br>
 
 ### Website Overview
@@ -21,12 +33,25 @@ output:
 * **Exploratory Analysis:** Exploratory statistical analyses of life expectancy with interactive visualizations.
 
 
+=======
+### Website Overview
+
+
+>>>>>>> cc8cd1b2bb2e7c3ef6f08f4904f5202152f80887
 
 
 <br>
 <br>
+<<<<<<< HEAD
 
 <font size="2"> Contributors: </font> 
 <font size="2">AnMei Chen and Lynn Chen</font> 
 
 <font size="2">The Github repository for this website can be found [here ](https://github.com/lc1002/LifeExpectancyAnalysis). </font> 
+=======
+<font size="2"> ---------------------------------------------------------------------------------------------------------------------------</font><br>
+<font size="2"> Contributors: </font> 
+<font size="2">AnMei Chen, Lynn Chen</font> 
+
+<font size="2">The Github repository for this website can be found [here ](https://github.com/lc1002/LifeExpectancy), and the corresponding Github repository for this project is located [here](https://github.com/lc1002/LifeExpectancyAnalysis)</font> 
+>>>>>>> cc8cd1b2bb2e7c3ef6f08f4904f5202152f80887

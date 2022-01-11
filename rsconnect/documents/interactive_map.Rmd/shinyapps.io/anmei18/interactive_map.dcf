@@ -1,0 +1,13 @@
+name: interactive_map
+title: interactive_map
+username:
+account: anmei18
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 5419735
+bundleId: 5453740
+url: https://anmei18.shinyapps.io/interactive_map/
+when: 1641852353.38535
+lastSyncTime: 1641852353.38537
+asMultiple: FALSE
+asStatic: FALSE
