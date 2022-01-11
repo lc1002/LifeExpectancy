@@ -20,11 +20,11 @@ output:
 
 * **Project Report:** A written report with detailed explanation of our methods, findings and conclusions [(here)]().
 
-* **Exploratory Analysis:**  Exploratory analysis on global trend of life expectancy[(here)]().
+* **Exploratory Analysis:**  Exploratory analysis on global trend of life expectancy [(here)]().
 
-* **Regression Analysis:** Regression analysis on building a predictive model to predict life expectancy for the years beyond 2015 based on historical data[(here)]().
+* **Regression Analysis:** Regression analysis on building a predictive model to predict life expectancy for the years beyond 2015 based on historical data [(here)]().
 
-* **Interactive Map:** An interactive world map showing trends of life expectancy of all countries[(here)]().
+* **Interactive Map:** An interactive world map showing trends of life expectancy of all countries [(here)]().
 
 
 

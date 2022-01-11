@@ -1,4 +1,4 @@
-name: "Proect Website"
+name: "Project Website"
 output_dir: "."
 navbar:
   title: "Home"
