@@ -5,7 +5,7 @@ output:
 ---
 
 <center>
-<br><br><img src="image/LE.jpeg" alt="logo" style="width:60%; border:10px solid"><br>
+<br><br><img src="image/LE2.png" alt="logo" style="width:60%; border:10px solid"><br>
 </center>
 
 <br>
@@ -20,11 +20,11 @@ output:
 
 * **Project Report:** A written report with detailed explanation of our methods, findings and conclusions [(here)]().
 
-* **Exploratory Analysis:**  Exploratory analysis on global trend of life expectancy [(here)]().
+* **Exploratory Analysis:** Plots and graphs that visualized the global trend of life expectancy [(here)](https://lc1002.github.io/LifeExpectancy/exploratory.html).
 
-* **Regression Analysis:** Regression analysis on building a predictive model to predict life expectancy for the years beyond 2015 based on historical data [(here)]().
+* **Regression Analysis:** Regression analysis on building a predictive model to predict life expectancy for the years beyond 2015 based on historical data [(here)](https://lc1002.github.io/LifeExpectancy/regression.html).
 
-* **Interactive Map:** An interactive world map showing trends of life expectancy of all countries [(here)]().
+* **Interactive Map:** An interactive world map showing trends of life expectancy of all countries [(here)](https://anmei18.shinyapps.io/interactive_map/).
 
 
 
