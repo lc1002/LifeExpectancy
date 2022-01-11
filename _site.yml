@@ -1,8 +1,13 @@
+<<<<<<< HEAD
 name: "Life Expectancy"
+=======
+name: "Project Website"
+>>>>>>> 6c204bc0d018f8048ec8a32a2a212d2b1dd181dd
 output_dir: "."
 navbar:
   title: "Home"
   right:
+<<<<<<< HEAD
     - text: "Data Explorer"
       href: 
     - text: "Project Report"
@@ -13,6 +18,8 @@ navbar:
       - text: 
     - icon: fa-github fa-lg
       href: https://github.com/lc1002/LifeExpectancyAnalysis
+=======
+>>>>>>> 6c204bc0d018f8048ec8a32a2a212d2b1dd181dd
     - text: "Project Report"
       href: report.html
     - text: "Exploratory Analysis"
