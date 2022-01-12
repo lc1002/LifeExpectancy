@@ -66,7 +66,6 @@ animate(world_life_exp, duration = 8, renderer = gifski_renderer())
 
 ## World Life Expectancy From 2000 to 2015 By Continent
 
-
 ```{r message=FALSE}
 life_exp_continent =
   life_exp_df %>%
@@ -86,28 +85,8 @@ animate(life_exp_continent, duration = 8, renderer = gifski_renderer())
 #ggplotly(life_exp_continent)
 ```
 
-## World Life Expectancy From 2000 to 2015 By Development Status
 
-```{r message=FALSE}
-life_exp_status =
-  life_exp_df %>%
-  group_by(status,year) %>% 
-  summarize(avg = mean(lifeexpectancy)) %>% 
-  ggplot(aes(x = year, y = avg, color = status)) +
-  geom_line() +
-  geom_point(alpha = 0.5) +
-  labs(
-    x = "Year",
-    y = "Life Expectancy"
-  ) +
-  transition_reveal(as.integer(year))
-
-animate(life_exp_status, duration = 8, renderer = gifski_renderer())
-
-#ggplotly(life_exp_status)
-```
-
-## To vizualize correlation between the development status of a country and Life expectancy
+## Correlation between the development status of a country and Life expectancy
 
 ```{r message=FALSE}
 develop_plt = 
