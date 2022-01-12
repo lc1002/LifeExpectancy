@@ -1,6 +1,7 @@
 ---
 title: "Global Life Expectancy Analysis"
-output: html_document
+output: 
+  html_document
 ---
 
 <style type="text/css">
@@ -32,13 +33,13 @@ According to statistics, the average life expectancy at birth was 82.1 years in 
 
 ## **Website Overview**
 
-* **Project Report:** A written report with detailed explanation of our methods, findings and conclusions [(here)]().
+* **Project Report:** A written report with detailed explanation of our methods, findings and conclusions [(here)](https://lc1002.github.io/LifeExpectancy/report.html).
 
-* **Exploratory Analysis:**  Exploratory analysis in order to have a deeper understanding of the dataset and interpret global trend of life expectancy through statistical tests and visualizations [(here)]().
+* **Exploratory Analysis:**  Exploratory analysis in order to have a deeper understanding of the dataset and interpret global trend of life expectancy through statistical tests and visualizations [(here)](https://lc1002.github.io/LifeExpectancy/exploratory.html).
  
-* **Regression Analysis:** Regression analysis performed to analyze different attributes that influence life expectancy in countries and determine the most significant variables to create an optimal linear regression model for predicting life expectancy [(here)]().
+* **Regression Analysis:** Regression analysis performed to analyze different attributes that influence life expectancy in countries and determine the most significant variables to create an optimal linear regression model for predicting life expectancy [(here)](https://lc1002.github.io/LifeExpectancy/regression.html).
 
-* **Interactive Map:** An interactive world map showing trends of life expectancy of all countries [(here)]().
+* **Interactive Map:** An interactive world map showing trends of life expectancy of all countries [(here)](https://anmei18.shinyapps.io/interactive_map/).
 
 <br>
 
