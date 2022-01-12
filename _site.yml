@@ -2,7 +2,6 @@ name: "Life Expectancy"
 output_dir: "."
 navbar:
   title: "Home"
-  href: about.html
   right:
     - text: "Data Explorer"
       href: 
