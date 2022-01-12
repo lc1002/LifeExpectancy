@@ -12,11 +12,7 @@ navbar:
     - text: "Interactive Map"
       href: https://anmei18.shinyapps.io/interactive_map/
     - icon: fa-github fa-lg
-      menu:
-      - text: "Website"
-        href: https://github.com/lc1002/LifeExpectancy
-      - text: "Project"
-        href: https://github.com/lc1002/LifeExpectancyAnalysis
+      href: https://github.com/lc1002/LifeExpectancy
 output:
   html_document:
     code_folding: hide
