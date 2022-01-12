@@ -13,7 +13,6 @@ We all know someone who is “obsessed” with astrology or another popular way 
 
 Unsurprisingly, life expectancy around the world has fallen dramatically. According to the 2020 death data from the US Centers for Disease Control and Prevention's National Center for Health Statistics, in 2020, Covid-19 resulted in an enormous drop in life expectancy and an increase in the death rate in the United States. Human life span may have a maximum “absolute limit”. Health professionals calculate life expectancy at birth to better understand a country’s health over time. When analyzing life span, many variables are diving into the rise and fall of an individual’s life span, such as socioeconomic, genetic, and environmental factors. In order to better understand the measure of life expectancy, we will investigate via statistical methods and explore the parameters affecting the life span of individuals and how life expectancy can be estimated with regression models. Through this project, we hope that useful information could be retrieved and effects on an individual’s life expectancy could be effectively communicated to the audience in the hope of raising awareness. 
 
-
 <br>
 
 ### Related Work 
@@ -28,11 +27,9 @@ Following are resources that have inspired this project:
 
 * "US life expectancy fell by more than a year during coronavirus pandemic, research suggests" from CNN. [(Link)](https://www.cnn.com/2021/06/24/health/us-life-expectancy-covid-19-pandemic-study-wellness/index.html)
 
-
-<iframe width="560" height="315" 
-  src= "https://www.youtube.com/watch?v=_30TjaV4F3g" 
-  title="Video on Life Expectancy from the year 1800 to 2099" frameborder="1" 
-  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<div align="center">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/_30TjaV4F3g" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
 
 <br>
 
@@ -53,7 +50,7 @@ Following are resources that have inspired this project:
 
 <br>
 
-## Exploratory Analysis
+## Analysis
 
 <br>
 
