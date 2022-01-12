@@ -3,16 +3,6 @@ output_dir: "."
 navbar:
   title: "Home"
   right:
-    - text: "Data Explorer"
-      href: 
-    - text: "Project Report"
-      href: 
-    - text: "Exploratory Analysis"
-      menu:
-      - text: "Section 1"
-      - text: 
-    - icon: fa-github fa-lg
-      href: https://github.com/lc1002/LifeExpectancyAnalysis
     - text: "Project Report"
       href: report.html
     - text: "Exploratory Analysis"
@@ -22,7 +12,11 @@ navbar:
     - text: "Interactive Map"
       href: https://anmei18.shinyapps.io/interactive_map/
     - icon: fa-github fa-lg
-      href: https://github.com/lc1002/LifeExpectancy
+      menu:
+      - text: "Website"
+        href: https://github.com/lc1002/LifeExpectancy
+      - text: "Project"
+        href: https://github.com/lc1002/LifeExpectancyAnalysis
 output:
   html_document:
     code_folding: hide
