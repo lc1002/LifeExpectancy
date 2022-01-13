@@ -3,8 +3,9 @@ title: "Interactive Map"
 output:
   flexdashboard::flex_dashboard:
     theme: 
-      bg: black
-      fg: white
+      bg: "#fff"
+      fg: "#000"
+      primary: "#808080"
     orientation: columns
     vertical_layout: fill
 runtime: shiny
@@ -15,6 +16,7 @@ resource_files:
 ```{r setup, include=FALSE}
 library(flexdashboard)
 library(shiny)
+library(shinyWidgets)
 library(tidyverse)
 library(leaflet)
 library(sf)
@@ -61,24 +63,27 @@ continent_choice =
   distinct(continent) %>% 
   pull()
 
-selectInput(
+pickerInput(
   "continent_choice",
   label = h3("Select Continent"),
   choices = continent_choice,
-  selected = " "
+  selected = "Asia",
+  options = list(`actions-box` = TRUE),
+  multiple = T
 )
 
-country_choice = 
+year_choice = 
   life_exp_df %>% 
-  distinct(NAME) %>% 
+  distinct(year) %>% 
   pull()
 
 selectInput(
-  "country_choice",
-  label = h3("Select Country"),
-  choices = country_choice,
-  selected = " "
+  "year_choice",
+  label = h3("Select Year"),
+  choices = year_choice,
+  selected = "2000"
 )
+
 min_le = 
   life_exp_df %>% 
   distinct(lifeexpectancy) %>% 
@@ -125,8 +130,8 @@ pal =
 renderLeaflet({
   map_df %>% 
     dplyr::filter(
-      continent == input[["continent_choice"]],
-      NAME == input[["country_choice"]],
+      continent %in% input[["continent_choice"]],
+      year == input[["year_choice"]],
       lifeexpectancy > input[["le_choice"]][1], lifeexpectancy < input[["le_choice"]][2],
       status == input[["status_choice"]]
     ) %>% 

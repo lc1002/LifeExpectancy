@@ -84,11 +84,6 @@ animate(life_exp_continent, duration = 8, renderer = gifski_renderer())
 
 #ggplotly(life_exp_continent)
 ```
-<<<<<<< HEAD
- 
-## To vizualize correlation between the development status of a country and Life expectancy
-=======
-
 
 ## Top 10 Countries with the Highest Life Expectancy
 
@@ -107,7 +102,7 @@ top_le_country
 
 
 ## Correlation Between the Development Status of A Country And Life Expectancy
->>>>>>> 62fdd9fcf644f63b48ac28403da35397f7a5e217
+
 
 ```{r message=FALSE, warning=FALSE}
 develop_plt = 
@@ -159,7 +154,7 @@ life_exp_df %>%
     add_trace(locations = ~ country,
              z = ~mean_LE,
              color = ~mean_LE,
-             colorscale="Viridis") %>%
+             colorscale = "Viridis") %>%
     layout(
       title = "Average Life Expectancy by Country",
       labels = "Mean Life Expectancy",
