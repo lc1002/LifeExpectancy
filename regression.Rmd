@@ -12,12 +12,10 @@ library(corrplot)
 
 knitr::opts_chunk$set(
   echo = TRUE,
-  fig.asp = .6,
   fig.width = 6,
-  fig.height = 4,
-  out.height = 400,
+  fig.asp = .7,
   dpi = 800,
-  out.width = "90%"
+  out.width = "80%"
 )
 
 theme_set(theme_minimal())
@@ -77,7 +75,7 @@ cm_df =
   le_df %>%
   dplyr::select(-c(country,continent,year,status))
 
-corrplot(cor(cm_df), type = "upper", diag = FALSE, method = "square", addCoef.col = "black", number.cex = .5, tl.col = "black", tl.cex = .9)
+corrplot(cor(cm_df), type = "upper", diag = FALSE, method = "square", addCoef.col = "black", number.cex = .4, tl.col = "black", tl.cex = .8)
 ```
 
 ## Model building 

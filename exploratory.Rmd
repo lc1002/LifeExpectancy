@@ -1,5 +1,5 @@
 ---
-title: "Exploratory Analysis"
+title: "Life Expectancy Over Time"
 output: html_document
 ---
 
@@ -86,29 +86,44 @@ animate(life_exp_continent, duration = 8, renderer = gifski_renderer())
 ```
 
 
-## Correlation between the development status of a country and Life expectancy
+## Top 10 Countries with the Highest Life Expectancy
+
+```{r}
+top_le_country =
+  life_exp_df %>% 
+  group_by(country) %>% 
+  summarize(avg = mean(lifeexpectancy)) %>%
+  arrange(desc(avg)) %>% 
+  rename("Country" = "country", "Average Life Expectancy" =  "avg") %>% 
+  head(10) %>% 
+  knitr::kable(bootstrap_options = "striped", full_width = F, position = "left")
+
+top_le_country
+```
+
+
+## Correlation Between the Development Status of A Country And Life Expectancy
 
 ```{r message=FALSE}
 develop_plt = 
   life_exp_df %>% 
-  ggplot(aes(x = status, y = lifeexpectancy, fill = status))+
-  geom_violin(width=1) +
-  geom_boxplot(width=0.1, color = "red", alpha = 0.2) +
-  scale_fill_hue(c=45, l=80) +
+  ggplot(aes(x = status, y = lifeexpectancy, fill = status)) +
+  geom_violin(width = 1) +
+  geom_boxplot(width = 0.1, color = "red", alpha = 0.2) +
+  scale_fill_hue(c = 45, l = 80) +
   theme(
-      legend.position="none",
-      plot.title = element_text(size=11)
+      legend.position = "none",
+      plot.title = element_text(size = 11)
     ) +
   labs(
     x = "Development Status",
-    y = "Life Expectancy",
-    title = "Life Expectancy VS. Development Status"
+    y = "Life Expectancy"
   ) 
 
 develop_plt
 ```
 
-## World life Expectancy by Countries with GDP Values
+## Correlation Between GDP Values And Life Expectancy
 
 ```{r message=FALSE}
 gdp_le =
