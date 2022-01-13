@@ -62,7 +62,6 @@ range_le
 * The range of life expectancy is from `r min(life_exp_df$lifeexpectancy)` years to `r max(life_exp_df$lifeexpectancy)` years.
 * The graph shows that majority of people fall under the range 65–80 years of life expectancy. There are only small number of people on both sides of the tails (i.e having life expectancy lower than 45 years and higher than 85 years).
 
-
 ## Global Trend of Life Expectancy From 2000 to 2015
 
 ```{r message=FALSE}
@@ -210,6 +209,7 @@ summary(aov(lifeexpectancy ~ status, data = life_exp_df))
 * The range of life expectancy among the Developing countries is visually wider than the Developed countries. The minimum life expectancy is much lower in Developing countries. 
 * The interquartile range of life expectancy is higher in Developing countries than Developed countries. The mean and median are both higher in the Developed countries.
 * From the ANOVA Analysis, we obtain a p-value of lower than $2e^{-16}$ and is significantly less than 0.05, thus, we reject the null hypothesis and can conclude that there are significant differences in life expectancy between the Developed and Developing Countries.
+
 
 ## Correlation Between GDP Values And Life Expectancy
 
