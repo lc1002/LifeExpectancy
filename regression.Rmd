@@ -2,6 +2,7 @@
 title: "Regression Analysis"
 output: html_document
 ---
+<br>
 
 ```{r include=FALSE, message=FALSE}
 library(tidyverse)
@@ -11,12 +12,10 @@ library(corrplot)
 
 knitr::opts_chunk$set(
   echo = TRUE,
-  fig.asp = .6,
   fig.width = 6,
-  fig.height = 4,
-  out.height = 400,
+  fig.asp = .7,
   dpi = 800,
-  out.width = "90%"
+  out.width = "80%"
 )
 
 theme_set(theme_minimal())
@@ -37,13 +36,46 @@ le_df =
   rename("HDI" = "incomecompositionofresources", "percent_exp" = "percentageexpenditure", "total_exp" = "totalexpenditure", "le" = "lifeexpectancy", "adult_mort" = "adult_mortality", "thin_1_19" = "thinness1_19years", "thin_5_9" = "thinness5_9years", "under_five" = "under_fivedeaths")
 ```
 
+## Variables of Interest
+
+**Response Variable:**
+
+* `le`: Life Expectancy in age
+
+**Predictor Variables:**
+
+* `continent`: Name of the continent in which the country is located
+* `year` : 2000 to 2015
+* `status`: Development status of the country (Developed or Developing)
+* `adult_mort`: Adult mortality rates of both sexes (Probability of dying between 15 and 60 years old per 1000 population)
+* `infantdeaths`: Number of infant deaths per 1000 population
+* `Alcohol`: Alcohol consumption (15+) per capita (in litres of pure alcohol)
+* `percent_exp`: Government expenditure on health as a percentage of gross domestic product per capita (%)
+* `total_exp`: General government expenditure on health as a percentage of total government expenditure (%)
+* `hepatitis_b`: Hepatitis B immunization coverage among 1-year-old (%)
+* `measles`: Number of reported measles cases per 1000 population
+* `bmi`: Average body mass index of entire population
+* `under_five`: Number of deaths in children aged under 5 years old per 1000 population
+* `polio`: Polio immunization coverage among 1-year-old(%)
+* `diphtheria`: Diphtheria tetanus toxoid and pertussis immunization coverage among 1-year-old (%)
+* `hiv_aids`: Number of deaths in children aged 0 to 4 years old due to HIV/AIDS per 1000 live births
+* `gdp`: Gross domestic product per capita in USD
+* `population`: Population of the country
+* `thin_1_19`: Prevalence of thinness among children and adolescents aged 10 to 19 (%)
+* `thin_5_9`: Prevalence of thinness among children and adolescents aged 5 to 9 (%)
+* `HDI`: Human development index in terms of income composition of resources (index ranging from 0 to 1)
+* `schooling`: Number of years of Schooling
+
+<br>
+
 ## Correlation Matrix
+
 ```{r}
 cm_df =
   le_df %>%
   dplyr::select(-c(country,continent,year,status))
 
-corrplot(cor(cm_df), type = "upper", diag = FALSE, method = "square", addCoef.col = "black", number.cex = .5, tl.col = "black", tl.cex = .9)
+corrplot(cor(cm_df), type = "upper", diag = FALSE, method = "square", addCoef.col = "black", number.cex = .4, tl.col = "black", tl.cex = .8)
 ```
 
 ## Model building 

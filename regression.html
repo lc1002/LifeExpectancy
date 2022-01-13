@@ -290,14 +290,47 @@ $(document).ready(function () {
 </div>
 
 
+<p><br></p>
+<div id="variables-of-interest" class="section level2">
+<h2>Variables of Interest</h2>
+<p><strong>Response Variable:</strong></p>
+<ul>
+<li><code>le</code>: Life Expectancy in age</li>
+</ul>
+<p><strong>Predictor Variables:</strong></p>
+<ul>
+<li><code>continent</code>: Name of the continent in which the country is located</li>
+<li><code>year</code> : 2000 to 2015</li>
+<li><code>status</code>: Development status of the country (Developed or Developing)</li>
+<li><code>adult_mort</code>: Adult mortality rates of both sexes (Probability of dying between 15 and 60 years old per 1000 population)</li>
+<li><code>infantdeaths</code>: Number of infant deaths per 1000 population</li>
+<li><code>Alcohol</code>: Alcohol consumption (15+) per capita (in litres of pure alcohol)</li>
+<li><code>percent_exp</code>: Government expenditure on health as a percentage of gross domestic product per capita (%)</li>
+<li><code>total_exp</code>: General government expenditure on health as a percentage of total government expenditure (%)</li>
+<li><code>hepatitis_b</code>: Hepatitis B immunization coverage among 1-year-old (%)</li>
+<li><code>measles</code>: Number of reported measles cases per 1000 population</li>
+<li><code>bmi</code>: Average body mass index of entire population</li>
+<li><code>under_five</code>: Number of deaths in children aged under 5 years old per 1000 population</li>
+<li><code>polio</code>: Polio immunization coverage among 1-year-old(%)</li>
+<li><code>diphtheria</code>: Diphtheria tetanus toxoid and pertussis immunization coverage among 1-year-old (%)</li>
+<li><code>hiv_aids</code>: Number of deaths in children aged 0 to 4 years old due to HIV/AIDS per 1000 live births</li>
+<li><code>gdp</code>: Gross domestic product per capita in USD</li>
+<li><code>population</code>: Population of the country</li>
+<li><code>thin_1_19</code>: Prevalence of thinness among children and adolescents aged 10 to 19 (%)</li>
+<li><code>thin_5_9</code>: Prevalence of thinness among children and adolescents aged 5 to 9 (%)</li>
+<li><code>HDI</code>: Human development index in terms of income composition of resources (index ranging from 0 to 1)</li>
+<li><code>schooling</code>: Number of years of Schooling</li>
+</ul>
+<p><br></p>
+</div>
 <div id="correlation-matrix" class="section level2">
 <h2>Correlation Matrix</h2>
 <pre class="r"><code>cm_df =
   le_df %&gt;%
   dplyr::select(-c(country,continent,year,status))
 
-corrplot(cor(cm_df), type = &quot;upper&quot;, diag = FALSE, method = &quot;square&quot;, addCoef.col = &quot;black&quot;, number.cex = .5, tl.col = &quot;black&quot;, tl.cex = .9)</code></pre>
-<p><img src="regression_files/figure-html/unnamed-chunk-3-1.png" width="90%" height="400" /></p>
+corrplot(cor(cm_df), type = &quot;upper&quot;, diag = FALSE, method = &quot;square&quot;, addCoef.col = &quot;black&quot;, number.cex = .4, tl.col = &quot;black&quot;, tl.cex = .8)</code></pre>
+<p><img src="regression_files/figure-html/unnamed-chunk-3-1.png" width="80%" /></p>
 </div>
 <div id="model-building" class="section level2">
 <h2>Model building</h2>
@@ -361,7 +394,7 @@ cv_df =
   scale_fill_brewer(type = &#39;seq&#39;, palette = &#39;Blues&#39;) +
   theme(legend.position = &#39;none&#39;,
         plot.title = element_text(hjust = 0.5))</code></pre>
-<p><img src="regression_files/figure-html/unnamed-chunk-6-1.png" width="90%" height="400" /></p>
+<p><img src="regression_files/figure-html/unnamed-chunk-6-1.png" width="80%" /></p>
 </div>
 <div id="results" class="section level2">
 <h2>Results</h2>

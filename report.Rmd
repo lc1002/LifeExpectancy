@@ -39,8 +39,9 @@ Following are resources that have inspired this project:
 <br>
 
 ## Data
-### Data Sources
 
+### Data Sources
+The primary dataset ([Life Expectancy (WHO)](https://www.kaggle.com/kumarajarshi/life-expectancy-who)) used in this project is a combined dataset from the the Global Health Observatory (GHO) data repository under World Health Organization (WHO) and United Nations website with the help of Deeksha Russell and Duan Wang.This data consists of immunization related factors, mortality factors, economical factors and social factors for all countries from 2000 to 2015. We also used the [country-to-continent dataset](https://www.kaggle.com/statchaitya/country-to-continent) and [World borders dataset](http://thematicmapping.org/downloads/world_borders.php) to supplement our analysis.
 
 <br>
 
