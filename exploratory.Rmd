@@ -116,7 +116,7 @@ low_le_country
 
 ## Map depicting average life expectancy in each country
 
-```{r, warning=FALSE, message=FALSE}
+```{r, warning=FALSE, message=FALSE, fig.width=12, fig.height=10}
 
 ge = list(
 showframe = TRUE,
@@ -136,7 +136,6 @@ life_exp_df %>%
       title = "Average Life Expectancy by Country",
       geo = ge)
 ```
-
 * From the map, we see that among all Sub-Saharan Africa countries have the lowest life expectancy, while regions like Canada, European countries and Australia are amongst the highest.
 
 ## World Life Expectancy From 2000 to 2015 By Continent
