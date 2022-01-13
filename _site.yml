@@ -8,7 +8,11 @@ navbar:
     - text: "Exploratory Analysis"
       href: exploratory.html
     - text: "Regression Analysis"
-      href: regression.html
+      menu:
+      - text: "Statistical Analysis"
+        href: 
+      - text: "Modeling"
+        href: regression.html
     - text: "Interactive Map"
       href: https://anmei18.shinyapps.io/interactive_map/
     - icon: fa-github fa-lg

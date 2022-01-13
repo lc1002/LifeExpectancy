@@ -85,31 +85,10 @@ animate(life_exp_continent, duration = 8, renderer = gifski_renderer())
 
 #ggplotly(life_exp_continent)
 ```
-
-## World Life Expectancy From 2000 to 2015 By Development Status
-
-```{r message=FALSE}
-life_exp_status =
-  life_exp_df %>%
-  group_by(status,year) %>% 
-  summarize(avg = mean(lifeexpectancy)) %>% 
-  ggplot(aes(x = year, y = avg, color = status)) +
-  geom_line() +
-  geom_point(alpha = 0.5) +
-  labs(
-    x = "Year",
-    y = "Life Expectancy"
-  ) +
-  transition_reveal(as.integer(year))
-
-animate(life_exp_status, duration = 8, renderer = gifski_renderer())
-
-#ggplotly(life_exp_status)
-```
-
+ 
 ## To vizualize correlation between the development status of a country and Life expectancy
 
-```{r message=FALSE}
+```{r message=FALSE, warning=FALSE}
 develop_plt = 
   life_exp_df %>% 
   ggplot(aes(x = status, y = lifeexpectancy, fill = status))+
@@ -120,6 +99,14 @@ develop_plt =
       legend.position="none",
       plot.title = element_text(size=11)
     ) +
+  stat_summary(
+    fun = mean, aes(color = "Mean"), 
+    geom = "point", 
+    shape = 18, 
+    size = 2.5,
+    position = position_dodge(width = 0.75)) +
+  scale_colour_manual(
+    values = c("Mean" = "white")) +
   labs(
     x = "Development Status",
     y = "Life Expectancy",
@@ -127,6 +114,37 @@ develop_plt =
   ) 
 
 develop_plt
+
+life_exp_df %>% 
+  select(lifeexpectancy, status) %>% 
+  group_by(status) %>%
+  summarize(mean_expectancy = mean(lifeexpectancy)) %>% 
+  knitr::kable(digits = 2)
+```
+
+## Map depicting average life expectancy in each country
+
+```{r, warning=FALSE, message=FALSE}
+
+ge = list(
+showframe = TRUE,
+showcoastlines = TRUE,
+projection = list(type = 'Mercator')
+)
+
+life_exp_df %>% 
+  group_by(country) %>% 
+  summarize(mean_LE = mean(lifeexpectancy)) %>% 
+  plot_geo(locationmode = "country names") %>%
+    add_trace(locations = ~ country,
+             z = ~mean_LE,
+             color = ~mean_LE,
+             colorscale="Viridis") %>%
+    layout(
+      title = "Average Life Expectancy by Country",
+      labels = "Mean Life Expectancy",
+  geo = ge)
+
 ```
 
 ## World life Expectancy by Countries with GDP Values

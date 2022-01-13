@@ -65,9 +65,20 @@ selectInput(
   "continent_choice",
   label = h3("Select Continent"),
   choices = continent_choice,
-  selected = "Asia"
+  selected = " "
 )
 
+country_choice = 
+  life_exp_df %>% 
+  distinct(NAME) %>% 
+  pull()
+
+selectInput(
+  "country_choice",
+  label = h3("Select Country"),
+  choices = country_choice,
+  selected = " "
+)
 min_le = 
   life_exp_df %>% 
   distinct(lifeexpectancy) %>% 
@@ -115,6 +126,7 @@ renderLeaflet({
   map_df %>% 
     dplyr::filter(
       continent == input[["continent_choice"]],
+      NAME == input[["country_choice"]],
       lifeexpectancy > input[["le_choice"]][1], lifeexpectancy < input[["le_choice"]][2],
       status == input[["status_choice"]]
     ) %>% 
