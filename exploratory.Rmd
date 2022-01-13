@@ -42,6 +42,27 @@ life_exp_df =
   )
 ```
 
+## Range of Life Expectancy
+
+```{r}
+range_le = 
+  life_exp_df %>% 
+  ggplot(aes(x = lifeexpectancy)) +
+  geom_histogram(aes(y = ..density..), colour = 1, fill = "lightblue", binwidth = 5, alpha = 0.7) +
+  geom_density(lwd = 1, colour = 2, linetype = 1) + 
+  labs(
+    x = "Life Expectancy (Years)",
+    y = "Density",
+    title = "Life Expectancy from 2000-2015"
+  )
+
+range_le
+```
+
+* The range of life expectancy is from `r min(life_exp_df$lifeexpectancy)` years to `r max(life_exp_df$lifeexpectancy)` years.
+* The graph shows that majority of people fall under the range 65–80 years of life expectancy. There are only small number of people on both sides of the tails (i.e having life expectancy lower than 45 years and higher than 85 years).
+
+
 ## Global Trend of Life Expectancy From 2000 to 2015
 
 ```{r message=FALSE}
@@ -64,6 +85,61 @@ animate(world_life_exp, duration = 8, renderer = gifski_renderer())
 #ggplotly(world_life_exp)
 ```
 
+## Top 10 Countries with the Highest Life Expectancy
+
+```{r}
+top_le_country =
+  life_exp_df %>% 
+  group_by(country) %>% 
+  summarize(avg = mean(lifeexpectancy)) %>%
+  arrange(desc(avg)) %>% 
+  rename("Country" = "country", "Average Life Expectancy" =  "avg") %>% 
+  head(10) %>% 
+  knitr::kable(bootstrap_options = "striped", full_width = F, position = "left")
+
+top_le_country
+```
+
+## Top 10 Countries with the Lowest Life Expectancy
+
+```{r}
+low_le_country =
+  life_exp_df %>% 
+  group_by(country) %>% 
+  summarize(avg = mean(lifeexpectancy)) %>%
+  arrange(avg) %>% 
+  rename("Country" = "country", "Average Life Expectancy" =  "avg") %>% 
+  head(10) %>% 
+  knitr::kable(bootstrap_options = "striped", full_width = F, position = "left")
+
+low_le_country
+```
+
+## Map depicting average life expectancy in each country
+
+```{r, warning=FALSE, message=FALSE}
+
+ge = list(
+showframe = TRUE,
+showcoastlines = TRUE,
+projection = list(type = 'Mercator')
+)
+
+life_exp_df %>% 
+  group_by(country) %>% 
+  summarize(mean_LE = mean(lifeexpectancy)) %>% 
+  plot_geo(locationmode = "country names") %>%
+    add_trace(locations = ~ country,
+             z = ~mean_LE,
+             color = ~mean_LE,
+             colorscale = "Viridis") %>%
+    layout(
+      title = "Average Life Expectancy by Country",
+      geo = ge)
+```
+
+* From the map, we see that among all Sub-Saharan Africa countries have the lowest life expectancy, while regions like Canada, European countries and Australia are amongst the highest.
+
 ## World Life Expectancy From 2000 to 2015 By Continent
 
 ```{r message=FALSE}
@@ -84,30 +160,23 @@ animate(life_exp_continent, duration = 8, renderer = gifski_renderer())
 
 #ggplotly(life_exp_continent)
 ```
-<<<<<<< HEAD
- 
-## To vizualize correlation between the development status of a country and Life expectancy
-=======
 
+## Correlation Between the Development Status of a Country And Life Expectancy
 
-## Top 10 Countries with the Highest Life Expectancy
+In order to get an understanding of how a country's development status is correlated with life expectancy, we first compared the mean life expectancy of the developed and developing countries.
 
-```{r}
-top_le_country =
-  life_exp_df %>% 
-  group_by(country) %>% 
-  summarize(avg = mean(lifeexpectancy)) %>%
-  arrange(desc(avg)) %>% 
-  rename("Country" = "country", "Average Life Expectancy" =  "avg") %>% 
-  head(10) %>% 
-  knitr::kable(bootstrap_options = "striped", full_width = F, position = "left")
-
-top_le_country
+```{r message=FALSE, warning=FALSE}
+life_exp_df %>% 
+  select(lifeexpectancy, status) %>% 
+  group_by(status) %>%
+  summarize(mean_expectancy = mean(lifeexpectancy)) %>% 
+  knitr::kable(digits = 2, col.names = c("Status", "Mean Life Expectancy"))
 ```
 
+* The average life expectancy between Developed and Developing countries are 79.2 years and 68.14 years, respectively. Thus, on average, individuals living in the developed countries tend to live almost a decade longer than individuals in the developing countries.
 
-## Correlation Between the Development Status of A Country And Life Expectancy
->>>>>>> 62fdd9fcf644f63b48ac28403da35397f7a5e217
+
+A violin plot with included boxplot was created in order to have a better visualization of the correlation between the development status of a country and the life expectancy and have a snapshot of the distribution and summary statistics.
 
 ```{r message=FALSE, warning=FALSE}
 develop_plt = 
@@ -135,37 +204,12 @@ develop_plt =
 
 develop_plt
 
-life_exp_df %>% 
-  select(lifeexpectancy, status) %>% 
-  group_by(status) %>%
-  summarize(mean_expectancy = mean(lifeexpectancy)) %>% 
-  knitr::kable(digits = 2)
+summary(aov(lifeexpectancy ~ status, data = life_exp_df))
 ```
 
-## Map depicting average life expectancy in each country
-
-```{r, warning=FALSE, message=FALSE}
-
-ge = list(
-showframe = TRUE,
-showcoastlines = TRUE,
-projection = list(type = 'Mercator')
-)
-
-life_exp_df %>% 
-  group_by(country) %>% 
-  summarize(mean_LE = mean(lifeexpectancy)) %>% 
-  plot_geo(locationmode = "country names") %>%
-    add_trace(locations = ~ country,
-             z = ~mean_LE,
-             color = ~mean_LE,
-             colorscale="Viridis") %>%
-    layout(
-      title = "Average Life Expectancy by Country",
-      labels = "Mean Life Expectancy",
-  geo = ge)
-
-```
+* The range of life expectancy among the Developing countries is visually wider than the Developed countries. The minimum life expectancy is much lower in Developing countries. 
+* The interquartile range of life expectancy is higher in Developing countries than Developed countries. The mean and median are both higher in the Developed countries.
+* From the ANOVA Analysis, we obtain a p-value of lower than $2e^{-16}$ and is significantly less than 0.05, thus, we reject the null hypothesis and can conclude that there are significant differences in life expectancy between the Developed and Developing Countries.
 
 ## Correlation Between GDP Values And Life Expectancy
 
