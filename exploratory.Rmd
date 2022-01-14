@@ -189,7 +189,7 @@ animate(life_exp_continent, duration = 8, renderer = gifski_renderer())
 ```
 
 * Europe has the highest life expectancy of all continents, as Africa has the lowest life expectancy rate. 
-* There was a dramatic increase in the life expectancy of Africa from 2000 to 2015, while Asia, Americas, and Oceania’s life expectancy rates remain steady. 
+* There was a dramatic increase in the life expectancy of Africa from 2000 to 2015, while Asia, Americas, and Oceania’s life expectancy rates remain steady.
 * The life expectancy gap between Africa and other continents is still enormous.
 
 <br>
@@ -292,7 +292,7 @@ ggplotly(gdp_le)
 ```
 
 * Africa has the lowest GDP per capita and life expectancy among all continents.
-* There is a positive correlation between GDP per capita and life expectancy, with a threshold effect when GDP per capita reaches to approximately 20,000. In other words, countries with higher GDP per capita (i.e. GDP per capita > 20,000) tends to have higher life expectancy.
+* There is a positive correlation between GDP per capita and life expectancy, with a threshold effect when GDP per capita reaches to approximately 20,000. In other words, countries with higher GDP per capita (i.e. GDP per capita > 20,000) tend to have higher life expectancy.
 * There is no apparent association between population and GDP per capita or life expectancy.
 
 
