@@ -94,36 +94,6 @@ animate(world_life_exp, duration = 8, renderer = gifski_renderer())
 
 * As expected, the average life expectancy worldwide has gradually increased from 2000 to 2015, due to the improvements of medical care, technology and overall standard of living worldwide.
 
-<br> 
-<br>
-
-## Map depicting average life expectancy in each country
-
-The following map shows the distribution of life expectancy:
-
-```{r, warning=FALSE, message=FALSE}
-
-ge = list(
-showframe = TRUE,
-showcoastlines = TRUE,
-projection = list(type = 'Mercator')
-)
-
-life_exp_df %>% 
-  group_by(country) %>% 
-  summarize(mean_LE = mean(lifeexpectancy)) %>% 
-  plot_geo(locationmode = "country names") %>%
-    add_trace(locations = ~ country,
-             z = ~mean_LE,
-             color = ~mean_LE,
-             colorscale = "Viridis") %>%
-    layout(
-      title = "Average Life Expectancy by Country",
-      geo = ge)
-```
-
-* From the map, we see that among all Sub-Saharan Africa countries have the lowest life expectancy, while regions like Canada, European countries and Australia are among the highest.
-
 <br>
 
 Here is a list of countries with the highest life expectancy:

@@ -38,16 +38,18 @@ le_df =
 
 In continuation of the exploratory analysis, we want to dive more into the dataset to further investigate the variables and possibly excavate some interesting findings.
 
+### Development Status 
+
 When exploring the Development status variable, the one-way analysis of variance (ANOVA) is used in order to have an understanding on how the two different groups (Developed and Developing) respond. And from the result we obtained, a conclusion was drawn that there is statistically significant differences between the means of Developed countries and Developing countries. 
 
 Subsequently, we want to see if the dataset provides envidence for Developed countries having greater mean life expectancy than the Developing countries. 
 
-$H_{0}: \mu_{Developed} = \mu_{Developing}$
+$H_{0}: \mu_{Developed} = \mu_{Developing}$ \
 $H_{1}: \mu_{Developed} > \mu_{Developing}$
 
 We will perform two-sample T-Test since the true variance of the populations is unknown. And also use F-test to test if the variances of the two populations are equal. 
 
-```{r}
+```{r,include=FALSE}
 ## mean life expectancy of each country from 2000 - 2015
 Developed = 
   le_df %>% 
@@ -60,20 +62,80 @@ Developing =
   filter(status == "Developing") %>% 
   group_by(country) %>% 
   summarize(Mean_LE = mean(le))
+```
 
-var.test(Developed$Mean_LE, Developing$Mean_LE)
+```{r}
+var.test(Developed$Mean_LE, Developing$Mean_LE) %>% 
+  broom::tidy() %>% 
+  select(c(4,5,8,9)) %>% 
+  knitr::kable()
 ```
 
 * We obtain a p-value of $2.21e^{-8}$ which is less than $\alpha = 0.05$. Hence we reject the null hypothesis and conclude that the variance of two populations is not equal.
 
 ```{r}
-t.test(Developed$Mean_LE, Developing$Mean_LE, alternative = "greater", var.equal = FALSE)
+t.test(Developed$Mean_LE, Developing$Mean_LE, alternative = "greater", var.equal = FALSE) %>% 
+  broom::tidy() %>% 
+  select(c(4,5,6,9)) %>% 
+  knitr::kable()
 ```
 
 * At significance level of 0.05, we reject the $H_{0}$ since $p-value < 2.2e^{-16} < \alpha = 0.05$. Thus, we conclude that the life expectancy for developed countries is greater than the developing countries.
 
 
+### Income composition of resources (HDI)
 
 
+The Human Development Index (HDI) is a statistic composite index of average achievement in key dimensions of human development: health (life expectancy),  education (knowledge), and per capita income indicators (standard of living). By definition, life expectancy is one of the aspects of HDI measure, we want to see if there's strong relationship between HDI and life expectancy; if countries that spend a higher proportion of their resources on human development would have a higher life expectancy.
 
+```{r include=FALSE}
+human_develop = 
+  le_df %>% 
+  group_by(country) %>% 
+  summarize(mean_LE = mean(le), 
+            mean_HDI = mean(HDI))
 
+human_develop %>% 
+  ggplot(aes(x = mean_HDI, y = mean_LE)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  labs(title = "Mean Life Expectancy VS. Mean HDI",
+       x = "Mean HDI",
+       y = "Mean Life Expectancy (Years)")
+```
+
+```{r}
+cor.test(human_develop$mean_LE, human_develop$mean_HDI, method = "pearson") 
+```
+
+* We obtain a correlation coefficient value of r = 0.79, which shows a significant positive correlation between life expectancy and HDI. This implies that countries with higher income composition of resources for human development have higher life expectancy. Thus, countries could spend more on human development in order to achieve higher life expectancy.
+
+### Infant deaths and Under-five deaths
+
+From the correlation matrix [(here)](regression.html), the variable infant deaths and under-five deaths are highly correlated. Hence, we want to compare the proportions of the two variables (infant deaths and under-five deaths) using two-proportions z-test.
+
+$H_{0}: p_{infant} = p_{under five}$ \
+$H_{1}: p_{infant} \ne p_{under five}$
+
+```{r, include=FALSE}
+infant_underfive_deaths = 
+  le_df %>% 
+  group_by(country) %>% 
+  summarize(mean_LE = mean(le),
+            mean_infant = mean(infantdeaths),
+            mean_underfive = mean(under_five))
+
+avg_infants = mean(infant_underfive_deaths$mean_infant)
+avg_under = mean(infant_underfive_deaths$mean_underfive)
+x = c(avg_infants,avg_under)
+n = c(1000,1000)
+```
+
+```{r,message=FALSE}
+prop.test(x, n, correct = FALSE) %>% 
+  broom::tidy() %>% 
+  select(c(3,4,5,8)) %>% 
+  knitr::kable(digits = 4)
+```
+
+* At 0.05 significance level, we have p-value = 0.1709 $> \alpha = 0.05$, thus, we fail to reject the null hypothesis and there is insufficient evidence to conclude that there is significant difference in the two independent proportions. Hence, we need to take into consideration of possible collinearity between the infant deaths variable and the under-five deaths variable when building the regression model.
