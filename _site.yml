@@ -10,7 +10,7 @@ navbar:
     - text: "Regression Analysis"
       menu:
       - text: "Statistical Analysis"
-        href: 
+        href: statistical.html
       - text: "Modeling"
         href: regression.html
     - text: "Interactive Map"

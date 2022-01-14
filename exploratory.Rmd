@@ -162,11 +162,39 @@ low_le_country =
 low_le_country
 ```
 
+
 * Japan, the country with the highest life expectancy worldwide, has an average life expectancy of 82.54 years. Whereas Sierra Leone, the country with the lowest life expectancy worldwide, only has an average life expectancy of 46.11 years.
 * There is still a huge gap in life expectancy across countries even when the overall global life expectancy increased steadily.
 
 <br> 
 <br> 
+
+## Map depicting average life expectancy in each country
+
+```{r, warning=FALSE, message=FALSE, fig.width=12, fig.height=10}
+
+ge = list(
+showframe = TRUE,
+showcoastlines = TRUE,
+projection = list(type = 'Mercator')
+)
+
+life_exp_df %>% 
+  group_by(country) %>% 
+  summarize(mean_LE = mean(lifeexpectancy)) %>% 
+  plot_geo(locationmode = "country names") %>%
+    add_trace(locations = ~ country,
+             z = ~mean_LE,
+             color = ~mean_LE,
+             colorscale = "Viridis") %>%
+    layout(
+      title = "Average Life Expectancy by Country",
+      geo = ge)
+```
+* From the map, we see that among all Sub-Saharan Africa countries have the lowest life expectancy, while regions like Canada, European countries and Australia are among the highest.
+
+<br>
+<br>
 
 ## World Life Expectancy From 2000 to 2015 By Continent
 
@@ -206,7 +234,7 @@ num_status =
   life_exp_df %>%
   group_by(continent,status) %>%
   ggplot(aes(x = status,fill = continent)) +
-  geom_histogram(stat = "count", position = "dodge", binwidth = 5)
+  geom_bar(position = "dodge")
 
 ggplotly(num_status)
 
