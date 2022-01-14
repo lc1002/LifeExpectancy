@@ -304,14 +304,121 @@ $(document).ready(function () {
 
 <p><br></p>
 <p>In continuation of the exploratory analysis, we want to dive more into the dataset to further investigate the variables and possibly excavate some interesting findings.</p>
+<div id="development-status" class="section level3">
+<h3>Development Status</h3>
 <p>When exploring the Development status variable, the one-way analysis of variance (ANOVA) is used in order to have an understanding on how the two different groups (Developed and Developing) respond. And from the result we obtained, a conclusion was drawn that there is statistically significant differences between the means of Developed countries and Developing countries.</p>
 <p>Subsequently, we want to see if the dataset provides envidence for Developed countries having greater mean life expectancy than the Developing countries.</p>
-<p><span class="math inline">\(H_{0}: \mu_{Developed} = \mu_{Developing}\)</span> <span class="math inline">\(H_{1}: \mu_{Developed} &gt; \mu_{Developing}\)</span></p>
+<p><span class="math inline">\(H_{0}: \mu_{Developed} = \mu_{Developing}\)</span><br />
+<span class="math inline">\(H_{1}: \mu_{Developed} &gt; \mu_{Developing}\)</span></p>
 <p>We will perform two-sample T-Test since the true variance of the populations is unknown. And also use F-test to test if the variances of the two populations are equal.</p>
+<pre class="r"><code>var.test(Developed$Mean_LE, Developing$Mean_LE) %&gt;% 
+  broom::tidy() %&gt;% 
+  select(c(4,5,8,9)) %&gt;% 
+  knitr::kable()</code></pre>
+<pre><code>## Multiple parameters; naming those columns num.df, den.df</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+<th align="left">method</th>
+<th align="left">alternative</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0.1401705</td>
+<td align="right">0</td>
+<td align="left">F test to compare two variances</td>
+<td align="left">two.sided</td>
+</tr>
+</tbody>
+</table>
 <ul>
-<li><p>We obtain a p-value of <span class="math inline">\(2.21e^{-8}\)</span> which is less than <span class="math inline">\(\alpha = 0.05\)</span>. Hence we reject the null hypothesis and conclude that the variance of two populations is not equal.</p></li>
-<li><p>At significance level of 0.05, we reject the <span class="math inline">\(H_{0}\)</span> since <span class="math inline">\(p-value &lt; 2.2e^{-16} &lt; \alpha = 0.05\)</span>. Thus, we conclude that the life expectancy for developed countries is greater than the developing countries.</p></li>
+<li>We obtain a p-value of <span class="math inline">\(2.21e^{-8}\)</span> which is less than <span class="math inline">\(\alpha = 0.05\)</span>. Hence we reject the null hypothesis and conclude that the variance of two populations is not equal.</li>
 </ul>
+<pre class="r"><code>t.test(Developed$Mean_LE, Developing$Mean_LE, alternative = &quot;greater&quot;, var.equal = FALSE) %&gt;% 
+  broom::tidy() %&gt;% 
+  select(c(4,5,6,9)) %&gt;% 
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+<th align="right">parameter</th>
+<th align="left">method</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">13.21463</td>
+<td align="right">0</td>
+<td align="right">130.4326</td>
+<td align="left">Welch Two Sample t-test</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>At significance level of 0.05, we reject the <span class="math inline">\(H_{0}\)</span> since <span class="math inline">\(p-value &lt; 2.2e^{-16} &lt; \alpha = 0.05\)</span>. Thus, we conclude that the life expectancy for developed countries is greater than the developing countries.</li>
+</ul>
+</div>
+<div id="income-composition-of-resources-hdi" class="section level3">
+<h3>Income composition of resources (HDI)</h3>
+<p>The Human Development Index (HDI) is a statistic composite index of average achievement in key dimensions of human development: health (life expectancy), education (knowledge), and per capita income indicators (standard of living). By definition, life expectancy is one of the aspects of HDI measure, we want to see if there’s strong relationship between HDI and life expectancy; if countries that spend a higher proportion of their resources on human development would have a higher life expectancy.</p>
+<pre class="r"><code>cor.test(human_develop$mean_LE, human_develop$mean_HDI, method = &quot;pearson&quot;) </code></pre>
+<pre><code>## 
+##  Pearson&#39;s product-moment correlation
+## 
+## data:  human_develop$mean_LE and human_develop$mean_HDI
+## t = 18.013, df = 191, p-value &lt; 2.2e-16
+## alternative hypothesis: true correlation is not equal to 0
+## 95 percent confidence interval:
+##  0.7344548 0.8404527
+## sample estimates:
+##       cor 
+## 0.7933927</code></pre>
+<ul>
+<li>We obtain a correlation coefficient value of r = 0.79, which shows a significant positive correlation between life expectancy and HDI. This implies that countries with higher income composition of resources for human development have higher life expectancy. Thus, countries could spend more on human development in order to achieve higher life expectancy.</li>
+</ul>
+</div>
+<div id="infant-deaths-and-under-five-deaths" class="section level3">
+<h3>Infant deaths and Under-five deaths</h3>
+<p>From the correlation matrix <a href="regression.html">(here)</a>, the variable infant deaths and under-five deaths are highly correlated. Hence, we want to compare the proportions of the two variables (infant deaths and under-five deaths) using two-proportions z-test.</p>
+<p><span class="math inline">\(H_{0}: p_{infant} = p_{under five}\)</span><br />
+<span class="math inline">\(H_{1}: p_{infant} \ne p_{under five}\)</span></p>
+<pre class="r"><code>prop.test(x, n, correct = FALSE) %&gt;% 
+  broom::tidy() %&gt;% 
+  select(c(3,4,5,8)) %&gt;% 
+  knitr::kable(digits = 4)</code></pre>
+<table>
+<colgroup>
+<col width="10%" />
+<col width="8%" />
+<col width="10%" />
+<col width="72%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+<th align="right">parameter</th>
+<th align="left">method</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1.8747</td>
+<td align="right">0.1709</td>
+<td align="right">1</td>
+<td align="left">2-sample test for equality of proportions without continuity correction</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>At 0.05 significance level, we have p-value = 0.1709 <span class="math inline">\(&gt; \alpha = 0.05\)</span>, thus, we fail to reject the null hypothesis and there is insufficient evidence to conclude that there is significant difference in the two independent proportions. Hence, we need to take into consideration of possible collinearity between the infant deaths variable and the under-five deaths variable when building the regression model.</li>
+</ul>
+</div>
 
 
 
