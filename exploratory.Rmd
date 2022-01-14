@@ -322,7 +322,7 @@ ggplotly(gdp_le)
 ```
 
 * Africa has the lowest GDP per capita and life expectancy among all continents.
-* There is a positive correlation between GDP per capita and life expectancy, with a threshold effect when GDP per capita reaches to approximately 20,000. 
+* There is a positive correlation between GDP per capita and life expectancy, with a threshold effect when GDP per capita reaches to approximately 20,000. In other words, countries with higher GDP per capita (i.e. GDP per capita > 20,000) tends to have higher life expectancy.
 * There is no apparent association between population and GDP per capita or life expectancy.
 
 
