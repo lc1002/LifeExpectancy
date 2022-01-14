@@ -1,5 +1,5 @@
 ---
-title: "Life Expectancy Over Time"
+title: "Exploring Life Expectancy Worldwide"
 output: html_document
 ---
 
@@ -42,7 +42,11 @@ life_exp_df =
   )
 ```
 
-## Range of Life Expectancy
+<br> 
+
+## Distribution of Life Expectancy
+
+First, let's examine the distribution of life expectancy across all countries.
 
 ```{r}
 range_le = 
@@ -62,7 +66,12 @@ range_le
 * The range of life expectancy is from `r min(life_exp_df$lifeexpectancy)` years to `r max(life_exp_df$lifeexpectancy)` years.
 * The graph shows that majority of people fall under the range 65–80 years of life expectancy. There are only small number of people on both sides of the tails (i.e having life expectancy lower than 45 years and higher than 85 years).
 
+<br>
+<br>
+
 ## Global Trend of Life Expectancy From 2000 to 2015
+
+To have a better understanding of the data, we also want to take a look at the average life expectancy of all countries over time.
 
 ```{r message=FALSE}
 world_life_exp =
@@ -81,40 +90,16 @@ world_life_exp =
 
 animate(world_life_exp, duration = 8, renderer = gifski_renderer())
 
-#ggplotly(world_life_exp)
 ```
 
-## Top 10 Countries with the Highest Life Expectancy
+* As expected, the average life expectancy worldwide has gradually increased from 2000 to 2015, due to the improvements of medical care, technology and overall standard of living worldwide.
 
-```{r}
-top_le_country =
-  life_exp_df %>% 
-  group_by(country) %>% 
-  summarize(avg = mean(lifeexpectancy)) %>%
-  arrange(desc(avg)) %>% 
-  rename("Country" = "country", "Average Life Expectancy" =  "avg") %>% 
-  head(10) %>% 
-  knitr::kable(bootstrap_options = "striped", full_width = F, position = "left")
-
-top_le_country
-```
-
-## Top 10 Countries with the Lowest Life Expectancy
-
-```{r}
-low_le_country =
-  life_exp_df %>% 
-  group_by(country) %>% 
-  summarize(avg = mean(lifeexpectancy)) %>%
-  arrange(avg) %>% 
-  rename("Country" = "country", "Average Life Expectancy" =  "avg") %>% 
-  head(10) %>% 
-  knitr::kable(bootstrap_options = "striped", full_width = F, position = "left")
-
-low_le_country
-```
+<br> 
+<br>
 
 ## Map depicting average life expectancy in each country
+
+The following map shows the distribution of life expectancy:
 
 ```{r, warning=FALSE, message=FALSE}
 
@@ -137,9 +122,55 @@ life_exp_df %>%
       geo = ge)
 ```
 
-* From the map, we see that among all Sub-Saharan Africa countries have the lowest life expectancy, while regions like Canada, European countries and Australia are amongst the highest.
+* From the map, we see that among all Sub-Saharan Africa countries have the lowest life expectancy, while regions like Canada, European countries and Australia are among the highest.
+
+<br>
+
+Here is a list of countries with the highest life expectancy:
+
+## Top 10 Countries with the Highest Life Expectancy
+
+```{r}
+top_le_country =
+  life_exp_df %>% 
+  group_by(country) %>% 
+  summarize(avg = mean(lifeexpectancy)) %>%
+  arrange(desc(avg)) %>% 
+  rename("Country" = "country", "Average Life Expectancy" =  "avg") %>% 
+  head(10) %>% 
+  knitr::kable(bootstrap_options = "striped", full_width = F, position = "left")
+
+top_le_country
+```
+
+<br>
+
+And a list of countries with the lowest life expectancy:
+
+## Top 10 Countries with the Lowest Life Expectancy
+
+```{r}
+low_le_country =
+  life_exp_df %>% 
+  group_by(country) %>% 
+  summarize(avg = mean(lifeexpectancy)) %>%
+  arrange(avg) %>% 
+  rename("Country" = "country", "Average Life Expectancy" =  "avg") %>% 
+  head(10) %>% 
+  knitr::kable(bootstrap_options = "striped", full_width = F, position = "left")
+
+low_le_country
+```
+
+* Japan, the country with the highest life expectancy worldwide, has an average life expectancy of 82.54 years. Whereas Sierra Leone, the country with the lowest life expectancy worldwide, only has an average life expectancy of 46.11 years.
+* There is still a huge gap in life expectancy across countries even when the overall global life expectancy increased steadily.
+
+<br> 
+<br> 
 
 ## World Life Expectancy From 2000 to 2015 By Continent
+
+We can also visualize the trend of life expectancy by continent.
 
 ```{r message=FALSE}
 life_exp_continent =
@@ -157,8 +188,36 @@ life_exp_continent =
 
 animate(life_exp_continent, duration = 8, renderer = gifski_renderer())
 
-#ggplotly(life_exp_continent)
 ```
+
+* Europe has the highest life expectancy of all continents, as Africa has the lowest life expectancy rate. 
+* There was a dramatic increase in the life expectancy of Africa from 2000 to 2015, while Asia, Americas, and Oceania’s life expectancy rates remain steady. 
+* The life expectancy gap between Africa and other continents is still enormous.
+
+<br>
+<br> 
+
+## Distribution of Developed and Developing Countires by Continent
+
+The following graph shows the distribution of development status by continent:
+
+```{r warning = FALSE, message=FALSE}
+num_status =
+  life_exp_df %>%
+  group_by(continent,status) %>%
+  ggplot(aes(x = status,fill = continent)) +
+  geom_histogram(stat = "count", position = "dodge", binwidth = 5)
+
+ggplotly(num_status)
+
+```
+
+* Africa is the only continent that only consists of developing countries, and it is the continent with the lowest average life expectancy.
+* Europe has the most developed countries, and it also has the highest average life expectancy.
+* Correlation between development status and life expectancy might exist given the above information.
+
+<br> 
+<br> 
 
 ## Correlation Between the Development Status of a Country And Life Expectancy
 
@@ -174,8 +233,9 @@ life_exp_df %>%
 
 * The average life expectancy between Developed and Developing countries are 79.2 years and 68.14 years, respectively. Thus, on average, individuals living in the developed countries tend to live almost a decade longer than individuals in the developing countries.
 
+<br>
 
-A violin plot with included boxplot was created in order to have a better visualization of the correlation between the development status of a country and the life expectancy and have a snapshot of the distribution and summary statistics.
+A violin plot with included boxplot was created in order to have a better visualization of the correlation between the development status of a country and the life expectancy, and have a snapshot of the distribution and summary statistics.
 
 ```{r message=FALSE, warning=FALSE}
 develop_plt = 
@@ -210,30 +270,31 @@ summary(aov(lifeexpectancy ~ status, data = life_exp_df))
 * The interquartile range of life expectancy is higher in Developing countries than Developed countries. The mean and median are both higher in the Developed countries.
 * From the ANOVA Analysis, we obtain a p-value of lower than $2e^{-16}$ and is significantly less than 0.05, thus, we reject the null hypothesis and can conclude that there are significant differences in life expectancy between the Developed and Developing Countries.
 
+<br> 
+<br> 
 
-## Correlation Between GDP Values And Life Expectancy
+## Correlation Between GDP Per Capita And Life Expectancy
+
+Gross domestic product per capita, a measure of the GDP of a country contributed by each member of its population, is commonly used as an indicator of the standards of living for a country's citizens. As life expectancy is highly related to the living standards of a country, we want to examine the relationship between GDP per capita and life expectancy. The bubble plot below displays the correlation between life expectancy, GDP, and population.
 
 ```{r message=FALSE}
 gdp_le =
   life_exp_df %>%
-  mutate(
-    continent = as.factor(continent),
-    continent = fct_relevel(continent, c("Africa","Americas","Oceania","Asia", "Europe"))) %>% 
-  ggplot(aes(x = lifeexpectancy, y = gdp, color = country)) +
+  ggplot(aes(x = gdp, y = lifeexpectancy, size = population, color = continent)) +
   geom_point(alpha = .6) +
   labs(
-    x = "Life Expectancy",
-    y = "GDP Value"
+    x = "GDP Per Capita",
+    y = "Life Expectancy"
   ) +
-  facet_grid(.~ continent)  +
-  guides(
-    shape = guide_legend(override.aes = list(size = 3)),
-    color = guide_legend(override.aes = list(size = 3)))  +
-  theme(legend.title = element_text(size = 7), 
-        legend.text  = element_text(size = 6),
-        legend.key.size = unit(4, "cm"))
+  scale_size(range = c(1.4, 19), name = "Population") +
+  scale_color_brewer(palette = "Set2", guide = "none")
 
 ggplotly(gdp_le)
 
 ```
+
+* Africa has the lowest GDP per capita and life expectancy among all continents.
+* There is a positive correlation between GDP per capita and life expectancy, with a threshold effect when GDP per capita reaches to approximately 20,000. 
+* There is no apparent association between population and GDP per capita or life expectancy.
+
 

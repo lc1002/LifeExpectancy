@@ -1,7 +1,6 @@
 ---
 title: "Global Life Expectancy Analysis"
-output: 
-  html_document
+output: html_document
 ---
 
 <style type="text/css">
@@ -43,13 +42,6 @@ According to statistics, the average life expectancy at birth was 82.1 years in 
 
 <br>
 
-<font size="2"> <span style="text-decoration:underline"> **Contributors:**</span> </font>  
-<font size="2">
-
-* AnMei Chen
-
-* Lynn Chen 
-
-</font> 
+<font size="2"> <span style="text-decoration:underline"> **Contributors:**</span> AnMei Chen, Lynn Chen</font>  
 
 <font size="2">The Github repository for this website can be found [here ](https://github.com/lc1002/LifeExpectancy), and the corresponding Github repository for this project is located [here](https://github.com/lc1002/LifeExpectancyAnalysis)</font> 
