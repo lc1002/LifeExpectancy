@@ -38,6 +38,7 @@ le_df =
 
 In continuation of the exploratory analysis, we want to dive more into the dataset to further investigate the variables and possibly excavate some interesting findings.
 
+### Development Status 
 When exploring the Development status variable, the one-way analysis of variance (ANOVA) is used in order to have an understanding on how the two different groups (Developed and Developing) respond. And from the result we obtained, a conclusion was drawn that there is statistically significant differences between the means of Developed countries and Developing countries. 
 
 Subsequently, we want to see if the dataset provides envidence for Developed countries having greater mean life expectancy than the Developing countries. 
@@ -47,7 +48,7 @@ $H_{1}: \mu_{Developed} > \mu_{Developing}$
 
 We will perform two-sample T-Test since the true variance of the populations is unknown. And also use F-test to test if the variances of the two populations are equal. 
 
-```{r}
+```{r, include=FALSE}
 ## mean life expectancy of each country from 2000 - 2015
 Developed = 
   le_df %>% 
@@ -61,13 +62,19 @@ Developing =
   group_by(country) %>% 
   summarize(Mean_LE = mean(le))
 
-var.test(Developed$Mean_LE, Developing$Mean_LE)
+var.test(Developed$Mean_LE, Developing$Mean_LE) %>% 
+  broom::tidy() %>% 
+  select(c(4,5,8,9)) %>% 
+  knitr::kable()
 ```
 
 * We obtain a p-value of $2.21e^{-8}$ which is less than $\alpha = 0.05$. Hence we reject the null hypothesis and conclude that the variance of two populations is not equal.
 
-```{r}
-t.test(Developed$Mean_LE, Developing$Mean_LE, alternative = "greater", var.equal = FALSE)
+```{r, include=FALSE}
+t.test(Developed$Mean_LE, Developing$Mean_LE, alternative = "greater", var.equal = FALSE) %>% 
+  broom::tidy() %>% 
+  select(c(4,5,6,9)) %>% 
+  knitr::kable()
 ```
 
 * At significance level of 0.05, we reject the $H_{0}$ since $p-value < 2.2e^{-16} < \alpha = 0.05$. Thus, we conclude that the life expectancy for developed countries is greater than the developing countries.
