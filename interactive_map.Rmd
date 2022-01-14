@@ -65,7 +65,7 @@ continent_choice =
 
 pickerInput(
   "continent_choice",
-  label = h3("Select Continent"),
+  label = h5("Select Continent"),
   choices = continent_choice,
   selected = "Asia",
   options = list(`actions-box` = TRUE),
@@ -79,7 +79,7 @@ year_choice =
 
 selectInput(
   "year_choice",
-  label = h3("Select Year"),
+  label = h5("Select Year"),
   choices = year_choice,
   selected = "2000"
 )
@@ -96,7 +96,7 @@ max_le =
 
 sliderInput(
   "le_choice",
-  label = h3("Life Expectancy Range"),
+  label = h5("Life Expectancy Range"),
   min = min_le,
   max = max_le,
   value = c(min_le,max_le)
@@ -109,9 +109,9 @@ status_choice =
 
 radioButtons(
   "status_choice",
-  label = h3("Development Status"),
-  choices = status_choice,
-  selected = "Developing"
+  label = h5("Development Status"),
+  choices = c(status_choice,"Both"),
+  selected = "Developing",
 )
 
 ```
@@ -133,7 +133,7 @@ renderLeaflet({
       continent %in% input[["continent_choice"]],
       year == input[["year_choice"]],
       lifeexpectancy > input[["le_choice"]][1], lifeexpectancy < input[["le_choice"]][2],
-      status == input[["status_choice"]]
+      status == input[["status_choice"]] | input[["status_choice"]] == "Both"
     ) %>% 
     leaflet() %>% 
     addTiles() %>%
