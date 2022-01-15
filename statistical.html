@@ -302,20 +302,33 @@ $(document).ready(function () {
 </div>
 
 
+<style type="text/css">
+
+h1.title {
+  font-size: 45px;
+  text-align: left;
+  font-family: Papyrus;
+  font-weight: bold;
+  font-variant: small-caps
+}
+</style>
 <p><br></p>
-<p>In continuation of the exploratory analysis, we want to dive more into the dataset to further investigate the variables and possibly excavate some interesting findings.</p>
+<p>There are countless factors that affects country’s average life expectancy and how long an individual will be expected to live. In continuation of the exploratory analysis, we want to dive more into the dataset to further investigate the variables and possibly excavate some interesting findings that we don’t normally aware of.</p>
+<p><br></p>
 <div id="development-status" class="section level3">
-<h3>Development Status</h3>
+<h3><strong>Development Status</strong></h3>
 <p>When exploring the Development status variable, the one-way analysis of variance (ANOVA) is used in order to have an understanding on how the two different groups (Developed and Developing) respond. And from the result we obtained, a conclusion was drawn that there is statistically significant differences between the means of Developed countries and Developing countries.</p>
 <p>Subsequently, we want to see if the dataset provides envidence for Developed countries having greater mean life expectancy than the Developing countries.</p>
-<p><span class="math inline">\(H_{0}: \mu_{Developed} = \mu_{Developing}\)</span><br />
-<span class="math inline">\(H_{1}: \mu_{Developed} &gt; \mu_{Developing}\)</span></p>
+<center>
+<span class="math inline">\(H_{0}: \mu_{Developed} = \mu_{Developing}\)</span><br />
+<span class="math inline">\(H_{1}: \mu_{Developed} &gt; \mu_{Developing}\)</span>
+</center>
+<p><br></p>
 <p>We will perform two-sample T-Test since the true variance of the populations is unknown. And also use F-test to test if the variances of the two populations are equal.</p>
 <pre class="r"><code>var.test(Developed$Mean_LE, Developing$Mean_LE) %&gt;% 
   broom::tidy() %&gt;% 
   select(c(4,5,8,9)) %&gt;% 
-  knitr::kable()</code></pre>
-<pre><code>## Multiple parameters; naming those columns num.df, den.df</code></pre>
+  knitr::kable(table.attr = &quot;style=&#39;width:30%;&#39;&quot;)</code></pre>
 <table>
 <thead>
 <tr class="header">
@@ -340,7 +353,7 @@ $(document).ready(function () {
 <pre class="r"><code>t.test(Developed$Mean_LE, Developing$Mean_LE, alternative = &quot;greater&quot;, var.equal = FALSE) %&gt;% 
   broom::tidy() %&gt;% 
   select(c(4,5,6,9)) %&gt;% 
-  knitr::kable()</code></pre>
+  knitr::kable(table.attr = &quot;style=&#39;width:30%;&#39;&quot;)</code></pre>
 <table>
 <thead>
 <tr class="header">
@@ -362,31 +375,32 @@ $(document).ready(function () {
 <ul>
 <li>At significance level of 0.05, we reject the <span class="math inline">\(H_{0}\)</span> since <span class="math inline">\(p-value &lt; 2.2e^{-16} &lt; \alpha = 0.05\)</span>. Thus, we conclude that the life expectancy for developed countries is greater than the developing countries.</li>
 </ul>
+<p><br></p>
 </div>
 <div id="income-composition-of-resources-hdi" class="section level3">
-<h3>Income composition of resources (HDI)</h3>
-<p>The Human Development Index (HDI) is a statistic composite index of average achievement in key dimensions of human development: health (life expectancy), education (knowledge), and per capita income indicators (standard of living). By definition, life expectancy is one of the aspects of HDI measure, we want to see if there’s strong relationship between HDI and life expectancy; if countries that spend a higher proportion of their resources on human development would have a higher life expectancy.</p>
-<pre class="r"><code>cor.test(human_develop$mean_LE, human_develop$mean_HDI, method = &quot;pearson&quot;) </code></pre>
-<pre><code>## 
-##  Pearson&#39;s product-moment correlation
-## 
-## data:  human_develop$mean_LE and human_develop$mean_HDI
-## t = 18.013, df = 191, p-value &lt; 2.2e-16
-## alternative hypothesis: true correlation is not equal to 0
-## 95 percent confidence interval:
-##  0.7344548 0.8404527
-## sample estimates:
-##       cor 
-## 0.7933927</code></pre>
+<h3><strong>Income composition of resources (HDI)</strong></h3>
+<p>The Human Development Index (HDI) is a statistic composite index of average achievement in key dimensions of human development: health (life expectancy), education (knowledge), and per capita income indicators (standard of living); it measures how good a country is at using its resources. By definition, life expectancy is one of the aspects of HDI measure, we want to see if there’s strong relationship between HDI and life expectancy; if countries that spend a higher proportion of their resources on human development would have a higher life expectancy.</p>
+<pre class="r"><code>human_develop %&gt;% 
+  ggplot(aes(x = mean_HDI, y = mean_LE)) +
+  geom_point() +
+  geom_smooth(method = &quot;lm&quot;) +
+  stat_cor(aes(label = ..r.label..), method = &quot;pearson&quot;,  label.y = 75,color = &quot;red&quot;) +
+  labs(title = &quot;Mean Life Expectancy VS. Mean HDI&quot;,
+       x = &quot;Mean HDI&quot;,
+       y = &quot;Mean Life Expectancy (Years)&quot;)</code></pre>
+<p><img src="statistical_files/figure-html/unnamed-chunk-7-1.png" width="80%" /></p>
 <ul>
-<li>We obtain a correlation coefficient value of r = 0.79, which shows a significant positive correlation between life expectancy and HDI. This implies that countries with higher income composition of resources for human development have higher life expectancy. Thus, countries could spend more on human development in order to achieve higher life expectancy.</li>
+<li>We obtain a correlation coefficient value of r = 0.79, which shows a significant positive correlation between life expectancy and HDI. This implies that countries with higher income composition of resources for human development and utilizes resources effectively are more likely to have higher life expectancy. Thus, countries could spend more on human development in order to achieve higher life expectancy.</li>
 </ul>
+<p><br></p>
 </div>
 <div id="infant-deaths-and-under-five-deaths" class="section level3">
-<h3>Infant deaths and Under-five deaths</h3>
-<p>From the correlation matrix <a href="regression.html">(here)</a>, the variable infant deaths and under-five deaths are highly correlated. Hence, we want to compare the proportions of the two variables (infant deaths and under-five deaths) using two-proportions z-test.</p>
-<p><span class="math inline">\(H_{0}: p_{infant} = p_{under five}\)</span><br />
-<span class="math inline">\(H_{1}: p_{infant} \ne p_{under five}\)</span></p>
+<h3><strong>Infant deaths and Under-five deaths</strong></h3>
+<p>From the <a href="regression_files/figure-html/unnamed-chunk-3-1.png">correlation matrix</a>, the variable infant deaths and under-five deaths are highly correlated. Hence, we want to compare the proportions of the two variables (infant deaths and under-five deaths) using two-proportions z-test.</p>
+<center>
+<span class="math inline">\(H_{0}: p_{infant} = p_{under five}\)</span><br />
+<span class="math inline">\(H_{1}: p_{infant} \ne p_{under five}\)</span>
+</center>
 <pre class="r"><code>prop.test(x, n, correct = FALSE) %&gt;% 
   broom::tidy() %&gt;% 
   select(c(3,4,5,8)) %&gt;% 
@@ -416,8 +430,58 @@ $(document).ready(function () {
 </tbody>
 </table>
 <ul>
-<li>At 0.05 significance level, we have p-value = 0.1709 <span class="math inline">\(&gt; \alpha = 0.05\)</span>, thus, we fail to reject the null hypothesis and there is insufficient evidence to conclude that there is significant difference in the two independent proportions. Hence, we need to take into consideration of possible collinearity between the infant deaths variable and the under-five deaths variable when building the regression model.</li>
+<li><p>At 0.05 significance level, we have p-value = 0.1709 <span class="math inline">\(&gt; \alpha = 0.05\)</span>, thus, we fail to reject the null hypothesis and there is insufficient evidence to conclude that there is significant difference in the two independent proportions. Hence, we need to take into consideration of possible collinearity between the infant deaths variable and the under-five deaths variable when building the regression model.</p></li>
+<li><p>We can see from the <a href="regression_files/figure-html/unnamed-chunk-3-1.png">correlation matrix</a> that the correlation coefficient between infant deaths and life expectancy is negative (r = -0.2), and similarly between under-five deaths and life expectancy (r = -0.22), which means that when infant deaths or under-five deaths increase, life expectancy will eventually decreases.</p></li>
 </ul>
+<p><br></p>
+</div>
+<div id="alcohol" class="section level3">
+<h3><strong>Alcohol</strong></h3>
+<p>A recent cohort study showed that light-to-moderate alcohol intake is positively associated with longevity <a href="https://academic.oup.com/ageing/article/49/3/395/5730334">(Brandts et al., 2020)</a>. Another study conducted by a group of Harvard researchers on how lifestyle factors affect life expectancy showed evidence that people who take a few alcoholic drinks a week tends to live more years free of diabetes and heart disease than those who don’t drink or binge drink <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6207481/">(Li et al., 2018)</a>.</p>
+<p>We want to see if life expectancy shows any strong correlation with drinking alcohol using our data.</p>
+<pre class="r"><code>alc %&gt;% 
+  ggplot(aes(x = mean_alc, y = mean_LE)) +
+  geom_point() +
+  geom_smooth(method = &quot;lm&quot;) +
+  stat_cor(aes(label = ..r.label..), method = &quot;pearson&quot;, label.x = 10, label.y = 60, color = &quot;red&quot;) +
+  labs(title = &quot;Mean Life Expectancy VS. Mean Alcohol Consumption&quot;,
+       x = &quot;Alcohol Consumption (per capita (15+) consumption (in litres of pure alcohol))&quot;,
+       y = &quot;Life Expectancy (Years)&quot;) </code></pre>
+<p><img src="statistical_files/figure-html/unnamed-chunk-11-1.png" width="80%" /></p>
+<ul>
+<li>Surprisingly, in accordance with the studies, the scatter plot demonstrates that alcohol consumption has a positive correlation (r = 0.44) with life expectancy.</li>
+</ul>
+<pre class="r"><code>alc_mortality %&gt;% 
+  ggplot(aes(x = mean_alc, y = mean_mortality)) +
+  geom_point() +
+  geom_smooth(method = &quot;lm&quot;) +
+  stat_cor(method = &quot;pearson&quot;, label.x = 10, color = &quot;red&quot;) +
+  labs(title = &quot;Mean Adult Mortality Rates VS. Mean Alcohol Consumption&quot;,
+       x = &quot;Alcohol Consumption (per capita (15+) consumption (in litres of pure alcohol))&quot;,
+       y = &quot;Adult Mortality Rates (per 1000 population)&quot;) </code></pre>
+<p><img src="statistical_files/figure-html/unnamed-chunk-13-1.png" width="80%" /></p>
+<ul>
+<li>Although there’s no strong correlation between adult mortality rates and alcohol consumption, but having a p-value = 0.00083 we see that the correlation coefficient would still be significant. Even though, we can’t reach a strong conclusion regarding the correlation, interestingly, there’s evidence showing that alcohol consumption is positively associated (r = 0.44) with life expectancy and negatively associated (r = -0.24) with adult mortality.</li>
+</ul>
+<p><br></p>
+</div>
+<div id="correlation-between-immunization-and-other-health-related-factors" class="section level3">
+<h3><strong>Correlation between immunization and other health related factors</strong></h3>
+<p>By understanding correlations between variables, we could gain knowledge on the factors that will affect life expectancy the most.</p>
+<pre class="r"><code>cor_df =
+  le_df %&gt;%
+  dplyr::select(c(le, hepatitis_b, measles, polio, diphtheria, hiv_aids, thin_1_19, thin_5_9))
+
+corrplot(cor(cor_df), type = &quot;upper&quot;, diag = FALSE, method = &quot;square&quot;, addCoef.col = &quot;black&quot;, number.cex = 1, tl.col = &quot;black&quot;, tl.cex = .8)</code></pre>
+<p><img src="statistical_files/figure-html/unnamed-chunk-14-1.png" width="80%" /></p>
+<ul>
+<li><p>Life Expectancy has moderate negative correlation with HIV/AIDS, Thinness_1_19_years, and Thinness_5_9_years. And has low negative correlation with Measles.</p></li>
+<li><p>Life Expectancy moderate positive correlation with Diphtheria, Polio and Hepatitis_B</p></li>
+</ul>
+<p><br></p>
+</div>
+<div id="correlation-between-economic-social-and-behavioral-factors" class="section level3">
+<h3><strong>Correlation between economic, social, and behavioral factors</strong></h3>
 </div>
 
 
