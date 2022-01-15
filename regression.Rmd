@@ -93,6 +93,8 @@ mod_4 = lm(le ~ polio + total_exp + diphtheria + hiv_aids + thin_1_19, data = le
 mod_5 = lm(le ~ adult_mort + bmi, data = le_df)
 
 mod_6 = lm(le ~ year + adult_mort + infantdeaths + percent_exp + bmi + under_five + polio + diphtheria + hiv_aids + gdp + thin_5_9, data = le_df)
+
+mod_7 = lm(le ~ status + percent_exp + HDI + adult_mort + infantdeaths + schooling, data = le_df)
 ```
 
 ## Cross Validation
@@ -112,7 +114,8 @@ cv_df =
     mod_3 = map(train, ~lm(formula = formula(mod_3), data = .x)),
     mod_4 = map(train, ~lm(formula = formula(mod_4), data = .x)),
     mod_5 = map(train, ~lm(formula = formula(mod_5), data = .x)),
-    mod_6 = map(train, ~lm(formula = formula(mod_6), data = .x))
+    mod_6 = map(train, ~lm(formula = formula(mod_6), data = .x)),
+    mod_7 = map(train, ~lm(formula = formula(mod_7), data = .x))
     ) %>% 
   mutate(
     rmse_1 = map2_dbl(mod_1, test, ~rmse(model = .x, data = .y)),
@@ -120,7 +123,8 @@ cv_df =
     rmse_3 = map2_dbl(mod_3, test, ~rmse(model = .x, data = .y)),
     rmse_4 = map2_dbl(mod_4, test, ~rmse(model = .x, data = .y)),
     rmse_5 = map2_dbl(mod_5, test, ~rmse(model = .x, data = .y)),
-    rmse_6 = map2_dbl(mod_6, test, ~rmse(model = .x, data = .y))
+    rmse_6 = map2_dbl(mod_6, test, ~rmse(model = .x, data = .y)),
+    rmse_7 = map2_dbl(mod_7, test, ~rmse(model = .x, data = .y))
     )
 ```
 
@@ -128,7 +132,7 @@ cv_df =
 ```{r}
 cv_df %>% 
   pivot_longer(
-    rmse_1:rmse_6,
+    rmse_1:rmse_7,
     names_to = "model", 
     values_to = "rmse",
     names_prefix = "rmse_") %>% 
@@ -138,7 +142,8 @@ cv_df %>%
                                    "Model 3" = "3",
                                    "Model 4" = "4",
                                    "Model 5" = "5",
-                                   "Model 6" = "6")
+                                   "Model 6" = "6",
+                                   "Model 7" = "7")
          ) %>% 
   ggplot(aes(x = model, y = rmse, fill = model)) + 
   geom_violin() + 
