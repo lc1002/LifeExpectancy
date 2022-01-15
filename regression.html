@@ -321,7 +321,7 @@ corrplot(cor(cm_df), type = &quot;upper&quot;, diag = FALSE, method = &quot;squa
 <h2>Cross Validation</h2>
 <pre class="r"><code>cv_df %&gt;% 
   pivot_longer(
-    rmse_1:rmse_9,
+    rmse_1:rmse_8,
     names_to = &quot;model&quot;, 
     values_to = &quot;rmse&quot;,
     names_prefix = &quot;rmse_&quot;) %&gt;% 
@@ -333,8 +333,7 @@ corrplot(cor(cm_df), type = &quot;upper&quot;, diag = FALSE, method = &quot;squa
                                    &quot;Model 5&quot; = &quot;5&quot;,
                                    &quot;Model 6&quot; = &quot;6&quot;,
                                    &quot;Model 7&quot; = &quot;7&quot;,
-                                   &quot;Model 8&quot; = &quot;8&quot;,
-                                   &quot;Model 9&quot; = &quot;9&quot;)
+                                   &quot;Model 8&quot; = &quot;8&quot;)
          ) %&gt;% 
   ggplot(aes(x = model, y = rmse, fill = model)) + 
   geom_violin() + 
@@ -364,80 +363,87 @@ corrplot(cor(cm_df), type = &quot;upper&quot;, diag = FALSE, method = &quot;squa
 <tbody>
 <tr class="odd">
 <td align="left">(Intercept)</td>
-<td align="right">55.1866191</td>
-<td align="right">0.5500151</td>
-<td align="right">100.336549</td>
-<td align="right">0.00e+00</td>
+<td align="right">55.2299390</td>
+<td align="right">0.5506411</td>
+<td align="right">100.301162</td>
+<td align="right">0.0000000</td>
 </tr>
 <tr class="even">
 <td align="left">statusDeveloping</td>
-<td align="right">-1.3259556</td>
-<td align="right">0.2410087</td>
-<td align="right">-5.501691</td>
-<td align="right">0.00e+00</td>
+<td align="right">-1.3487590</td>
+<td align="right">0.2414278</td>
+<td align="right">-5.586593</td>
+<td align="right">0.0000000</td>
 </tr>
 <tr class="odd">
 <td align="left">adult_mort</td>
-<td align="right">-0.0173260</td>
-<td align="right">0.0007921</td>
-<td align="right">-21.874352</td>
-<td align="right">0.00e+00</td>
+<td align="right">-0.0173771</td>
+<td align="right">0.0007926</td>
+<td align="right">-21.923728</td>
+<td align="right">0.0000000</td>
 </tr>
 <tr class="even">
+<td align="left">infantdeaths</td>
+<td align="right">-0.0010814</td>
+<td align="right">0.0007155</td>
+<td align="right">-1.511318</td>
+<td align="right">0.1308155</td>
+</tr>
+<tr class="odd">
 <td align="left">bmi</td>
-<td align="right">0.0411505</td>
-<td align="right">0.0048200</td>
-<td align="right">8.537487</td>
-<td align="right">0.00e+00</td>
+<td align="right">0.0412481</td>
+<td align="right">0.0048194</td>
+<td align="right">8.558845</td>
+<td align="right">0.0000000</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">polio</td>
-<td align="right">0.0286026</td>
-<td align="right">0.0043320</td>
-<td align="right">6.602643</td>
-<td align="right">0.00e+00</td>
+<td align="right">0.0283100</td>
+<td align="right">0.0043354</td>
+<td align="right">6.530019</td>
+<td align="right">0.0000000</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">diphtheria</td>
-<td align="right">0.0274582</td>
-<td align="right">0.0043499</td>
-<td align="right">6.312328</td>
-<td align="right">0.00e+00</td>
+<td align="right">0.0271300</td>
+<td align="right">0.0043544</td>
+<td align="right">6.230484</td>
+<td align="right">0.0000000</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">hiv_aids</td>
-<td align="right">-0.5061651</td>
-<td align="right">0.0172086</td>
-<td align="right">-29.413529</td>
-<td align="right">0.00e+00</td>
+<td align="right">-0.5074286</td>
+<td align="right">0.0172251</td>
+<td align="right">-29.458660</td>
+<td align="right">0.0000000</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">gdp</td>
-<td align="right">0.0000520</td>
+<td align="right">0.0000519</td>
 <td align="right">0.0000065</td>
-<td align="right">7.947801</td>
-<td align="right">0.00e+00</td>
-</tr>
-<tr class="odd">
-<td align="left">thin_1_19</td>
-<td align="right">-0.0875168</td>
-<td align="right">0.0205998</td>
-<td align="right">-4.248434</td>
-<td align="right">2.22e-05</td>
+<td align="right">7.936992</td>
+<td align="right">0.0000000</td>
 </tr>
 <tr class="even">
-<td align="left">HDI</td>
-<td align="right">6.9266695</td>
-<td align="right">0.6094487</td>
-<td align="right">11.365469</td>
-<td align="right">0.00e+00</td>
+<td align="left">thin_1_19</td>
+<td align="right">-0.0735034</td>
+<td align="right">0.0225863</td>
+<td align="right">-3.254338</td>
+<td align="right">0.0011495</td>
 </tr>
 <tr class="odd">
+<td align="left">HDI</td>
+<td align="right">6.9639951</td>
+<td align="right">0.6098153</td>
+<td align="right">11.419842</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="even">
 <td align="left">schooling</td>
-<td align="right">0.7128671</td>
-<td align="right">0.0391507</td>
-<td align="right">18.208302</td>
-<td align="right">0.00e+00</td>
+<td align="right">0.7107725</td>
+<td align="right">0.0391666</td>
+<td align="right">18.147408</td>
+<td align="right">0.0000000</td>
 </tr>
 </tbody>
 </table>
