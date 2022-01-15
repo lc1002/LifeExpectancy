@@ -10,6 +10,7 @@ library(RColorBrewer)
 library(gganimate)
 library(ggplot2)
 library(viridis)
+library(psych)
 
 
 knitr::opts_chunk$set(
@@ -295,4 +296,17 @@ ggplotly(gdp_le)
 * There is a positive correlation between GDP per capita and life expectancy, with a threshold effect when GDP per capita reaches to approximately 20,000. In other words, countries with higher GDP per capita (i.e. GDP per capita > 20,000) tend to have higher life expectancy.
 * There is no apparent association between population and GDP per capita or life expectancy.
 
+<br> 
+<br> 
+
+## Summary Statsitcs of Life Expectancy Dataset
+
+```{r}
+df =
+  life_exp_df %>% 
+  select(-c(country,continent,status,year))
+
+psych::describe(df) %>% 
+  knitr::kable()
+```
 
