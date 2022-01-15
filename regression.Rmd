@@ -10,6 +10,7 @@ library(modelr)
 library(mgcv)
 library(corrplot)
 library(olsrr)
+library(leaps)
 
 knitr::opts_chunk$set(
   echo = TRUE,
@@ -56,7 +57,8 @@ corrplot(cor(cm_df), type = "upper", diag = FALSE, method = "square", addCoef.co
 
 ```{r include=FALSE}
 #stepwise
-mod_1 = lm(le ~ adult_mort + bmi + polio + diphtheria + hiv_aids + thin_5_9 + HDI, data = le_df)
+mod_1 = lm(le ~ status + adult_mort + bmi + polio + diphtheria + hiv_aids + gdp + thin_1_19 + HDI + schooling, data = le_df)
+
 
 # Nutrition 
 mod_2 = lm(le ~ status + bmi + population + thin_1_19 + thin_5_9 + status * bmi + status * thin_1_19 + status * thin_5_9, data = le_df)
@@ -79,6 +81,9 @@ mod_7 = lm(le ~ status + adult_mort + bmi + polio + total_exp + diphtheria + hiv
 #forward
 mod_8 = lm(le ~ status + adult_mort + bmi + under_five + polio + diphtheria + hiv_aids + gdp + thin_5_9 + HDI, data = le_df)
 
+#best subsets selection
+mod_9 = lm(le ~ adult_mort + infantdeaths + polio + hiv_aids + gdp + HDI + schooling, data = le_df)
+
 ```
 
 ## Cross Validation
@@ -100,7 +105,8 @@ cv_df =
     mod_5 = map(train, ~lm(formula = formula(mod_5), data = .x)),
     mod_6 = map(train, ~lm(formula = formula(mod_6), data = .x)),
     mod_7 = map(train, ~lm(formula = formula(mod_7), data = .x)),
-    mod_8 = map(train, ~lm(formula = formula(mod_8), data = .x))
+    mod_8 = map(train, ~lm(formula = formula(mod_8), data = .x)),
+    mod_9 = map(train, ~lm(formula = formula(mod_9), data = .x))
     ) %>% 
   mutate(
     rmse_1 = map2_dbl(mod_1, test, ~rmse(model = .x, data = .y)),
@@ -110,7 +116,8 @@ cv_df =
     rmse_5 = map2_dbl(mod_5, test, ~rmse(model = .x, data = .y)),
     rmse_6 = map2_dbl(mod_6, test, ~rmse(model = .x, data = .y)),
     rmse_7 = map2_dbl(mod_7, test, ~rmse(model = .x, data = .y)),
-    rmse_8 = map2_dbl(mod_8, test, ~rmse(model = .x, data = .y))
+    rmse_8 = map2_dbl(mod_8, test, ~rmse(model = .x, data = .y)),
+    rmse_9 = map2_dbl(mod_9, test, ~rmse(model = .x, data = .y))
     )
 ```
 
@@ -118,7 +125,7 @@ cv_df =
 ```{r}
 cv_df %>% 
   pivot_longer(
-    rmse_1:rmse_8,
+    rmse_1:rmse_9,
     names_to = "model", 
     values_to = "rmse",
     names_prefix = "rmse_") %>% 
@@ -130,11 +137,12 @@ cv_df %>%
                                    "Model 5" = "5",
                                    "Model 6" = "6",
                                    "Model 7" = "7",
-                                   "Model 8" = "8")
+                                   "Model 8" = "8",
+                                   "Model 9" = "9")
          ) %>% 
   ggplot(aes(x = model, y = rmse, fill = model)) + 
   geom_violin() + 
-  labs(x = "Model",
+  labs(x = "",
        y = "RMSE", 
        title = "Cross Validation") +
   scale_fill_brewer(type = 'seq', palette = 'Blues') +
