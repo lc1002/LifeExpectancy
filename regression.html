@@ -346,19 +346,32 @@ corrplot(cor(cm_df), type = &quot;upper&quot;, diag = FALSE, method = &quot;squa
 </div>
 <div id="model-building" class="section level2">
 <h2>Model building</h2>
-<pre class="r"><code>mod_1 = lm(le ~ adult_mort + bmi + polio + diphtheria + hiv_aids + thin_5_9 + HDI, data = le_df)
+<pre class="r"><code>#stepwise
+mod_1 = lm(le ~ adult_mort + bmi + polio + diphtheria + hiv_aids + thin_5_9 + HDI, data = le_df)
 
+# Nutrition 
 mod_2 = lm(le ~ status + bmi + population + thin_1_19 + thin_5_9 + status * bmi + status * thin_1_19 + status * thin_5_9, data = le_df)
-             
+
+#Education level, GDP, health        
 mod_3 = lm(le ~ status + polio + total_exp + diphtheria + gdp + schooling + total_exp * gdp, data = le_df)
 
+#health
 mod_4 = lm(le ~ polio + total_exp + diphtheria + hiv_aids + thin_1_19, data = le_df)
 
+# bmi adult mortality
 mod_5 = lm(le ~ adult_mort + bmi, data = le_df)
 
+#full model
 mod_6 = lm(le ~ year + adult_mort + infantdeaths + percent_exp + bmi + under_five + polio + diphtheria + hiv_aids + gdp + thin_5_9, data = le_df)
 
-mod_7 = lm(le ~ status + percent_exp + HDI + adult_mort + infantdeaths + schooling, data = le_df)</code></pre>
+# health-related factors, mortality factors, economical factors and social factors
+mod_7 = lm(le ~ status + percent_exp + HDI + adult_mort + infantdeaths + schooling, data = le_df)
+
+#backward
+mod_8 = lm(le ~ continent + status + adult_mort + alcohol + bmi + under_five + polio + diphtheria + hiv_aids + gdp + HDI + schooling, data = le_df)
+
+#forward
+mod_9 = lm(le ~ status + adult_mort + bmi + under_five + polio + diphtheria + hiv_aids + gdp + thin_5_9 + HDI, data = le_df)</code></pre>
 </div>
 <div id="cross-validation" class="section level2">
 <h2>Cross Validation</h2>
@@ -377,7 +390,9 @@ cv_df =
     mod_4 = map(train, ~lm(formula = formula(mod_4), data = .x)),
     mod_5 = map(train, ~lm(formula = formula(mod_5), data = .x)),
     mod_6 = map(train, ~lm(formula = formula(mod_6), data = .x)),
-    mod_7 = map(train, ~lm(formula = formula(mod_7), data = .x))
+    mod_7 = map(train, ~lm(formula = formula(mod_7), data = .x)),
+    mod_8 = map(train, ~lm(formula = formula(mod_8), data = .x)),
+    mod_9 = map(train, ~lm(formula = formula(mod_9), data = .x))
     ) %&gt;% 
   mutate(
     rmse_1 = map2_dbl(mod_1, test, ~rmse(model = .x, data = .y)),
@@ -386,11 +401,13 @@ cv_df =
     rmse_4 = map2_dbl(mod_4, test, ~rmse(model = .x, data = .y)),
     rmse_5 = map2_dbl(mod_5, test, ~rmse(model = .x, data = .y)),
     rmse_6 = map2_dbl(mod_6, test, ~rmse(model = .x, data = .y)),
-    rmse_7 = map2_dbl(mod_7, test, ~rmse(model = .x, data = .y))
+    rmse_7 = map2_dbl(mod_7, test, ~rmse(model = .x, data = .y)),
+    rmse_8 = map2_dbl(mod_8, test, ~rmse(model = .x, data = .y)),
+    rmse_9 = map2_dbl(mod_9, test, ~rmse(model = .x, data = .y))
     )</code></pre>
 <pre class="r"><code>cv_df %&gt;% 
   pivot_longer(
-    rmse_1:rmse_7,
+    rmse_1:rmse_9,
     names_to = &quot;model&quot;, 
     values_to = &quot;rmse&quot;,
     names_prefix = &quot;rmse_&quot;) %&gt;% 
@@ -401,7 +418,9 @@ cv_df =
                                    &quot;Model 4&quot; = &quot;4&quot;,
                                    &quot;Model 5&quot; = &quot;5&quot;,
                                    &quot;Model 6&quot; = &quot;6&quot;,
-                                   &quot;Model 7&quot; = &quot;7&quot;)
+                                   &quot;Model 7&quot; = &quot;7&quot;,
+                                   &quot;Model 8&quot; = &quot;8&quot;,
+                                   &quot;Model 9&quot; = &quot;9&quot;)
          ) %&gt;% 
   ggplot(aes(x = model, y = rmse, fill = model)) + 
   geom_violin() + 
