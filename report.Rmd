@@ -48,6 +48,35 @@ The primary dataset ([Life Expectancy (WHO)](https://www.kaggle.com/kumarajarshi
 ### Data Cleaning
 
 
+### Variables of Interest
+
+**Response Variable:**
+
+* `le`: Life Expectancy in age
+
+**Predictor Variables:**
+
+* `continent`: Name of the continent in which the country is located
+* `year` : 2000 to 2015
+* `status`: Development status of the country (Developed or Developing)
+* `adult_mort`: Adult mortality rates of both sexes (Probability of dying between 15 and 60 years old per 1000 population)
+* `infantdeaths`: Number of infant deaths per 1000 population
+* `Alcohol`: Alcohol consumption (15+) per capita (in litres of pure alcohol)
+* `percent_exp`: Government expenditure on health as a percentage of gross domestic product per capita (%)
+* `total_exp`: General government expenditure on health as a percentage of total government expenditure (%)
+* `hepatitis_b`: Hepatitis B immunization coverage among 1-year-old (%)
+* `measles`: Number of reported measles cases per 1000 population
+* `bmi`: Average body mass index of entire population
+* `under_five`: Number of deaths in children aged under 5 years old per 1000 population
+* `polio`: Polio immunization coverage among 1-year-old(%)
+* `diphtheria`: Diphtheria tetanus toxoid and pertussis immunization coverage among 1-year-old (%)
+* `hiv_aids`: Number of deaths in children aged 0 to 4 years old due to HIV/AIDS per 1000 live births
+* `gdp`: Gross domestic product per capita in USD
+* `population`: Population of the country
+* `thin_1_19`: Prevalence of thinness among children and adolescents aged 10 to 19 (%)
+* `thin_5_9`: Prevalence of thinness among children and adolescents aged 5 to 9 (%)
+* `HDI`: Human development index in terms of income composition of resources (index ranging from 0 to 1)
+* `schooling`: Number of years of Schooling
 
 <br>
 

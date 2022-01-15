@@ -9,6 +9,7 @@ library(tidyverse)
 library(modelr)
 library(mgcv)
 library(corrplot)
+library(olsrr)
 
 knitr::opts_chunk$set(
   echo = TRUE,
@@ -36,36 +37,6 @@ le_df =
   rename("HDI" = "incomecompositionofresources", "percent_exp" = "percentageexpenditure", "total_exp" = "totalexpenditure", "le" = "lifeexpectancy", "adult_mort" = "adult_mortality", "thin_1_19" = "thinness1_19years", "thin_5_9" = "thinness5_9years", "under_five" = "under_fivedeaths")
 ```
 
-## Variables of Interest
-
-**Response Variable:**
-
-* `le`: Life Expectancy in age
-
-**Predictor Variables:**
-
-* `continent`: Name of the continent in which the country is located
-* `year` : 2000 to 2015
-* `status`: Development status of the country (Developed or Developing)
-* `adult_mort`: Adult mortality rates of both sexes (Probability of dying between 15 and 60 years old per 1000 population)
-* `infantdeaths`: Number of infant deaths per 1000 population
-* `Alcohol`: Alcohol consumption (15+) per capita (in litres of pure alcohol)
-* `percent_exp`: Government expenditure on health as a percentage of gross domestic product per capita (%)
-* `total_exp`: General government expenditure on health as a percentage of total government expenditure (%)
-* `hepatitis_b`: Hepatitis B immunization coverage among 1-year-old (%)
-* `measles`: Number of reported measles cases per 1000 population
-* `bmi`: Average body mass index of entire population
-* `under_five`: Number of deaths in children aged under 5 years old per 1000 population
-* `polio`: Polio immunization coverage among 1-year-old(%)
-* `diphtheria`: Diphtheria tetanus toxoid and pertussis immunization coverage among 1-year-old (%)
-* `hiv_aids`: Number of deaths in children aged 0 to 4 years old due to HIV/AIDS per 1000 live births
-* `gdp`: Gross domestic product per capita in USD
-* `population`: Population of the country
-* `thin_1_19`: Prevalence of thinness among children and adolescents aged 10 to 19 (%)
-* `thin_5_9`: Prevalence of thinness among children and adolescents aged 5 to 9 (%)
-* `HDI`: Human development index in terms of income composition of resources (index ranging from 0 to 1)
-* `schooling`: Number of years of Schooling
-
 <br>
 
 ## Correlation Matrix
@@ -78,10 +49,12 @@ cm_df =
 corrplot(cor(cm_df), type = "upper", diag = FALSE, method = "square", addCoef.col = "black", number.cex = .4, tl.col = "black", tl.cex = .8)
 ```
 
+<br>
+
 ## Model building 
 
 
-```{r}
+```{r include=FALSE}
 #stepwise
 mod_1 = lm(le ~ adult_mort + bmi + polio + diphtheria + hiv_aids + thin_5_9 + HDI, data = le_df)
 
@@ -94,26 +67,23 @@ mod_3 = lm(le ~ status + polio + total_exp + diphtheria + gdp + schooling + tota
 #health
 mod_4 = lm(le ~ polio + total_exp + diphtheria + hiv_aids + thin_1_19, data = le_df)
 
-# bmi adult mortality
-mod_5 = lm(le ~ adult_mort + bmi, data = le_df)
-
 #full model
-mod_6 = lm(le ~ year + adult_mort + infantdeaths + percent_exp + bmi + under_five + polio + diphtheria + hiv_aids + gdp + thin_5_9, data = le_df)
+mod_5 = lm(le ~ year + adult_mort + infantdeaths + percent_exp + bmi + under_five + polio + diphtheria + hiv_aids + gdp + thin_5_9, data = le_df)
 
 # health-related factors, mortality factors, economical factors and social factors
-mod_7 = lm(le ~ status + percent_exp + HDI + adult_mort + infantdeaths + schooling, data = le_df)
+mod_6 = lm(le ~ status + percent_exp + HDI + adult_mort + infantdeaths + schooling, data = le_df)
 
 #backward
-mod_8 = lm(le ~ continent + status + adult_mort + alcohol + bmi + under_five + polio + diphtheria + hiv_aids + gdp + HDI + schooling, data = le_df)
+mod_7 = lm(le ~ status + adult_mort + bmi + polio + total_exp + diphtheria + hiv_aids + gdp + thin_1_19 + HDI + schooling, data = le_df)
 
 #forward
-mod_9 = lm(le ~ status + adult_mort + bmi + under_five + polio + diphtheria + hiv_aids + gdp + thin_5_9 + HDI, data = le_df)
+mod_8 = lm(le ~ status + adult_mort + bmi + under_five + polio + diphtheria + hiv_aids + gdp + thin_5_9 + HDI, data = le_df)
 
 ```
 
 ## Cross Validation
 
-```{r}
+```{r include=FALSE}
 set.seed(2)
 
 cv_df = 
@@ -130,8 +100,7 @@ cv_df =
     mod_5 = map(train, ~lm(formula = formula(mod_5), data = .x)),
     mod_6 = map(train, ~lm(formula = formula(mod_6), data = .x)),
     mod_7 = map(train, ~lm(formula = formula(mod_7), data = .x)),
-    mod_8 = map(train, ~lm(formula = formula(mod_8), data = .x)),
-    mod_9 = map(train, ~lm(formula = formula(mod_9), data = .x))
+    mod_8 = map(train, ~lm(formula = formula(mod_8), data = .x))
     ) %>% 
   mutate(
     rmse_1 = map2_dbl(mod_1, test, ~rmse(model = .x, data = .y)),
@@ -141,8 +110,7 @@ cv_df =
     rmse_5 = map2_dbl(mod_5, test, ~rmse(model = .x, data = .y)),
     rmse_6 = map2_dbl(mod_6, test, ~rmse(model = .x, data = .y)),
     rmse_7 = map2_dbl(mod_7, test, ~rmse(model = .x, data = .y)),
-    rmse_8 = map2_dbl(mod_8, test, ~rmse(model = .x, data = .y)),
-    rmse_9 = map2_dbl(mod_9, test, ~rmse(model = .x, data = .y))
+    rmse_8 = map2_dbl(mod_8, test, ~rmse(model = .x, data = .y))
     )
 ```
 
@@ -150,7 +118,7 @@ cv_df =
 ```{r}
 cv_df %>% 
   pivot_longer(
-    rmse_1:rmse_9,
+    rmse_1:rmse_8,
     names_to = "model", 
     values_to = "rmse",
     names_prefix = "rmse_") %>% 
@@ -162,8 +130,7 @@ cv_df %>%
                                    "Model 5" = "5",
                                    "Model 6" = "6",
                                    "Model 7" = "7",
-                                   "Model 8" = "8",
-                                   "Model 9" = "9")
+                                   "Model 8" = "8")
          ) %>% 
   ggplot(aes(x = model, y = rmse, fill = model)) + 
   geom_violin() + 
