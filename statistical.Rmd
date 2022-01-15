@@ -64,7 +64,7 @@ Developing =
   summarize(Mean_LE = mean(le))
 ```
 
-```{r}
+```{r, message=FALSE}
 var.test(Developed$Mean_LE, Developing$Mean_LE) %>% 
   broom::tidy() %>% 
   select(c(4,5,8,9)) %>% 
