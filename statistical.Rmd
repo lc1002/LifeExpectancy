@@ -53,6 +53,7 @@ le_df =
 There are countless factors that affects country's average life expectancy and how long an individual will be expected to live. In continuation of the exploratory analysis, we want to dive more into the dataset to further investigate the variables and possibly excavate some interesting findings that we don’t normally aware of. 
 
 <br>
+<hr>
 
 ### **Development Status**
 
@@ -102,6 +103,7 @@ t.test(Developed$Mean_LE, Developing$Mean_LE, alternative = "greater", var.equal
 * At significance level of 0.05, we reject the $H_{0}$ since $p-value < 2.2e^{-16} < \alpha = 0.05$. Thus, we conclude that the life expectancy for developed countries is greater than the developing countries.
 
 <br>
+<hr>
 
 ### **Income composition of resources (HDI)**
 
@@ -129,6 +131,7 @@ human_develop %>%
 * We obtain a correlation coefficient value of r = 0.79, which shows a significant positive correlation between life expectancy and HDI. This implies that countries with higher income composition of resources for human development and utilizes resources effectively are more likely to have higher life expectancy. Thus, countries could spend more on human development in order to achieve higher life expectancy. 
 
 <br>
+<hr>
 
 ### **Infant deaths and Under-five deaths**
 
@@ -165,6 +168,7 @@ prop.test(x, n, correct = FALSE) %>%
 * We can see from the [correlation matrix](regression_files/figure-html/unnamed-chunk-3-1.png) that the correlation coefficient between infant deaths and life expectancy is negative (r = -0.2), and similarly between under-five deaths and life expectancy (r = -0.22), which means that when infant deaths or under-five deaths increase, life expectancy will eventually decreases.
 
 <br>
+<hr>
 
 ### **Alcohol**
 
@@ -215,6 +219,7 @@ alc_mortality %>%
 * Although there's no strong correlation between adult mortality rates and alcohol consumption, but having a p-value = 0.00083 we see that the correlation coefficient would still be significant. Even though, we can't reach a strong conclusion regarding the correlation, interestingly, there's evidence showing that alcohol consumption is positively associated (r = 0.44) with life expectancy and negatively associated (r = -0.24) with adult mortality. 
 
 <br>
+<hr>
 
 ### **Correlation between immunization and other health related factors**
 
@@ -317,6 +322,7 @@ t.test(health_Low$Mean_exp, health_High$Mean_exp) %>%
 * Also, from the plot above, we see that total expenditure on health as a percentage of of total government expenditure is a factor contribute in predicting life expectancy since we have a p-value = 0.0025. However, we can infer that solely total healthcare expenditure factor will not accurately predict life expectancy since we obtain a pretty low $R^{2}$ value of 0.047. Therefore, we want to look at other factors along with total expenditures and see how they are going to affect the life expectancy. 
 
 <br>
+<hr>
 
 ### **Correlation between socioeconomic and behavioral factors**
 

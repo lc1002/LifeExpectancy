@@ -43,7 +43,8 @@ life_exp_df =
   )
 ```
 
-<br> 
+<br>
+<hr> 
 
 ## Distribution of Life Expectancy
 
@@ -69,6 +70,7 @@ range_le
 
 <br>
 <br>
+<hr>
 
 ## Global Trend of Life Expectancy From 2000 to 2015
 
@@ -138,7 +140,8 @@ low_le_country
 * There is still a huge gap in life expectancy across countries even when the overall global life expectancy increased steadily.
 
 <br> 
-<br> 
+<br>
+<hr> 
 
 ## Map depicting average life expectancy in each country
 
@@ -166,6 +169,7 @@ life_exp_df %>%
 
 <br>
 <br>
+<hr>
 
 ## World Life Expectancy From 2000 to 2015 By Continent
 
@@ -194,7 +198,8 @@ animate(life_exp_continent, duration = 8, renderer = gifski_renderer())
 * The life expectancy gap between Africa and other continents is still enormous.
 
 <br>
-<br> 
+<br>
+<hr> 
 
 ## Distribution of Developed and Developing Countires by Continent
 
@@ -216,7 +221,8 @@ ggplotly(num_status)
 * Correlation between development status and life expectancy might exist given the above information.
 
 <br> 
-<br> 
+<br>
+<hr> 
 
 ## Correlation Between the Development Status of a Country And Life Expectancy
 
@@ -270,7 +276,8 @@ summary(aov(lifeexpectancy ~ status, data = life_exp_df))
 * From the ANOVA Analysis, we obtain a p-value of lower than $2e^{-16}$ and is significantly less than 0.05, thus, we reject the null hypothesis and can conclude that there are significant differences in life expectancy between the Developed and Developing Countries.
 
 <br> 
-<br> 
+<br>
+<hr> 
 
 ## Correlation Between GDP Per Capita And Life Expectancy
 

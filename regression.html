@@ -313,9 +313,332 @@ $(document).ready(function () {
 corrplot(cor(cm_df), type = &quot;upper&quot;, diag = FALSE, method = &quot;square&quot;, addCoef.col = &quot;black&quot;, number.cex = .3, tl.col = &quot;black&quot;, tl.cex = .7)</code></pre>
 <p><img src="regression_files/figure-html/unnamed-chunk-3-1.png" width="80%" /></p>
 <p><br></p>
+<hr>
 </div>
 <div id="model-building" class="section level2">
 <h2>Model building</h2>
+<div id="models-based-on-prior-research" class="section level3">
+<h3>Models Based on Prior Research</h3>
+<p><br> <br></p>
+</div>
+<div id="models-based-on-automated-model-selection" class="section level3">
+<h3>Models Based on Automated Model Selection</h3>
+<p><strong>Stepwise Regression:</strong></p>
+<p><br> <br></p>
+<p><strong>Forward Selection:</strong></p>
+<p><br> <br></p>
+<p><strong>Backward Elimination:</strong></p>
+<p><br> <br></p>
+<p><strong>Best Subsets Regression:</strong></p>
+<p><br></p>
+<p><em>Best Fitting Models Based on the Numbers of Predictors</em></p>
+<pre class="r"><code>sub_fit = regsubsets(le ~ year + status_Developed + adult_mort + infantdeaths + alcohol + percent_exp + hepatitis_b_high + hepatitis_b_low + measles + bmi + under_five + polio_high + polio_low + total_exp + diphtheria_high + diphtheria_low + hiv_aids + gdp + population + thin_1_19 + thin_5_9 + HDI + schooling, data = le_df)
+
+best_summary = summary(sub_fit)
+best_summary_df = 
+  as.data.frame(best_summary$outmat) %&gt;% 
+  remove_rownames() %&gt;% 
+  add_column(&quot; &quot; = c(1:8), .before = &quot;year&quot;)
+
+as.data.frame(t(best_summary_df[-1])) %&gt;% 
+  rename(&quot;1&quot; = &quot;V1&quot;, &quot;2&quot; = &quot;V2&quot;, &quot;3&quot; = &quot;V3&quot;,&quot;4&quot; = &quot;V4&quot;, &quot;5&quot; = &quot;V5&quot;, &quot;6&quot; = &quot;V6&quot;,&quot;7&quot; = &quot;V7&quot;, &quot;8&quot; = &quot;V8&quot;) %&gt;% 
+   knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="left">1</th>
+<th align="left">2</th>
+<th align="left">3</th>
+<th align="left">4</th>
+<th align="left">5</th>
+<th align="left">6</th>
+<th align="left">7</th>
+<th align="left">8</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">year</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">status_Developed</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">adult_mort</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">*</td>
+<td align="left">*</td>
+<td align="left">*</td>
+<td align="left">*</td>
+<td align="left">*</td>
+<td align="left">*</td>
+</tr>
+<tr class="even">
+<td align="left">infantdeaths</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">*</td>
+</tr>
+<tr class="odd">
+<td align="left">alcohol</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">percent_exp</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">hepatitis_b_high</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">hepatitis_b_low</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">measles</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">bmi</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">*</td>
+<td align="left">*</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">under_five</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">*</td>
+</tr>
+<tr class="even">
+<td align="left">polio_high</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">*</td>
+<td align="left">*</td>
+<td align="left">*</td>
+<td align="left">*</td>
+<td align="left">*</td>
+</tr>
+<tr class="odd">
+<td align="left">polio_low</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">total_exp</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">diphtheria_high</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">diphtheria_low</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">hiv_aids</td>
+<td align="left"></td>
+<td align="left">*</td>
+<td align="left">*</td>
+<td align="left">*</td>
+<td align="left">*</td>
+<td align="left">*</td>
+<td align="left">*</td>
+<td align="left">*</td>
+</tr>
+<tr class="even">
+<td align="left">gdp</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">*</td>
+<td align="left">*</td>
+</tr>
+<tr class="odd">
+<td align="left">population</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">thin_1_19</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">thin_5_9</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">HDI</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">*</td>
+<td align="left">*</td>
+<td align="left">*</td>
+<td align="left">*</td>
+</tr>
+<tr class="odd">
+<td align="left">schooling</td>
+<td align="left">*</td>
+<td align="left">*</td>
+<td align="left">*</td>
+<td align="left">*</td>
+<td align="left">*</td>
+<td align="left">*</td>
+<td align="left">*</td>
+<td align="left">*</td>
+</tr>
+</tbody>
+</table>
+<p><br></p>
+<p><em>Comparison Based on Model Selection Criteria</em></p>
+<pre class="r"><code>Model_comparison =
+  tibble(
+    n_pred = c(1:8),
+    &quot;Adjusted R-square&quot; = best_summary$adjr2,
+    &quot;BIC&quot; = best_summary$bic,
+    &quot;Cp&quot; = best_summary$cp,
+    &quot;Regression Square Error&quot; = best_summary$rsq,
+    &quot;Residual Sum Square&quot; = best_summary$rss
+    ) %&gt;%
+    gather(key = &quot;Statistics&quot;, value = &quot;value&quot;, 2:6) %&gt;%
+    ggplot(aes(x = n_pred, y = value)) +
+      geom_point() +
+      geom_line() +
+      facet_grid(Statistics ~ ., scales = &quot;free_y&quot;) +
+      labs(
+        x = &quot;Number of Predictors&quot;,
+        y = &quot;Values&quot;,
+        title = &quot;Model Selection Criteria Comparison&quot;
+      )
+
+Model_comparison</code></pre>
+<p><img src="regression_files/figure-html/unnamed-chunk-5-1.png" width="80%" /></p>
+<p><br> <br></p>
+</div>
 </div>
 <div id="cross-validation" class="section level2">
 <h2>Cross Validation</h2>
@@ -342,7 +665,7 @@ corrplot(cor(cm_df), type = &quot;upper&quot;, diag = FALSE, method = &quot;squa
   scale_fill_brewer(type = &#39;seq&#39;, palette = &#39;Blues&#39;) +
   theme(legend.position = &#39;none&#39;,
         plot.title = element_text(hjust = 0.5))</code></pre>
-<p><img src="regression_files/figure-html/unnamed-chunk-6-1.png" width="80%" /></p>
+<p><img src="regression_files/figure-html/unnamed-chunk-8-1.png" width="80%" /></p>
 </div>
 <div id="results" class="section level2">
 <h2>Results</h2>

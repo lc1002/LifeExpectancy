@@ -51,8 +51,89 @@ corrplot(cor(cm_df), type = "upper", diag = FALSE, method = "square", addCoef.co
 
 <br>
 
+<hr>
+
 ## Model building 
 
+### Models Based on Prior Research
+
+<br>
+<br>
+
+### Models Based on Automated Model Selection
+
+**Stepwise Regression:**
+
+<br>
+<br>
+
+**Forward Selection:**
+
+<br>
+<br>
+
+**Backward Elimination:**
+
+<br>
+<br>
+
+**Best Subsets Regression:**
+
+<br>
+
+*Best Fitting Models Based on the Numbers of Predictors*
+```{r include=FALSE}
+sub_fit = regsubsets(le ~ year + status_Developed + adult_mort + infantdeaths + alcohol + percent_exp + hepatitis_b_high + hepatitis_b_low + measles + bmi + under_five + polio_high + polio_low + total_exp + diphtheria_high + diphtheria_low + hiv_aids + gdp + population + thin_1_19 + thin_5_9 + HDI + schooling, data = le_df)
+
+best_summary = summary(sub_fit)
+best_summary_df = 
+  as.data.frame(best_summary$outmat) %>% 
+  remove_rownames() %>% 
+  add_column(" " = c(1:8), .before = "year")
+
+table = as.data.frame(t(best_summary_df[-1])) %>% 
+  rename("1" = "V1", "2" = "V2", "3" = "V3","4" = "V4", "5" = "V5", "6" = "V6","7" = "V7", "8" = "V8")
+```
+
+```{r}
+table %>% 
+     knitr::kable()
+```
+
+<br>
+
+*Comparison Based on Model Selection Criteria*
+```{r}
+Model_comparison =
+  tibble(
+	n_pred = c(1:8),
+	"Adjusted R-square" = best_summary$adjr2,
+	"BIC" = best_summary$bic,
+	"Cp" = best_summary$cp,
+	"Regression Square Error" = best_summary$rsq,
+	"Residual Sum Square" = best_summary$rss
+	) %>%
+	gather(key = "Statistics", value = "value", 2:6) %>%
+	ggplot(aes(x = n_pred, y = value)) +
+	  geom_point() +
+	  geom_line() +
+	  facet_grid(Statistics ~ ., scales = "free_y") +
+	  labs(
+	  	x = "Number of Predictors",
+	  	y = "Values",
+	  	title = "Model Selection Criteria Comparison"
+	  )
+
+Model_comparison
+```
+
+
+<br>
+<br>
+
+<hr>
+
+## Cross Validation
 
 ```{r include=FALSE}
 #stepwise
@@ -77,8 +158,6 @@ mod_6 = lm(le ~ status_Developed + adult_mort + infantdeaths + bmi + polio_high 
 mod_7 = lm(le ~ adult_mort + infantdeaths + polio_high + hiv_aids + gdp + HDI + schooling, data = le_df)
 
 ```
-
-## Cross Validation
 
 ```{r include=FALSE}
 set.seed(2)

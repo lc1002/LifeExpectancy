@@ -314,7 +314,8 @@ h1.title {
 </style>
 <p><br></p>
 <p>There are countless factors that affects country’s average life expectancy and how long an individual will be expected to live. In continuation of the exploratory analysis, we want to dive more into the dataset to further investigate the variables and possibly excavate some interesting findings that we don’t normally aware of.</p>
-<p><br></p>
+<br>
+<hr>
 <div id="development-status" class="section level3">
 <h3><strong>Development Status</strong></h3>
 <p>When exploring the Development status variable, the one-way analysis of variance (ANOVA) is used in order to have an understanding on how the two different groups (Developed and Developing) respond. And from the result we obtained, a conclusion was drawn that there is statistically significant differences between the means of Developed countries and Developing countries.</p>
@@ -375,7 +376,8 @@ h1.title {
 <ul>
 <li>At significance level of 0.05, we reject the <span class="math inline">\(H_{0}\)</span> since <span class="math inline">\(p-value &lt; 2.2e^{-16} &lt; \alpha = 0.05\)</span>. Thus, we conclude that the life expectancy for developed countries is greater than the developing countries.</li>
 </ul>
-<p><br></p>
+<br>
+<hr>
 </div>
 <div id="income-composition-of-resources-hdi" class="section level3">
 <h3><strong>Income composition of resources (HDI)</strong></h3>
@@ -392,7 +394,8 @@ h1.title {
 <ul>
 <li>We obtain a correlation coefficient value of r = 0.79, which shows a significant positive correlation between life expectancy and HDI. This implies that countries with higher income composition of resources for human development and utilizes resources effectively are more likely to have higher life expectancy. Thus, countries could spend more on human development in order to achieve higher life expectancy.</li>
 </ul>
-<p><br></p>
+<br>
+<hr>
 </div>
 <div id="infant-deaths-and-under-five-deaths" class="section level3">
 <h3><strong>Infant deaths and Under-five deaths</strong></h3>
@@ -433,7 +436,8 @@ h1.title {
 <li><p>At 0.05 significance level, we have p-value = 0.1709 <span class="math inline">\(&gt; \alpha = 0.05\)</span>, thus, we fail to reject the null hypothesis and there is insufficient evidence to conclude that there is significant difference in the two independent proportions. Hence, we need to take into consideration of possible collinearity between the infant deaths variable and the under-five deaths variable when building the regression model.</p></li>
 <li><p>We can see from the <a href="regression_files/figure-html/unnamed-chunk-3-1.png">correlation matrix</a> that the correlation coefficient between infant deaths and life expectancy is negative (r = -0.2), and similarly between under-five deaths and life expectancy (r = -0.22), which means that when infant deaths or under-five deaths increase, life expectancy will eventually decreases.</p></li>
 </ul>
-<p><br></p>
+<br>
+<hr>
 </div>
 <div id="alcohol" class="section level3">
 <h3><strong>Alcohol</strong></h3>
@@ -463,7 +467,8 @@ h1.title {
 <ul>
 <li>Although there’s no strong correlation between adult mortality rates and alcohol consumption, but having a p-value = 0.00083 we see that the correlation coefficient would still be significant. Even though, we can’t reach a strong conclusion regarding the correlation, interestingly, there’s evidence showing that alcohol consumption is positively associated (r = 0.44) with life expectancy and negatively associated (r = -0.24) with adult mortality.</li>
 </ul>
-<p><br></p>
+<br>
+<hr>
 </div>
 <div id="correlation-between-immunization-and-other-health-related-factors" class="section level3">
 <h3><strong>Correlation between immunization and other health related factors</strong></h3>
@@ -552,7 +557,8 @@ t.test(health_Low$Mean_exp, health_High$Mean_exp) %&gt;%
 <li><p>The p-value we get from the t-test is 0.047 which is less than significance level of 0.05, thus, we will reject the null hypothesis and conclude that countries with high life expectancy spend higher proportion of their government expenditure on healthcare than countries with low life expectancy.</p></li>
 <li><p>Also, from the plot above, we see that total expenditure on health as a percentage of of total government expenditure is a factor contribute in predicting life expectancy since we have a p-value = 0.0025. However, we can infer that solely total healthcare expenditure factor will not accurately predict life expectancy since we obtain a pretty low <span class="math inline">\(R^{2}\)</span> value of 0.047. Therefore, we want to look at other factors along with total expenditures and see how they are going to affect the life expectancy.</p></li>
 </ul>
-<p><br></p>
+<br>
+<hr>
 </div>
 <div id="correlation-between-socioeconomic-and-behavioral-factors" class="section level3">
 <h3><strong>Correlation between socioeconomic and behavioral factors</strong></h3>
