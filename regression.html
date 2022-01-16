@@ -337,7 +337,7 @@ corrplot(cor(cm_df), type = &quot;upper&quot;, diag = FALSE, method = &quot;squa
          ) %&gt;% 
   ggplot(aes(x = model, y = rmse, fill = model)) + 
   geom_violin() + 
-  labs(x = &quot;Model&quot;,
+  labs(x = &quot;&quot;,
        y = &quot;RMSE&quot;, 
        title = &quot;Cross Validation&quot;) +
   scale_fill_brewer(type = &#39;seq&#39;, palette = &#39;Blues&#39;) +
@@ -363,59 +363,87 @@ corrplot(cor(cm_df), type = &quot;upper&quot;, diag = FALSE, method = &quot;squa
 <tbody>
 <tr class="odd">
 <td align="left">(Intercept)</td>
-<td align="right">55.9723894</td>
-<td align="right">0.4915970</td>
-<td align="right">113.858273</td>
-<td align="right">0</td>
+<td align="right">55.2299390</td>
+<td align="right">0.5506411</td>
+<td align="right">100.301162</td>
+<td align="right">0.0000000</td>
 </tr>
 <tr class="even">
+<td align="left">statusDeveloping</td>
+<td align="right">-1.3487590</td>
+<td align="right">0.2414278</td>
+<td align="right">-5.586593</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="odd">
 <td align="left">adult_mort</td>
-<td align="right">-0.0200800</td>
-<td align="right">0.0008521</td>
-<td align="right">-23.566515</td>
-<td align="right">0</td>
+<td align="right">-0.0173771</td>
+<td align="right">0.0007926</td>
+<td align="right">-21.923728</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="even">
+<td align="left">infantdeaths</td>
+<td align="right">-0.0010814</td>
+<td align="right">0.0007155</td>
+<td align="right">-1.511318</td>
+<td align="right">0.1308155</td>
 </tr>
 <tr class="odd">
 <td align="left">bmi</td>
-<td align="right">0.0565064</td>
-<td align="right">0.0052147</td>
-<td align="right">10.835925</td>
-<td align="right">0</td>
+<td align="right">0.0412481</td>
+<td align="right">0.0048194</td>
+<td align="right">8.558845</td>
+<td align="right">0.0000000</td>
 </tr>
 <tr class="even">
 <td align="left">polio</td>
-<td align="right">0.0355643</td>
-<td align="right">0.0047027</td>
-<td align="right">7.562500</td>
-<td align="right">0</td>
+<td align="right">0.0283100</td>
+<td align="right">0.0043354</td>
+<td align="right">6.530019</td>
+<td align="right">0.0000000</td>
 </tr>
 <tr class="odd">
 <td align="left">diphtheria</td>
-<td align="right">0.0355136</td>
-<td align="right">0.0047024</td>
-<td align="right">7.552237</td>
-<td align="right">0</td>
+<td align="right">0.0271300</td>
+<td align="right">0.0043544</td>
+<td align="right">6.230484</td>
+<td align="right">0.0000000</td>
 </tr>
 <tr class="even">
 <td align="left">hiv_aids</td>
-<td align="right">-0.4716051</td>
-<td align="right">0.0186585</td>
-<td align="right">-25.275684</td>
-<td align="right">0</td>
+<td align="right">-0.5074286</td>
+<td align="right">0.0172251</td>
+<td align="right">-29.458660</td>
+<td align="right">0.0000000</td>
 </tr>
 <tr class="odd">
-<td align="left">thin_5_9</td>
-<td align="right">-0.1629007</td>
-<td align="right">0.0215414</td>
-<td align="right">-7.562232</td>
-<td align="right">0</td>
+<td align="left">gdp</td>
+<td align="right">0.0000519</td>
+<td align="right">0.0000065</td>
+<td align="right">7.936992</td>
+<td align="right">0.0000000</td>
 </tr>
 <tr class="even">
+<td align="left">thin_1_19</td>
+<td align="right">-0.0735034</td>
+<td align="right">0.0225863</td>
+<td align="right">-3.254338</td>
+<td align="right">0.0011495</td>
+</tr>
+<tr class="odd">
 <td align="left">HDI</td>
-<td align="right">16.3963663</td>
-<td align="right">0.4807545</td>
-<td align="right">34.105484</td>
-<td align="right">0</td>
+<td align="right">6.9639951</td>
+<td align="right">0.6098153</td>
+<td align="right">11.419842</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="even">
+<td align="left">schooling</td>
+<td align="right">0.7107725</td>
+<td align="right">0.0391666</td>
+<td align="right">18.147408</td>
+<td align="right">0.0000000</td>
 </tr>
 </tbody>
 </table>

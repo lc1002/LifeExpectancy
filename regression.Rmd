@@ -10,6 +10,7 @@ library(modelr)
 library(mgcv)
 library(corrplot)
 library(olsrr)
+library(leaps)
 
 knitr::opts_chunk$set(
   echo = TRUE,
@@ -56,29 +57,28 @@ corrplot(cor(cm_df), type = "upper", diag = FALSE, method = "square", addCoef.co
 
 ```{r include=FALSE}
 #stepwise
-mod_1 = lm(le ~ adult_mort + bmi + polio + diphtheria + hiv_aids + thin_5_9 + HDI, data = le_df)
-
-# Nutrition 
-mod_2 = lm(le ~ status + bmi + population + thin_1_19 + thin_5_9 + status * bmi + status * thin_1_19 + status * thin_5_9, data = le_df)
-
-#Education level, GDP, health        
-mod_3 = lm(le ~ status + polio + total_exp + diphtheria + gdp + schooling + total_exp * gdp, data = le_df)
+mod_1 = lm(le ~ status + adult_mort + infantdeaths + bmi + polio + diphtheria + hiv_aids + gdp + thin_1_19 + HDI + schooling, data = le_df)
 
 #health
-mod_4 = lm(le ~ polio + total_exp + diphtheria + hiv_aids + thin_1_19, data = le_df)
+mod_2 = lm(le ~ polio + total_exp + diphtheria + hiv_aids + thin_1_19, data = le_df)
 
 #full model
-mod_5 = lm(le ~ year + adult_mort + infantdeaths + percent_exp + bmi + under_five + polio + diphtheria + hiv_aids + gdp + thin_5_9, data = le_df)
+mod_3 = lm(le ~ status + adult_mort + bmi + polio + diphtheria + hiv_aids + gdp + thin_1_19 + HDI + schooling, data = le_df)
 
 # health-related factors, mortality factors, economical factors and social factors
-mod_6 = lm(le ~ status + percent_exp + HDI + adult_mort + infantdeaths + schooling, data = le_df)
+mod_4 = lm(le ~ status + percent_exp + HDI + adult_mort + infantdeaths + schooling, data = le_df)
 
 #backward
-mod_7 = lm(le ~ status + adult_mort + bmi + polio + total_exp + diphtheria + hiv_aids + gdp + thin_1_19 + HDI + schooling, data = le_df)
+mod_5 = lm(le ~ status + adult_mort + bmi+ polio + diphtheria + hiv_aids + gdp + thin_1_19 + HDI + schooling, data = le_df)
 
 #forward
-mod_8 = lm(le ~ status + adult_mort + bmi + under_five + polio + diphtheria + hiv_aids + gdp + thin_5_9 + HDI, data = le_df)
+mod_6 = lm(le ~ adult_mort + infantdeaths + alcohol + bmi + polio + diphtheria + hiv_aids + gdp + thin_5_9 + HDI + schooling, data = le_df)
 
+#best subsets selection with 8 variables
+mod_7 = lm(le ~ adult_mort + infantdeaths + polio + hiv_aids + gdp + HDI + schooling, data = le_df)
+
+## Best Subsets model with 7 variables
+mod_8 = lm(le ~ adult_mort + bmi + polio + hiv_aids + gdp + HDI + schooling, data = le_df)
 ```
 
 ## Cross Validation
@@ -134,7 +134,7 @@ cv_df %>%
          ) %>% 
   ggplot(aes(x = model, y = rmse, fill = model)) + 
   geom_violin() + 
-  labs(x = "Model",
+  labs(x = "",
        y = "RMSE", 
        title = "Cross Validation") +
   scale_fill_brewer(type = 'seq', palette = 'Blues') +
