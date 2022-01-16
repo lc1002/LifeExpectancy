@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
   fig.width = 6,
   fig.asp = .7,
   dpi = 800,
-  out.width = "80%"
+  out.width = "70%"
 )
 
 theme_set(theme_minimal())
@@ -107,11 +107,11 @@ table %>%
 Model_comparison =
   tibble(
 	n_pred = c(1:8),
-	"Adjusted R-square" = best_summary$adjr2,
+	"Adjusted R2" = best_summary$adjr2,
 	"BIC" = best_summary$bic,
 	"Cp" = best_summary$cp,
-	"Regression Square Error" = best_summary$rsq,
-	"Residual Sum Square" = best_summary$rss
+	"RSE" = best_summary$rsq,
+	"RSS" = best_summary$rss
 	) %>%
 	gather(key = "Statistics", value = "value", 2:6) %>%
 	ggplot(aes(x = n_pred, y = value)) +

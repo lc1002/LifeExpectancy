@@ -311,7 +311,7 @@ $(document).ready(function () {
   dplyr::select(-c(country,continent))
 
 corrplot(cor(cm_df), type = &quot;upper&quot;, diag = FALSE, method = &quot;square&quot;, addCoef.col = &quot;black&quot;, number.cex = .3, tl.col = &quot;black&quot;, tl.cex = .7)</code></pre>
-<p><img src="regression_files/figure-html/unnamed-chunk-3-1.png" width="80%" /></p>
+<p><img src="regression_files/figure-html/unnamed-chunk-3-1.png" width="70%" /></p>
 <p><br></p>
 <hr>
 </div>
@@ -332,17 +332,8 @@ corrplot(cor(cm_df), type = &quot;upper&quot;, diag = FALSE, method = &quot;squa
 <p><strong>Best Subsets Regression:</strong></p>
 <p><br></p>
 <p><em>Best Fitting Models Based on the Numbers of Predictors</em></p>
-<pre class="r"><code>sub_fit = regsubsets(le ~ year + status_Developed + adult_mort + infantdeaths + alcohol + percent_exp + hepatitis_b_high + hepatitis_b_low + measles + bmi + under_five + polio_high + polio_low + total_exp + diphtheria_high + diphtheria_low + hiv_aids + gdp + population + thin_1_19 + thin_5_9 + HDI + schooling, data = le_df)
-
-best_summary = summary(sub_fit)
-best_summary_df = 
-  as.data.frame(best_summary$outmat) %&gt;% 
-  remove_rownames() %&gt;% 
-  add_column(&quot; &quot; = c(1:8), .before = &quot;year&quot;)
-
-as.data.frame(t(best_summary_df[-1])) %&gt;% 
-  rename(&quot;1&quot; = &quot;V1&quot;, &quot;2&quot; = &quot;V2&quot;, &quot;3&quot; = &quot;V3&quot;,&quot;4&quot; = &quot;V4&quot;, &quot;5&quot; = &quot;V5&quot;, &quot;6&quot; = &quot;V6&quot;,&quot;7&quot; = &quot;V7&quot;, &quot;8&quot; = &quot;V8&quot;) %&gt;% 
-   knitr::kable()</code></pre>
+<pre class="r"><code>table %&gt;% 
+     knitr::kable()</code></pre>
 <table>
 <thead>
 <tr class="header">
@@ -618,11 +609,11 @@ as.data.frame(t(best_summary_df[-1])) %&gt;%
 <pre class="r"><code>Model_comparison =
   tibble(
     n_pred = c(1:8),
-    &quot;Adjusted R-square&quot; = best_summary$adjr2,
+    &quot;Adjusted R2&quot; = best_summary$adjr2,
     &quot;BIC&quot; = best_summary$bic,
     &quot;Cp&quot; = best_summary$cp,
-    &quot;Regression Square Error&quot; = best_summary$rsq,
-    &quot;Residual Sum Square&quot; = best_summary$rss
+    &quot;RSE&quot; = best_summary$rsq,
+    &quot;RSS&quot; = best_summary$rss
     ) %&gt;%
     gather(key = &quot;Statistics&quot;, value = &quot;value&quot;, 2:6) %&gt;%
     ggplot(aes(x = n_pred, y = value)) +
@@ -636,8 +627,9 @@ as.data.frame(t(best_summary_df[-1])) %&gt;%
       )
 
 Model_comparison</code></pre>
-<p><img src="regression_files/figure-html/unnamed-chunk-5-1.png" width="80%" /></p>
+<p><img src="regression_files/figure-html/unnamed-chunk-6-1.png" width="70%" /></p>
 <p><br> <br></p>
+<hr>
 </div>
 </div>
 <div id="cross-validation" class="section level2">
@@ -665,7 +657,7 @@ Model_comparison</code></pre>
   scale_fill_brewer(type = &#39;seq&#39;, palette = &#39;Blues&#39;) +
   theme(legend.position = &#39;none&#39;,
         plot.title = element_text(hjust = 0.5))</code></pre>
-<p><img src="regression_files/figure-html/unnamed-chunk-8-1.png" width="80%" /></p>
+<p><img src="regression_files/figure-html/unnamed-chunk-9-1.png" width="70%" /></p>
 </div>
 <div id="results" class="section level2">
 <h2>Results</h2>
