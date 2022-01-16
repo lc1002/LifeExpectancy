@@ -6,6 +6,16 @@ output:
     toc: true
     toc_float: true
 ---
+<style type="text/css">
+
+h1.title {
+  font-size: 50px;
+  text-align: left;
+  font-family: Papyrus;
+  font-weight: bold;
+  font-variant: small-caps
+}
+</style>
 
 ## Project Motivation
 

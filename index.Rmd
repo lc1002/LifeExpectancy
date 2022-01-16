@@ -6,7 +6,7 @@ output: html_document
 <style type="text/css">
 
 h1.title {
-  font-size: 45px;
+  font-size: 50px;
   text-shadow: 0 0 15px rgba(255,255,255,.5), 0 0 10px rgba(255,255,255,.5), 5px 7px 6px rgba(44,50,96,0.83);
   text-align: center;
   font-family: Papyrus;
@@ -42,6 +42,6 @@ According to statistics, the average life expectancy at birth was 82.1 years in 
 
 <br>
 
-<font size="2"> <span style="text-decoration:underline"> **Contributors:**</span> AnMei Chen, Lynn Chen</font>  
+<font size="2"> <span style="text-decoration:underline"> **Contributors:**</span> AnMei Chen and Lynn Chen</font>  
 
-<font size="2">The Github repository for this website can be found [here ](https://github.com/lc1002/LifeExpectancy), and the corresponding Github repository for this project is located [here](https://github.com/lc1002/LifeExpectancyAnalysis)</font> 
+<font size="2">The Github repository for this website can be found [here ](https://github.com/lc1002/LifeExpectancy), and the corresponding Github repository for this project is located [here](https://github.com/lc1002/LifeExpectancyAnalysis). </font> 

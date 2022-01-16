@@ -6,7 +6,7 @@ output: html_document
 <style type="text/css">
 
 h1.title {
-  font-size: 45px;
+  font-size: 50px;
   text-align: left;
   font-family: Papyrus;
   font-weight: bold;
@@ -22,6 +22,7 @@ library(modelr)
 library(mgcv)
 library(corrplot)
 library(ggpubr)
+library(performance) 
 
 knitr::opts_chunk$set(
   echo = TRUE,
@@ -103,7 +104,6 @@ t.test(Developed$Mean_LE, Developing$Mean_LE, alternative = "greater", var.equal
 <br>
 
 ### **Income composition of resources (HDI)**
-
 
 The Human Development Index (HDI) is a statistic composite index of average achievement in key dimensions of human development: health (life expectancy),  education (knowledge), and per capita income indicators (standard of living); it measures how good a country is at using its resources. By definition, life expectancy is one of the aspects of HDI measure, we want to see if there's strong relationship between HDI and life expectancy; if countries that spend a higher proportion of their resources on human development would have a higher life expectancy.
 
@@ -206,7 +206,7 @@ alc_mortality %>%
   ggplot(aes(x = mean_alc, y = mean_mortality)) +
   geom_point() +
   geom_smooth(method = "lm") +
-  stat_cor(method = "pearson", label.x = 10, color = "red") +
+  stat_cor(method = "pearson", label.x = 8, color = "red") +
   labs(title = "Mean Adult Mortality Rates VS. Mean Alcohol Consumption",
        x = "Alcohol Consumption (per capita (15+) consumption (in litres of pure alcohol))",
        y = "Adult Mortality Rates (per 1000 population)") 
@@ -234,9 +234,130 @@ corrplot(cor(cor_df), type = "upper", diag = FALSE, method = "square", addCoef.c
 
 <br>
 
-### **Correlation between economic, social, and behavioral factors**
+In the US, nearly all Americans have healthcare or health insurance, the accessibility to health care undoubtedly decreases mortality and increases life expectancy. A study conducted for East African countries have shown that there is a strong positive association between total healthcare expenditures and life expectancy; also, a negative relationship between healthcare expenditures and number of infant and under-five deaths [Bein et al., 2017](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5636241/).
 
 
+```{r, include=FALSE}
+toalexp = 
+  le_df %>% 
+  group_by(country) %>% 
+  summarize(mean_LE = mean(le), 
+            mean_toalexp = mean(total_exp))
 
+exp_inf = 
+  le_df %>% 
+  group_by(country) %>% 
+  summarize(mean_inf = mean(infantdeaths), 
+            mean_toalexp = mean(total_exp))
+
+exp_underfive = 
+  le_df %>% 
+  group_by(country) %>% 
+  summarize(mean_under = mean(under_five), 
+            mean_toalexp = mean(total_exp))
+```
+
+```{r, message=FALSE, fig.height=8, fig.width=16}
+toalexp %>% 
+  ggplot(aes(x = mean_toalexp, y = mean_LE)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_cor(method = "pearson",label.y = 85, color = "red") +
+  stat_regline_equation(label.y = 82, aes(label = ..rr.label..), color = "red") +
+  labs(title = "Mean Healthcare Expenditures VS. Mean Life Expectancy",
+       x = "Healthcare Expedicture (% of Total Expenditure)",
+       y = "Life Expectancy (Years)") 
+
+B = exp_inf %>% 
+  ggplot(aes(x = mean_toalexp, y = mean_inf)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_cor(aes(label = ..r.label..), method = "pearson", color = "red") +
+  labs(title = "Mean Healthcare Expenditures VS. Mean Infant Deaths",
+       x = "Healthcare Expedicture (% of Total Expenditure)",
+       y = "Infant Deaths") 
+
+C = exp_underfive %>% 
+  ggplot(aes(x = mean_toalexp, y = mean_under)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_cor(aes(label = ..r.label..), method = "pearson", color = "red") +
+  labs(title = "Mean Healthcare Expenditures VS. Mean Under-five Deaths",
+       x = "Healthcare Expedicture (% of Total Expenditure)",
+       y = "Under-five Deaths") 
+
+gridExtra::grid.arrange(B, C, nrow = 1)
+```
+
+* Our dataset also shows evidence that expenditure spend on health is positively associated (r = 0.22) with life expectancy and negatively associated with infant (r = -0.16) and under-five (r = -0.16) deaths.
+
+Now, it will be interesting to see if countries with low life expectancy (<69 (mean)) spend less of their government expenditure on health and if those countries should increase their total expenditure on healthcare to increase life expectancy.
+
+```{r}
+health_Low = 
+  le_df %>% 
+  filter(le < 69) %>% 
+  group_by(country) %>% 
+  summarize(Mean_exp = mean(total_exp))
+
+health_High = 
+  le_df %>% 
+  filter(!le < 69) %>% 
+  group_by(country) %>% 
+  summarize(Mean_exp = mean(total_exp))
+
+t.test(health_Low$Mean_exp, health_High$Mean_exp) %>% 
+  broom::tidy() %>% 
+  select(c(4,5,6,9)) %>% 
+  knitr::kable(table.attr = "style='width:30%;'")
+```
+
+* The p-value we get from the t-test is 0.047 which is less than significance level of 0.05, thus, we will reject the null hypothesis and conclude that countries with high life expectancy spend higher proportion of their government expenditure on healthcare than countries with low life expectancy. 
+
+* Also, from the plot above, we see that total expenditure on health as a percentage of of total government expenditure is a factor contribute in predicting life expectancy since we have a p-value = 0.0025. However, we can infer that solely total healthcare expenditure factor will not accurately predict life expectancy since we obtain a pretty low $R^{2}$ value of 0.047. Therefore, we want to look at other factors along with total expenditures and see how they are going to affect the life expectancy. 
+
+<br>
+
+### **Correlation between socioeconomic and behavioral factors**
+
+Many demographic, socioeconomic, and behavioral factors can be linked with individual's life expectancy. In the United States, higher income was associated with longer life expectancy, and there are increasing differences in life expectancy across income groups [Chetty et al., 2016](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4866586/). We will conduct linear regression analysis based on SES and behavioral factors such as `alcohol`, `percent_exp`, `total_exp`, `bmi`, `population`, `HDI`, `schooling`, and `GDP` to have a deeper understanding on how these factors influence life expectancy of a country.  
+
+```{r}
+SES = lm(le ~ alcohol + percent_exp + total_exp + bmi + population + HDI + schooling, data = le_df)
+
+summary(SES)
+vif1 = check_collinearity(SES)
+```
+
+* We see that `total_exp` and `population` are both insignificant. 
+
+```{r}
+add_GDP = lm(le ~ alcohol + percent_exp + total_exp + bmi + population + HDI + schooling + gdp, data = le_df)
+vif2 = check_collinearity(add_GDP) 
+summary(add_GDP)
+```
+
+
+* Surprisingly, `percent_exp` becomes insignificant along with `total_exp` and `population` variables when `gdp` is added to the regression model. There's possibility that some of the variables are strongly correlated (`percent_exp` and `gdp`).
+
+```{r}
+ses_beh_df =
+  le_df %>%
+  dplyr::select(c(le, alcohol, percent_exp, total_exp, bmi, HDI, population, schooling))
+
+corrplot(cor(ses_beh_df), type = "upper", diag = FALSE, method = "square", addCoef.col = "black", number.cex = 0.5, tl.col = "black", tl.cex = .8)
+```
+
+Income composition of resources (HDI) is highly correlated with life expectancy and schooling, it shows evidence that it's a composite variable. 
+
+```{r}
+remove_HDI = lm(le ~ alcohol + percent_exp + total_exp + bmi + population + schooling + gdp, data = le_df)
+
+summary(remove_HDI)
+
+vif3 = check_collinearity(remove_HDI) ## all vif drop below 2
+```
+
+* VIF all fell below 2, HDI could be a combination of other variables.  
 
 
