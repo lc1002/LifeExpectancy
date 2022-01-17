@@ -343,12 +343,12 @@ summary(add_GDP)
 ```{r}
 ses_beh_df =
   le_df %>%
-  dplyr::select(c(le, alcohol, percent_exp, total_exp, bmi, HDI, population, schooling))
+  dplyr::select(c(le, alcohol, percent_exp, total_exp, bmi,gdp, HDI, population, schooling))
 
 corrplot(cor(ses_beh_df), type = "upper", diag = FALSE, method = "square", addCoef.col = "black", number.cex = 0.5, tl.col = "black", tl.cex = .8)
 ```
 
-Income composition of resources (HDI) is highly correlated with life expectancy and schooling, it shows evidence that it's a composite variable. 
+* `percent_exp` and `gdp` are strongly correlated as well, which explains why `percent_exp` becomes insignificant when `gdp` factor was added to the model. Income composition of resources (`HDI`) is highly correlated with `life expectancy` and `schooling`, it shows evidence that it's a composite variable. 
 
 ```{r}
 remove_HDI = lm(le ~ alcohol + percent_exp + total_exp + bmi + population + schooling + gdp, data = le_df)
@@ -359,5 +359,4 @@ vif3 = check_collinearity(remove_HDI) ## all vif drop below 2
 ```
 
 * VIF all fell below 2, HDI could be a combination of other variables.  
-
 
