@@ -7,7 +7,7 @@ output: html_document
 
 h1.title {
   font-size: 50px;
-  text-align: left;
+  text-align: left;   
   font-family: Papyrus;
   font-weight: bold;
   font-variant: small-caps
@@ -53,6 +53,7 @@ le_df =
 There are countless factors that affects country's average life expectancy and how long an individual will be expected to live. In continuation of the exploratory analysis, we want to dive more into the dataset to further investigate the variables and possibly excavate some interesting findings that we don’t normally aware of. 
 
 <br>
+<hr>
 
 ### **Development Status**
 
@@ -102,6 +103,7 @@ t.test(Developed$Mean_LE, Developing$Mean_LE, alternative = "greater", var.equal
 * At significance level of 0.05, we reject the $H_{0}$ since $p-value < 2.2e^{-16} < \alpha = 0.05$. Thus, we conclude that the life expectancy for developed countries is greater than the developing countries.
 
 <br>
+<hr>
 
 ### **Income composition of resources (HDI)**
 
@@ -129,6 +131,7 @@ human_develop %>%
 * We obtain a correlation coefficient value of r = 0.79, which shows a significant positive correlation between life expectancy and HDI. This implies that countries with higher income composition of resources for human development and utilizes resources effectively are more likely to have higher life expectancy. Thus, countries could spend more on human development in order to achieve higher life expectancy. 
 
 <br>
+<hr>
 
 ### **Infant deaths and Under-five deaths**
 
@@ -165,6 +168,7 @@ prop.test(x, n, correct = FALSE) %>%
 * We can see from the [correlation matrix](regression_files/figure-html/unnamed-chunk-3-1.png) that the correlation coefficient between infant deaths and life expectancy is negative (r = -0.2), and similarly between under-five deaths and life expectancy (r = -0.22), which means that when infant deaths or under-five deaths increase, life expectancy will eventually decreases.
 
 <br>
+<hr>
 
 ### **Alcohol**
 
@@ -215,6 +219,7 @@ alc_mortality %>%
 * Although there's no strong correlation between adult mortality rates and alcohol consumption, but having a p-value = 0.00083 we see that the correlation coefficient would still be significant. Even though, we can't reach a strong conclusion regarding the correlation, interestingly, there's evidence showing that alcohol consumption is positively associated (r = 0.44) with life expectancy and negatively associated (r = -0.24) with adult mortality. 
 
 <br>
+<hr>
 
 ### **Correlation between immunization and other health related factors**
 
@@ -317,6 +322,7 @@ t.test(health_Low$Mean_exp, health_High$Mean_exp) %>%
 * Also, from the plot above, we see that total expenditure on health as a percentage of of total government expenditure is a factor contribute in predicting life expectancy since we have a p-value = 0.0025. However, we can infer that solely total healthcare expenditure factor will not accurately predict life expectancy since we obtain a pretty low $R^{2}$ value of 0.047. Therefore, we want to look at other factors along with total expenditures and see how they are going to affect the life expectancy. 
 
 <br>
+<hr>
 
 ### **Correlation between socioeconomic and behavioral factors**
 
@@ -324,9 +330,9 @@ Many demographic, socioeconomic, and behavioral factors can be linked with indiv
 
 ```{r}
 SES = lm(le ~ alcohol + percent_exp + total_exp + bmi + population + HDI + schooling, data = le_df)
+vif1 = check_collinearity(SES)
 
 summary(SES)
-vif1 = check_collinearity(SES)
 ```
 
 * We see that `total_exp` and `population` are both insignificant. 
@@ -348,15 +354,73 @@ ses_beh_df =
 corrplot(cor(ses_beh_df), type = "upper", diag = FALSE, method = "square", addCoef.col = "black", number.cex = 0.5, tl.col = "black", tl.cex = .8)
 ```
 
-* `percent_exp` and `gdp` are strongly correlated as well, which explains why `percent_exp` becomes insignificant when `gdp` factor was added to the model. Income composition of resources (`HDI`) is highly correlated with `life expectancy` and `schooling`, it shows evidence that it's a composite variable. 
+* `percent_exp` and `gdp` are strongly correlated as well, which explains why `percent_exp` becomes insignificant when `gdp` factor was added to the model. 
+
+```{r}
+interact_term = lm(le ~ alcohol + percent_exp + total_exp + bmi + HDI + schooling + gdp + percent_exp*gdp, data = le_df)
+vif2 = check_collinearity(interact_term) 
+
+summary(interact_term)
+
+```
+
+* When the interaction term of `percent_exp` and `gdp` was included in the model, `percent_exp` once again becomes significant. We see that the interaction term is statistically significant at significance level of 0.001. Also, the adjusted R-squared has increased to 0.6488. Thus, the interaction term is probably important. 
+
+
+Income composition of resources (`HDI`) is highly correlated with `life expectancy` and `schooling`, it shows evidence that it's a composite variable.
 
 ```{r}
 remove_HDI = lm(le ~ alcohol + percent_exp + total_exp + bmi + population + schooling + gdp, data = le_df)
+vif3 = check_collinearity(remove_HDI) ## all vif drop below 2
 
 summary(remove_HDI)
-
-vif3 = check_collinearity(remove_HDI) ## all vif drop below 2
 ```
 
-* VIF all fell below 2, HDI could be a combination of other variables.  
+* Checking for collinearity and VIF all fell below 2, HDI could be a combination of other variables.  
+
+<br>
+<hr>
+
+We also want to take a deeper looking at schooling factor, since education brings awareness about healthy living and it shows that it's a statistically significance factor from above regression analysis. In addition, study shown that adults with at least a Master’s degree brings about a life expectancy of 14.7 years
+more than people who had not finished high school, and 8.3 years more than people who had completed high school [(Singh & Lee, 2021)](https://mchandaids.org/index.php/IJMA/article/view/402). We want to use the t-test for our data to see if average number of years in school has a significant impact on life expectancy. We will categorized `schooling` variable into Low (schooling $\le 12$) and High (schooling $> 12$)
+
+<center>
+$H_{0}: \mu_{Low} = \mu_{High}$ \
+$H_{1}: \mu_{Low} < \mu_{High}$ 
+</center>
+<br>
+
+```{r, include=FALSE}
+school_low = 
+  le_df %>% 
+  filter(schooling <= 12) %>% 
+  group_by(country) %>% 
+  summarize(mean_le = mean(le), 
+            mean_school = mean(schooling))
+
+school_high = 
+  le_df %>% 
+  filter(schooling > 12) %>% 
+  group_by(country) %>% 
+  summarize(mean_le = mean(le), 
+            mean_school = mean(schooling))
+```
+
+```{r, message=FALSE, fig.width=5}
+var.test(school_low$mean_le, school_high$mean_le) %>% 
+  broom::tidy() %>% 
+  select(c(4,5,8,9)) %>% 
+  knitr::kable(table.attr = "style='width:30%;'")
+```
+
+* We obtain a p-value of $1e^{-7}$ which is less than $\alpha = 0.05$. Hence we reject the null hypothesis and conclude that the variance of two populations is not equal.
+
+```{r}
+t.test(school_low$mean_le, school_high$mean_le, alternative = "less", var.equal = FALSE) %>% 
+  broom::tidy() %>% 
+  select(c(4,5,6,9)) %>% 
+  knitr::kable(table.attr = "style='width:30%;'")
+```
+
+* At significance level of 0.05, we reject the $H_{0}$ since $p-value < 2.2e^{-16} \approx 0 < \alpha = 0.05$. Thus, we conclude that the life expectancy for people with higher number of years of schooling is higher than the life expectancy of people with lower number of years of schooling. Thus, we schooling is a significant factor in predicting life expectancy. 
 
