@@ -79,7 +79,7 @@ corrplot(cor(cm_df), type = "upper", diag = FALSE, method = "square", addCoef.co
 
 *Best Fitting Models Based on the Numbers of Predictors*
 ```{r include=FALSE}
-sub_fit = regsubsets(le ~ year + status_Developed + adult_mort + infantdeaths + alcohol + percent_exp + hepatitis_b_high + hepatitis_b_low + measles + bmi + under_five + polio_high + polio_low + total_exp + diphtheria_high + diphtheria_low + hiv_aids + gdp + population + thin_1_19 + thin_5_9 + HDI + schooling, data = le_df)
+sub_fit = regsubsets(le ~ status_Developed + adult_mort + infantdeaths + alcohol + percent_exp + hepatitis_b_high + hepatitis_b_low + measles + bmi + under_five + polio_high + polio_low + total_exp + diphtheria_high + diphtheria_low + hiv_aids + gdp + population + thin_1_19 + thin_5_9 + HDI + schooling, data = le_df)
 
 best_summary = summary(sub_fit)
 best_summary_df = 
