@@ -9,15 +9,15 @@ library(tidyverse)
 library(modelr)
 library(mgcv)
 library(corrplot)
-library(olsrr)
 library(leaps)
+library(caret)
 
 knitr::opts_chunk$set(
   echo = TRUE,
   fig.width = 6,
   fig.asp = .7,
   dpi = 800,
-  out.width = "70%"
+  out.width = "80%"
 )
 
 theme_set(theme_minimal())
@@ -44,7 +44,7 @@ le_df =
 ```{r}
 cm_df =
   le_df %>%
-  dplyr::select(-c(country,continent))
+  dplyr::select(-c(country,continent,year))
 
 corrplot(cor(cm_df), type = "upper", diag = FALSE, method = "square", addCoef.col = "black", number.cex = .3, tl.col = "black", tl.cex = .7)
 ```
@@ -67,15 +67,11 @@ corrplot(cor(cm_df), type = "upper", diag = FALSE, method = "square", addCoef.co
 <br>
 <br>
 
-**Forward Selection:**
+**Forward/Backward Selection:**
 
 <br>
 <br>
 
-**Backward Elimination:**
-
-<br>
-<br>
 
 **Best Subsets Regression:**
 
@@ -130,7 +126,6 @@ Model_comparison
 
 <br>
 <br>
-
 <hr>
 
 ## Cross Validation
@@ -139,23 +134,14 @@ Model_comparison
 #stepwise
 mod_1 = lm(le ~ status_Developed + adult_mort + bmi + polio_high + diphtheria_low + hiv_aids + gdp + thin_1_19 + HDI + schooling, data = le_df)
 
-#health
-mod_2 = lm(le ~ polio_high + total_exp + diphtheria_low + hiv_aids + thin_1_19, data = le_df)
-
-#full model
-mod_3 = lm(le ~ status_Developed + adult_mort + infantdeaths + bmi + polio_high + diphtheria_low + hiv_aids + gdp + HDI + schooling, data = le_df)
-
 # model_7
-mod_4 = lm(le ~ status_Developed + percent_exp + HDI + adult_mort + infantdeaths + schooling, data = le_df)
+mod_2 = lm(le ~ status_Developed + percent_exp + HDI + adult_mort + infantdeaths + schooling + gdp + hiv_aids + gdp * percent_exp, data = le_df)
 
-#backward
-mod_5 = lm(le ~ status_Developed + adult_mort + bmi + polio_high + diphtheria_low + hiv_aids + gdp + thin_1_19 + HDI + schooling, data = le_df)
-
-#forward
-mod_6 = lm(le ~ status_Developed + adult_mort + infantdeaths + bmi + polio_high + diphtheria_low + hiv_aids + gdp + HDI + schooling, data = le_df)
+#backward/forward
+mod_3 = lm(le ~ status_Developed + adult_mort + bmi + polio_high + diphtheria_high + hiv_aids + gdp + thin_1_19 + HDI + schooling, data = le_df)
 
 #best subsets selection 
-mod_7 = lm(le ~ adult_mort + infantdeaths + polio_high + hiv_aids + gdp + HDI + schooling, data = le_df)
+mod_4 = lm(le ~ adult_mort + infantdeaths + polio_high + hiv_aids + gdp + HDI + schooling, data = le_df)
 
 ```
 
@@ -163,7 +149,7 @@ mod_7 = lm(le ~ adult_mort + infantdeaths + polio_high + hiv_aids + gdp + HDI + 
 set.seed(2)
 
 cv_df = 
-  crossv_mc(le_df,100) %>% 
+  crossv_mc(le_df, 100) %>% 
   mutate(
     train = map(train, as_tibble),
     test = map(test, as_tibble)
@@ -172,19 +158,13 @@ cv_df =
     mod_1 = map(train, ~lm(formula = formula(mod_1), data = .x)),
     mod_2 = map(train, ~lm(formula = formula(mod_2), data = .x)),
     mod_3 = map(train, ~lm(formula = formula(mod_3), data = .x)),
-    mod_4 = map(train, ~lm(formula = formula(mod_4), data = .x)),
-    mod_5 = map(train, ~lm(formula = formula(mod_5), data = .x)),
-    mod_6 = map(train, ~lm(formula = formula(mod_6), data = .x)),
-    mod_7 = map(train, ~lm(formula = formula(mod_7), data = .x))
+    mod_4 = map(train, ~lm(formula = formula(mod_4), data = .x))
     ) %>% 
   mutate(
     rmse_1 = map2_dbl(mod_1, test, ~rmse(model = .x, data = .y)),
     rmse_2 = map2_dbl(mod_2, test, ~rmse(model = .x, data = .y)),
     rmse_3 = map2_dbl(mod_3, test, ~rmse(model = .x, data = .y)),
-    rmse_4 = map2_dbl(mod_4, test, ~rmse(model = .x, data = .y)),
-    rmse_5 = map2_dbl(mod_5, test, ~rmse(model = .x, data = .y)),
-    rmse_6 = map2_dbl(mod_6, test, ~rmse(model = .x, data = .y)),
-    rmse_7 = map2_dbl(mod_7, test, ~rmse(model = .x, data = .y))
+    rmse_4 = map2_dbl(mod_4, test, ~rmse(model = .x, data = .y))
     )
 ```
 
@@ -192,7 +172,7 @@ cv_df =
 ```{r}
 cv_df %>% 
   pivot_longer(
-    rmse_1:rmse_7,
+    rmse_1:rmse_4,
     names_to = "model", 
     values_to = "rmse",
     names_prefix = "rmse_") %>% 
@@ -200,10 +180,7 @@ cv_df %>%
          model = fct_recode(model, "Model 1" = "1",
                                    "Model 2" = "2",
                                    "Model 3" = "3",
-                                   "Model 4" = "4",
-                                   "Model 5" = "5",
-                                   "Model 6" = "6",
-                                   "Model 7" = "7")
+                                   "Model 4" = "4")
          ) %>% 
   ggplot(aes(x = model, y = rmse, fill = model)) + 
   geom_violin() + 
@@ -214,6 +191,9 @@ cv_df %>%
   theme(legend.position = 'none',
         plot.title = element_text(hjust = 0.5))
 ```
+
+<br>
+<hr>
 
 ## Results
 

@@ -136,7 +136,8 @@ low_le_country
 ```
 
 
-* Japan, the country with the highest life expectancy worldwide, has an average life expectancy of 82.54 years. Whereas Sierra Leone, the country with the lowest life expectancy worldwide, only has an average life expectancy of 46.11 years.
+* Japan, the country with the highest life expectancy worldwide, has an average life expectancy of 82.54 years. A recent [study](https://www.nature.com/articles/s41430-020-0677-5) have shown that Japan’s long life expectancy is mainly due to its low mortality from infectious diseases, cerebrovascular disease, and pneumonia, resulting from Japanese diet with a low intake of saturated fatty acids (e.g., animal-based foods), and high intakes of marine n-3 polyunsaturated fatty acids (e.g., marine-based fish), plant foods (e.g., soybeans), unsweetened beverages (e.g., green tea), as well as westernized diet with meat, milk and dairy products (Tsugane, 2021).
+* In contrast, Sierra Leone, a country in western Africa, has the world's lowest average life expectancy of 46.11 years. Its infant and adult mortality rates are among the highest in the world, mainly due to the weaknesses of the health system. The leading causes of death include communicable diseases, maternal and perinatal health, and nutritional problems.[(Carshon-Marsh et al., 2021)](https://www.thelancet.com/journals/langlo/article/PIIS2214-109X(21)00459-9/fulltext)
 * There is still a huge gap in life expectancy across countries even when the overall global life expectancy increased steadily.
 
 <br> 
@@ -303,17 +304,6 @@ ggplotly(gdp_le)
 * There is a positive correlation between GDP per capita and life expectancy, with a threshold effect when GDP per capita reaches to approximately 20,000. In other words, countries with higher GDP per capita (i.e. GDP per capita > 20,000) tend to have higher life expectancy.
 * There is no apparent association between population and GDP per capita or life expectancy.
 
-<br> 
-<br> 
-
-## Summary Statsitcs of Life Expectancy Dataset
-
-```{r}
-df =
-  life_exp_df %>% 
-  select(-c(country,continent,status,year))
-
-psych::describe(df) %>% 
-  knitr::kable()
-```
+<br>
+<hr> 
 

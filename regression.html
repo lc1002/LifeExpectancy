@@ -308,10 +308,10 @@ $(document).ready(function () {
 <h2>Correlation Matrix</h2>
 <pre class="r"><code>cm_df =
   le_df %&gt;%
-  dplyr::select(-c(country,continent))
+  dplyr::select(-c(country,continent,year))
 
 corrplot(cor(cm_df), type = &quot;upper&quot;, diag = FALSE, method = &quot;square&quot;, addCoef.col = &quot;black&quot;, number.cex = .3, tl.col = &quot;black&quot;, tl.cex = .7)</code></pre>
-<p><img src="regression_files/figure-html/unnamed-chunk-3-1.png" width="70%" /></p>
+<p><img src="regression_files/figure-html/unnamed-chunk-3-1.png" width="80%" /></p>
 <p><br></p>
 <hr>
 </div>
@@ -325,9 +325,7 @@ corrplot(cor(cm_df), type = &quot;upper&quot;, diag = FALSE, method = &quot;squa
 <h3>Models Based on Automated Model Selection</h3>
 <p><strong>Stepwise Regression:</strong></p>
 <p><br> <br></p>
-<p><strong>Forward Selection:</strong></p>
-<p><br> <br></p>
-<p><strong>Backward Elimination:</strong></p>
+<p><strong>Forward/Backward Selection:</strong></p>
 <p><br> <br></p>
 <p><strong>Best Subsets Regression:</strong></p>
 <p><br></p>
@@ -627,8 +625,8 @@ corrplot(cor(cm_df), type = &quot;upper&quot;, diag = FALSE, method = &quot;squa
       )
 
 Model_comparison</code></pre>
-<p><img src="regression_files/figure-html/unnamed-chunk-6-1.png" width="70%" /></p>
-<p><br> <br></p>
+<p><img src="regression_files/figure-html/unnamed-chunk-6-1.png" width="80%" /></p>
+<br> <br>
 <hr>
 </div>
 </div>
@@ -636,7 +634,7 @@ Model_comparison</code></pre>
 <h2>Cross Validation</h2>
 <pre class="r"><code>cv_df %&gt;% 
   pivot_longer(
-    rmse_1:rmse_7,
+    rmse_1:rmse_4,
     names_to = &quot;model&quot;, 
     values_to = &quot;rmse&quot;,
     names_prefix = &quot;rmse_&quot;) %&gt;% 
@@ -644,10 +642,7 @@ Model_comparison</code></pre>
          model = fct_recode(model, &quot;Model 1&quot; = &quot;1&quot;,
                                    &quot;Model 2&quot; = &quot;2&quot;,
                                    &quot;Model 3&quot; = &quot;3&quot;,
-                                   &quot;Model 4&quot; = &quot;4&quot;,
-                                   &quot;Model 5&quot; = &quot;5&quot;,
-                                   &quot;Model 6&quot; = &quot;6&quot;,
-                                   &quot;Model 7&quot; = &quot;7&quot;)
+                                   &quot;Model 4&quot; = &quot;4&quot;)
          ) %&gt;% 
   ggplot(aes(x = model, y = rmse, fill = model)) + 
   geom_violin() + 
@@ -657,7 +652,9 @@ Model_comparison</code></pre>
   scale_fill_brewer(type = &#39;seq&#39;, palette = &#39;Blues&#39;) +
   theme(legend.position = &#39;none&#39;,
         plot.title = element_text(hjust = 0.5))</code></pre>
-<p><img src="regression_files/figure-html/unnamed-chunk-9-1.png" width="70%" /></p>
+<p><img src="regression_files/figure-html/unnamed-chunk-9-1.png" width="80%" /></p>
+<br>
+<hr>
 </div>
 <div id="results" class="section level2">
 <h2>Results</h2>
