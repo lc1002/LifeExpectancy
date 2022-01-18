@@ -41,6 +41,7 @@ According to statistics, the average life expectancy at birth was 82.1 years in 
 * **Interactive Map:** An interactive world map showing trends of life expectancy of all countries [(here)](https://anmei18.shinyapps.io/interactive_map/).
 
 <br>
+<hr> 
 
 <font size="2"> <span style="text-decoration:underline"> **Contributors:**</span> AnMei Chen and Lynn Chen</font>  
 

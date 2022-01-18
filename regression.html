@@ -308,26 +308,270 @@ $(document).ready(function () {
 <h2>Correlation Matrix</h2>
 <pre class="r"><code>cm_df =
   le_df %&gt;%
-  dplyr::select(-c(country,continent))
+  dplyr::select(-c(country,continent,year))
 
 corrplot(cor(cm_df), type = &quot;upper&quot;, diag = FALSE, method = &quot;square&quot;, addCoef.col = &quot;black&quot;, number.cex = .3, tl.col = &quot;black&quot;, tl.cex = .7)</code></pre>
-<p><img src="regression_files/figure-html/unnamed-chunk-3-1.png" width="70%" /></p>
+<p><img src="regression_files/figure-html/unnamed-chunk-3-1.png" width="80%" /></p>
 <p><br></p>
 <hr>
 </div>
 <div id="model-building" class="section level2">
 <h2>Model building</h2>
-<div id="models-based-on-prior-research" class="section level3">
-<h3>Models Based on Prior Research</h3>
+<div id="model-based-on-prior-research" class="section level3">
+<h3>Model Based on Prior Research</h3>
+<pre class="r"><code>mod_1 = lm(le ~ status_Developed + percent_exp + HDI + adult_mort + infantdeaths + schooling + gdp + hiv_aids + gdp * percent_exp, data = le_df)
+summary(mod_1)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = le ~ status_Developed + percent_exp + HDI + adult_mort + 
+##     infantdeaths + schooling + gdp + hiv_aids + gdp * percent_exp, 
+##     data = le_df)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -22.496  -2.230   0.032   2.470  20.269 
+## 
+## Coefficients:
+##                    Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)       5.690e+01  3.959e-01 143.728  &lt; 2e-16 ***
+## status_Developed  1.362e+00  2.535e-01   5.373 8.37e-08 ***
+## percent_exp       3.396e-04  1.285e-04   2.642 0.008281 ** 
+## HDI               8.323e+00  6.361e-01  13.085  &lt; 2e-16 ***
+## adult_mort       -1.879e-02  8.260e-04 -22.747  &lt; 2e-16 ***
+## infantdeaths     -3.857e-03  6.746e-04  -5.716 1.20e-08 ***
+## schooling         8.909e-01  3.962e-02  22.486  &lt; 2e-16 ***
+## gdp               5.874e-05  1.316e-05   4.464 8.34e-06 ***
+## hiv_aids         -5.341e-01  1.798e-02 -29.699  &lt; 2e-16 ***
+## percent_exp:gdp  -5.549e-09  1.511e-09  -3.672 0.000245 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 4.206 on 2928 degrees of freedom
+## Multiple R-squared:  0.8053, Adjusted R-squared:  0.8047 
+## F-statistic:  1345 on 9 and 2928 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>check_collinearity(mod_1)</code></pre>
+<pre><code>## # Check for Multicollinearity
+## 
+## Low Correlation
+## 
+##              Term  VIF Increased SE Tolerance
+##  status_Developed 1.40         1.18      0.72
+##       percent_exp 1.25         1.12      0.80
+##               HDI 2.92         1.71      0.34
+##        adult_mort 1.93         1.39      0.52
+##      infantdeaths 1.06         1.03      0.94
+##         schooling 3.21         1.79      0.31
+##               gdp 1.01         1.00      0.99
+##          hiv_aids 1.53         1.24      0.65
+##   percent_exp:gdp 1.00         1.00      1.00</code></pre>
 <p><br> <br></p>
 </div>
 <div id="models-based-on-automated-model-selection" class="section level3">
 <h3>Models Based on Automated Model Selection</h3>
 <p><strong>Stepwise Regression:</strong></p>
+<pre class="r"><code>step_model = stepAIC(full_model, direction = &quot;both&quot;, trace = FALSE)
+summary(step_model)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = le ~ status_Developed + adult_mort + infantdeaths + 
+##     bmi + under_five + polio_high + diphtheria_high + hiv_aids + 
+##     gdp + thin_1_19 + HDI + schooling, data = le_df)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -20.209  -2.170  -0.009   2.263  16.812 
+## 
+## Coefficients:
+##                    Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)       5.711e+01  4.246e-01 134.525  &lt; 2e-16 ***
+## status_Developed  1.575e+00  2.327e-01   6.768 1.58e-11 ***
+## adult_mort       -1.671e-02  7.634e-04 -21.886  &lt; 2e-16 ***
+## infantdeaths      9.918e-02  7.740e-03  12.815  &lt; 2e-16 ***
+## bmi               3.995e-02  4.634e-03   8.621  &lt; 2e-16 ***
+## under_five       -7.371e-02  5.702e-03 -12.927  &lt; 2e-16 ***
+## polio_high        1.854e+00  3.026e-01   6.128 1.01e-09 ***
+## diphtheria_high   1.163e+00  3.031e-01   3.838 0.000127 ***
+## hiv_aids         -4.900e-01  1.661e-02 -29.506  &lt; 2e-16 ***
+## gdp               5.519e-05  6.297e-06   8.764  &lt; 2e-16 ***
+## thin_1_19        -7.734e-02  2.175e-02  -3.557 0.000382 ***
+## HDI               6.095e+00  5.891e-01  10.348  &lt; 2e-16 ***
+## schooling         6.766e-01  3.775e-02  17.925  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 3.854 on 2925 degrees of freedom
+## Multiple R-squared:  0.8366, Adjusted R-squared:  0.836 
+## F-statistic:  1248 on 12 and 2925 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>check_collinearity(step_model)</code></pre>
+<pre><code>## # Check for Multicollinearity
+## 
+## Low Correlation
+## 
+##              Term  VIF Increased SE Tolerance
+##  status_Developed 1.27         1.13      0.79
+##        adult_mort 2.84         1.69      0.35
+##               bmi 2.86         1.69      0.35
+##          hiv_aids 1.92         1.38      0.52
+##               gdp 1.00         1.00      1.00
+##               HDI 3.35         1.83      0.30
+##         schooling 4.75         2.18      0.21
+## 
+## Moderate Correlation
+## 
+##             Term  VIF Increased SE Tolerance
+##       polio_high 7.26         2.69      0.14
+##  diphtheria_high 6.78         2.60      0.15
+## 
+## High Correlation
+## 
+##          Term     VIF Increased SE Tolerance
+##  infantdeaths 5856.27        76.53      0.00
+##    under_five 5846.13        76.46      0.00
+##     thin_1_19   11.75         3.43      0.09</code></pre>
+<p><em>Final Stepwise Model</em></p>
+<pre class="r"><code>## remove insignificant and high correlation variables (under_five, infantdeaths)
+mod_2 = lm(le ~ status_Developed + adult_mort + bmi + polio_high + diphtheria_high + hiv_aids + gdp + thin_1_19 + HDI + schooling, data = le_df)</code></pre>
 <p><br> <br></p>
-<p><strong>Forward Selection:</strong></p>
-<p><br> <br></p>
-<p><strong>Backward Elimination:</strong></p>
+<p><strong>Forward/Backward Selection:</strong></p>
+<p><em>Backward Elimination</em></p>
+<pre class="r"><code>back_mod = stepAIC(full_model, direction = &quot;backward&quot;, 
+                      trace = FALSE, scope = formula(full_model))
+summary(back_mod)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = le ~ status_Developed + adult_mort + infantdeaths + 
+##     bmi + under_five + polio_high + diphtheria_high + hiv_aids + 
+##     gdp + thin_1_19 + HDI + schooling, data = le_df)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -20.209  -2.170  -0.009   2.263  16.812 
+## 
+## Coefficients:
+##                    Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)       5.711e+01  4.246e-01 134.525  &lt; 2e-16 ***
+## status_Developed  1.575e+00  2.327e-01   6.768 1.58e-11 ***
+## adult_mort       -1.671e-02  7.634e-04 -21.886  &lt; 2e-16 ***
+## infantdeaths      9.918e-02  7.740e-03  12.815  &lt; 2e-16 ***
+## bmi               3.995e-02  4.634e-03   8.621  &lt; 2e-16 ***
+## under_five       -7.371e-02  5.702e-03 -12.927  &lt; 2e-16 ***
+## polio_high        1.854e+00  3.026e-01   6.128 1.01e-09 ***
+## diphtheria_high   1.163e+00  3.031e-01   3.838 0.000127 ***
+## hiv_aids         -4.900e-01  1.661e-02 -29.506  &lt; 2e-16 ***
+## gdp               5.519e-05  6.297e-06   8.764  &lt; 2e-16 ***
+## thin_1_19        -7.734e-02  2.175e-02  -3.557 0.000382 ***
+## HDI               6.095e+00  5.891e-01  10.348  &lt; 2e-16 ***
+## schooling         6.766e-01  3.775e-02  17.925  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 3.854 on 2925 degrees of freedom
+## Multiple R-squared:  0.8366, Adjusted R-squared:  0.836 
+## F-statistic:  1248 on 12 and 2925 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>check_collinearity(back_mod)</code></pre>
+<pre><code>## # Check for Multicollinearity
+## 
+## Low Correlation
+## 
+##              Term  VIF Increased SE Tolerance
+##  status_Developed 1.27         1.13      0.79
+##        adult_mort 2.84         1.69      0.35
+##               bmi 2.86         1.69      0.35
+##          hiv_aids 1.92         1.38      0.52
+##               gdp 1.00         1.00      1.00
+##               HDI 3.35         1.83      0.30
+##         schooling 4.75         2.18      0.21
+## 
+## Moderate Correlation
+## 
+##             Term  VIF Increased SE Tolerance
+##       polio_high 7.26         2.69      0.14
+##  diphtheria_high 6.78         2.60      0.15
+## 
+## High Correlation
+## 
+##          Term     VIF Increased SE Tolerance
+##  infantdeaths 5856.27        76.53      0.00
+##    under_five 5846.13        76.46      0.00
+##     thin_1_19   11.75         3.43      0.09</code></pre>
+<pre class="r"><code>backward = lm(le ~ status_Developed + adult_mort + bmi + polio_high + diphtheria_high + hiv_aids + gdp + thin_1_19 + HDI + schooling, data = le_df)</code></pre>
+<p><em>Forward Selection</em></p>
+<pre class="r"><code>forward_mod = stepAIC(full_model, direction = &quot;forward&quot;, trace = FALSE, scope = formula(full_model))
+summary(forward_mod)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = le ~ status_Developed + adult_mort + infantdeaths + 
+##     alcohol + percent_exp + hepatitis_b_high + measles + bmi + 
+##     under_five + polio_high + total_exp + diphtheria_high + hiv_aids + 
+##     gdp + population + thin_1_19 + thin_5_9 + HDI + schooling, 
+##     data = le_df)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -20.4808  -2.1461   0.0048   2.2608  16.7409 
+## 
+## Coefficients:
+##                    Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)       5.694e+01  4.621e-01 123.215  &lt; 2e-16 ***
+## status_Developed  1.435e+00  2.584e-01   5.552 3.08e-08 ***
+## adult_mort       -1.674e-02  7.716e-04 -21.689  &lt; 2e-16 ***
+## infantdeaths      1.004e-01  7.970e-03  12.592  &lt; 2e-16 ***
+## alcohol           1.426e-02  2.427e-02   0.587   0.5569    
+## percent_exp       4.938e-05  7.963e-05   0.620   0.5352    
+## hepatitis_b_high  7.132e-02  2.430e-01   0.293   0.7692    
+## measles           5.274e-07  7.313e-06   0.072   0.9425    
+## bmi               3.930e-02  4.713e-03   8.338  &lt; 2e-16 ***
+## under_five       -7.455e-02  5.845e-03 -12.755  &lt; 2e-16 ***
+## polio_high        1.836e+00  3.070e-01   5.980 2.50e-09 ***
+## total_exp         3.557e-02  3.110e-02   1.144   0.2528    
+## diphtheria_high   1.105e+00  3.409e-01   3.243   0.0012 ** 
+## hiv_aids         -4.921e-01  1.674e-02 -29.386  &lt; 2e-16 ***
+## gdp               4.912e-05  1.221e-05   4.022 5.91e-05 ***
+## population       -2.774e-10  1.582e-09  -0.175   0.8608    
+## thin_1_19        -5.000e-02  4.624e-02  -1.081   0.2796    
+## thin_5_9         -2.412e-02  4.565e-02  -0.528   0.5973    
+## HDI               6.186e+00  5.936e-01  10.421  &lt; 2e-16 ***
+## schooling         6.682e-01  3.875e-02  17.243  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 3.857 on 2918 degrees of freedom
+## Multiple R-squared:  0.8368, Adjusted R-squared:  0.8357 
+## F-statistic: 787.5 on 19 and 2918 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>check_collinearity(forward_mod)</code></pre>
+<pre><code>## # Check for Multicollinearity
+## 
+## Low Correlation
+## 
+##              Term  VIF Increased SE Tolerance
+##  status_Developed 1.63         1.28      0.61
+##        adult_mort 2.07         1.44      0.48
+##           alcohol 2.23         1.49      0.45
+##       percent_exp 1.11         1.05      0.90
+##           measles 1.00         1.00      1.00
+##               bmi 3.49         1.87      0.29
+##         total_exp 1.48         1.22      0.68
+##          hiv_aids 1.66         1.29      0.60
+##               gdp 1.01         1.00      0.99
+##        population 1.00         1.00      1.00
+##               HDI 3.85         1.96      0.26
+## 
+## Moderate Correlation
+## 
+##              Term  VIF Increased SE Tolerance
+##  hepatitis_b_high 5.87         2.42      0.17
+##        polio_high 9.39         3.06      0.11
+##         schooling 6.15         2.48      0.16
+## 
+## High Correlation
+## 
+##             Term     VIF Increased SE Tolerance
+##     infantdeaths 5978.58        77.32      0.00
+##       under_five 5987.53        77.38      0.00
+##  diphtheria_high   10.30         3.21      0.10
+##        thin_1_19   60.00         7.75      0.02
+##         thin_5_9   64.04         8.00      0.02</code></pre>
+<pre class="r"><code>forward = lm(le ~ status_Developed + adult_mort + infantdeaths + bmi + polio_high + diphtheria_low + hiv_aids + gdp + HDI + schooling, data = le_df)</code></pre>
 <p><br> <br></p>
 <p><strong>Best Subsets Regression:</strong></p>
 <p><br></p>
@@ -621,7 +865,11 @@ corrplot(cor(cm_df), type = &quot;upper&quot;, diag = FALSE, method = &quot;squa
 <pre class="r"><code>Model_comparison =
   tibble(
     n_pred = c(1:9),
+<<<<<<< HEAD
     &quot;Adjusted R2&quot; = best_summary$adjr2,
+=======
+    &quot;Adj R2&quot; = best_summary$adjr2,
+>>>>>>> 1cb88371370677146e084f9cd8e5b3db982a5b87
     &quot;BIC&quot; = best_summary$bic,
     &quot;Cp&quot; = best_summary$cp,
     &quot;RSE&quot; = best_summary$rsq,
@@ -639,13 +887,87 @@ corrplot(cor(cm_df), type = &quot;upper&quot;, diag = FALSE, method = &quot;squa
       )
 
 Model_comparison</code></pre>
-<p><img src="regression_files/figure-html/unnamed-chunk-6-1.png" width="70%" /></p>
+<p><img src="regression_files/figure-html/unnamed-chunk-13-1.png" width="80%" /></p>
+<p><em>Final Best Subsets Model</em></p>
+<pre class="r"><code>mod_3 = lm(le ~ adult_mort + bmi + under_five + polio_high + hiv_aids + gdp + HDI + schooling, data = le_df)</code></pre>
 <p><br> <br></p>
+<p><strong>Lasso Regression:</strong></p>
+<pre class="r"><code>#define response variable
+y = le_df$le
+
+#define matrix of predictor variables
+x = data.matrix(le_df[, c(&#39;status_Developed&#39;, &#39;adult_mort&#39;, &#39;infantdeaths&#39;, &#39;alcohol&#39;, &#39;percent_exp&#39;, &#39;hepatitis_b_high&#39;, &#39;measles&#39;, &#39;bmi&#39;, &#39;under_five&#39;, &#39;polio_high&#39;, &#39;total_exp&#39;, &#39;diphtheria_high&#39;, &#39;hiv_aids&#39;, &#39;gdp&#39;, &#39;population&#39;, &#39;thin_1_19&#39;, &#39;thin_5_9&#39;, &#39;HDI&#39;, &#39;schooling&#39;)])
+
+#perform k-fold cross-validation to find optimal lambda value
+cv_lasso_model &lt;- cv.glmnet(x, y, alpha = 1)
+
+#find optimal lambda value that minimizes test MSE
+best_lasso_lambda &lt;- cv_lasso_model$lambda.min
+best_lasso_lambda</code></pre>
+<pre><code>## [1] 0.003488968</code></pre>
+<pre class="r"><code>mod_4 = glmnet(x, y, alpha = 1, lambda = best_lasso_lambda)
+coef(mod_4)</code></pre>
+<pre><code>## 20 x 1 sparse Matrix of class &quot;dgCMatrix&quot;
+##                             s0
+## (Intercept)       5.681863e+01
+## status_Developed  1.430978e+00
+## adult_mort       -1.678470e-02
+## infantdeaths      8.592883e-02
+## alcohol           8.484722e-03
+## percent_exp       5.070890e-05
+## hepatitis_b_high  4.482229e-02
+## measles          -5.057143e-09
+## bmi               3.957832e-02
+## under_five       -6.398781e-02
+## polio_high        1.860788e+00
+## total_exp         3.502150e-02
+## diphtheria_high   1.147423e+00
+## hiv_aids         -4.935099e-01
+## gdp               4.828201e-05
+## population        1.038695e-10
+## thin_1_19        -5.142361e-02
+## thin_5_9         -1.963396e-02
+## HDI               6.284552e+00
+## schooling         6.712439e-01</code></pre>
+<pre class="r"><code>#No coefficient is shown for the predictor measles and population because the lasso regression shrunk the coefficients all the way to zero. This means it was completely dropped from the model because it wasn’t influential enough.
+
+plot(cv_lasso_model)</code></pre>
+<p><img src="regression_files/figure-html/unnamed-chunk-15-1.png" width="80%" /></p>
+<p><br> <br></p>
+<p><strong>Ridge Regression:</strong></p>
+<pre class="r"><code>#define response variable
+y = le_df$le
+
+#define matrix of predictor variables
+x = data.matrix(le_df[, c(&#39;status_Developed&#39;, &#39;adult_mort&#39;, &#39;infantdeaths&#39;, &#39;alcohol&#39;, &#39;percent_exp&#39;, &#39;hepatitis_b_high&#39;, &#39;measles&#39;, &#39;bmi&#39;, &#39;under_five&#39;, &#39;polio_high&#39;, &#39;total_exp&#39;, &#39;diphtheria_high&#39;, &#39;hiv_aids&#39;, &#39;gdp&#39;, &#39;population&#39;, &#39;thin_1_19&#39;, &#39;thin_5_9&#39;, &#39;HDI&#39;, &#39;schooling&#39;)])
+
+#fit ridge regression model
+mod_5 = glmnet(x, y, alpha = 0)
+
+#view summary of model
+summary(mod_5)</code></pre>
+<pre><code>##           Length Class     Mode   
+## a0         100   -none-    numeric
+## beta      1900   dgCMatrix S4     
+## df         100   -none-    numeric
+## dim          2   -none-    numeric
+## lambda     100   -none-    numeric
+## dev.ratio  100   -none-    numeric
+## nulldev      1   -none-    numeric
+## npasses      1   -none-    numeric
+## jerr         1   -none-    numeric
+## offset       1   -none-    logical
+## call         4   -none-    call   
+## nobs         1   -none-    numeric</code></pre>
+<pre class="r"><code>dim(coef(mod_5))</code></pre>
+<pre><code>## [1]  20 100</code></pre>
+<br> <br>
 <hr>
 </div>
 </div>
 <div id="cross-validation" class="section level2">
 <h2>Cross Validation</h2>
+<<<<<<< HEAD
 <pre><code>
 
 
@@ -667,15 +989,105 @@ cv_df %&gt;%
                                    &quot;Model 6&quot; = &quot;6&quot;,
                                    &quot;Model 7&quot; = &quot;7&quot;)
          ) %&gt;% 
+=======
+<div id="cross-validating-with-violin-plots" class="section level3">
+<h3>Cross-validating with Violin Plots</h3>
+<pre class="r"><code>rmse_plot =
+  rmse_table %&gt;% 
+>>>>>>> 1cb88371370677146e084f9cd8e5b3db982a5b87
   ggplot(aes(x = model, y = rmse, fill = model)) + 
   geom_violin() + 
   labs(x = &quot;&quot;,
-       y = &quot;RMSE&quot;, 
-       title = &quot;Cross Validation&quot;) +
-  scale_fill_brewer(type = &#39;seq&#39;, palette = &#39;Blues&#39;) +
+       y = &quot;RMSE&quot;) +
+  scale_fill_brewer(type = &#39;seq&#39;, palette = &#39;Set2&#39;) +
   theme(legend.position = &#39;none&#39;,
-        plot.title = element_text(hjust = 0.5))</code></pre>
-<p><img src="regression_files/figure-html/unnamed-chunk-9-1.png" width="70%" /></p>
+        plot.title = element_text(hjust = 0.5))
+
+rsq_plot =
+  rsq_table %&gt;% 
+  ggplot(aes(x = model, y = rsq, fill = model)) + 
+  geom_violin() + 
+  labs(x = &quot;&quot;,
+       y = &quot;RSquared&quot;) +
+  scale_fill_brewer(type = &#39;seq&#39;, palette = &#39;Set2&#39;) +
+  theme(legend.position = &#39;none&#39;,
+        plot.title = element_text(hjust = 0.5))
+
+mae_plot =
+  mae_table %&gt;% 
+  ggplot(aes(x = model, y = mae, fill = model)) + 
+  geom_violin() + 
+  labs(x = &quot;&quot;,
+       y = &quot;MAE&quot;) +
+  scale_fill_brewer(type = &#39;seq&#39;, palette = &#39;Set2&#39;) +
+  theme(legend.position = &#39;none&#39;,
+        plot.title = element_text(hjust = 0.5))
+
+rmse_plot/rsq_plot/mae_plot</code></pre>
+<p><img src="regression_files/figure-html/unnamed-chunk-19-1.png" width="80%" /></p>
+<p><br> <br></p>
+</div>
+<div id="cross-validation-table" class="section level3">
+<h3>Cross Validation Table</h3>
+<pre class="r"><code>mean_rmse =
+  rmse_table %&gt;% 
+  group_by(model) %&gt;% 
+  summarize(mean_rmse = mean(rmse))
+
+mean_mae = 
+  mae_table %&gt;%
+  group_by(model) %&gt;% 
+  summarize(mean_mae = mean(mae))
+
+mean_rsquare = 
+  rsq_table %&gt;% 
+  group_by(model) %&gt;% 
+  summarize(mean_rsq = mean(rsq))
+
+Model_comparison_table =
+  full_join(inner_join(mean_rmse, mean_rsquare), mean_mae) %&gt;% 
+  knitr::kable()
+
+Model_comparison_table </code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">model</th>
+<th align="right">mean_rmse</th>
+<th align="right">mean_rsq</th>
+<th align="right">mean_mae</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Model 1</td>
+<td align="right">4.209394</td>
+<td align="right">0.8053251</td>
+<td align="right">3.091406</td>
+</tr>
+<tr class="even">
+<td align="left">Model 2</td>
+<td align="right">3.970951</td>
+<td align="right">0.8267516</td>
+<td align="right">2.964913</td>
+</tr>
+<tr class="odd">
+<td align="left">Model 3</td>
+<td align="right">4.006047</td>
+<td align="right">0.8236816</td>
+<td align="right">2.979913</td>
+</tr>
+<tr class="even">
+<td align="left">Model 4</td>
+<td align="right">3.830895</td>
+<td align="right">0.8386278</td>
+<td align="right">2.868733</td>
+</tr>
+</tbody>
+</table>
+<br>
+<hr>
+</div>
 </div>
 <div id="results" class="section level2">
 <h2>Results</h2>
@@ -695,13 +1107,20 @@ cv_df %&gt;%
 <tbody>
 <tr class="odd">
 <td align="left">(Intercept)</td>
+<<<<<<< HEAD
 <td align="right">57.5663967</td>
 <td align="right">0.5321359</td>
 <td align="right">108.179873</td>
+=======
+<td align="right">56.8966265</td>
+<td align="right">0.3958633</td>
+<td align="right">143.727982</td>
+>>>>>>> 1cb88371370677146e084f9cd8e5b3db982a5b87
 <td align="right">0.0000000</td>
 </tr>
 <tr class="even">
 <td align="left">status_Developed</td>
+<<<<<<< HEAD
 <td align="right">1.3579794</td>
 <td align="right">0.2381854</td>
 <td align="right">5.701354</td>
@@ -740,10 +1159,51 @@ cv_df %&gt;%
 <td align="right">-0.5039861</td>
 <td align="right">0.0170105</td>
 <td align="right">-29.627976</td>
+=======
+<td align="right">1.3617600</td>
+<td align="right">0.2534639</td>
+<td align="right">5.372598</td>
+<td align="right">0.0000001</td>
+</tr>
+<tr class="odd">
+<td align="left">percent_exp</td>
+<td align="right">0.0003396</td>
+<td align="right">0.0001285</td>
+<td align="right">2.642179</td>
+<td align="right">0.0082813</td>
+</tr>
+<tr class="even">
+<td align="left">HDI</td>
+<td align="right">8.3230014</td>
+<td align="right">0.6360650</td>
+<td align="right">13.085142</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="odd">
+<td align="left">adult_mort</td>
+<td align="right">-0.0187897</td>
+<td align="right">0.0008260</td>
+<td align="right">-22.746898</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="even">
+<td align="left">infantdeaths</td>
+<td align="right">-0.0038565</td>
+<td align="right">0.0006746</td>
+<td align="right">-5.716483</td>
+<td align="right">0.0000000</td>
+</tr>
+<tr class="odd">
+<td align="left">schooling</td>
+<td align="right">0.8909016</td>
+<td align="right">0.0396209</td>
+<td align="right">22.485621</td>
+>>>>>>> 1cb88371370677146e084f9cd8e5b3db982a5b87
 <td align="right">0.0000000</td>
 </tr>
 <tr class="even">
 <td align="left">gdp</td>
+<<<<<<< HEAD
 <td align="right">0.0000514</td>
 <td align="right">0.0000065</td>
 <td align="right">7.948955</td>
@@ -768,7 +1228,26 @@ cv_df %&gt;%
 <td align="right">0.6887047</td>
 <td align="right">0.0387744</td>
 <td align="right">17.761841</td>
+=======
+<td align="right">0.0000587</td>
+<td align="right">0.0000132</td>
+<td align="right">4.464205</td>
+<td align="right">0.0000083</td>
+</tr>
+<tr class="odd">
+<td align="left">hiv_aids</td>
+<td align="right">-0.5340504</td>
+<td align="right">0.0179823</td>
+<td align="right">-29.698666</td>
 <td align="right">0.0000000</td>
+</tr>
+<tr class="even">
+<td align="left">percent_exp:gdp</td>
+<td align="right">0.0000000</td>
+>>>>>>> 1cb88371370677146e084f9cd8e5b3db982a5b87
+<td align="right">0.0000000</td>
+<td align="right">-3.672232</td>
+<td align="right">0.0002447</td>
 </tr>
 </tbody>
 </table>

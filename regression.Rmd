@@ -6,20 +6,28 @@ output: html_document
 
 ```{r include=FALSE, message=FALSE}
 library(tidyverse)
+library(performance)
 library(modelr)
 library(mgcv)
 library(corrplot)
-library(olsrr)
 library(leaps)
+<<<<<<< HEAD
 library(glmnet)
 library(rsample)
+=======
+library(caret)
+library(patchwork)
+library(Metrics)
+library(MASS)
+library(glmnet)
+>>>>>>> 1cb88371370677146e084f9cd8e5b3db982a5b87
 
 knitr::opts_chunk$set(
   echo = TRUE,
   fig.width = 6,
   fig.asp = .7,
   dpi = 800,
-  out.width = "70%"
+  out.width = "80%"
 )
 
 theme_set(theme_minimal())
@@ -46,7 +54,7 @@ le_df =
 ```{r}
 cm_df =
   le_df %>%
-  dplyr::select(-c(country,continent))
+  dplyr::select(-c(country,continent,year))
 
 corrplot(cor(cm_df), type = "upper", diag = FALSE, method = "square", addCoef.col = "black", number.cex = .3, tl.col = "black", tl.cex = .7)
 ```
@@ -57,27 +65,71 @@ corrplot(cor(cm_df), type = "upper", diag = FALSE, method = "square", addCoef.co
 
 ## Model building 
 
-### Models Based on Prior Research
+### Model Based on Prior Research
+
+```{r}
+mod_1 = lm(le ~ status_Developed + percent_exp + HDI + adult_mort + infantdeaths + schooling + gdp + hiv_aids + gdp * percent_exp, data = le_df)
+summary(mod_1)
+```
+
+
+```{r}
+check_collinearity(mod_1)
+```
+
 
 <br>
 <br>
 
 ### Models Based on Automated Model Selection
 
+```{r include = FALSE}
+full_model = lm(le ~ status_Developed + adult_mort + infantdeaths + alcohol + percent_exp + hepatitis_b_high + measles + bmi + under_five + polio_high + total_exp + diphtheria_high  + hiv_aids + gdp + population + thin_1_19 + thin_5_9 + HDI + schooling, data = le_df)
+```
+
+
 **Stepwise Regression:**
 
+```{r}
+step_model = stepAIC(full_model, direction = "both", trace = FALSE)
+summary(step_model)
+check_collinearity(step_model)
+```
+
+*Final Stepwise Model*
+```{r}
+## remove insignificant and high correlation variables (under_five, infantdeaths)
+mod_2 = lm(le ~ status_Developed + adult_mort + bmi + polio_high + diphtheria_high + hiv_aids + gdp + thin_1_19 + HDI + schooling, data = le_df)
+```
+
+
 <br>
 <br>
 
-**Forward Selection:**
+**Forward/Backward Selection:**
+
+*Backward Elimination*
+```{r}
+back_mod = stepAIC(full_model, direction = "backward", 
+                      trace = FALSE, scope = formula(full_model))
+summary(back_mod)
+check_collinearity(back_mod)
+
+backward = lm(le ~ status_Developed + adult_mort + bmi + polio_high + diphtheria_high + hiv_aids + gdp + thin_1_19 + HDI + schooling, data = le_df)
+```
+
+*Forward Selection*
+```{r}
+forward_mod = stepAIC(full_model, direction = "forward", trace = FALSE, scope = formula(full_model))
+summary(forward_mod)
+check_collinearity(forward_mod)
+
+forward = lm(le ~ status_Developed + adult_mort + infantdeaths + bmi + polio_high + diphtheria_low + hiv_aids + gdp + HDI + schooling, data = le_df)
+```
 
 <br>
 <br>
 
-**Backward Elimination:**
-
-<br>
-<br>
 
 **Best Subsets Regression:**
 
@@ -94,7 +146,11 @@ best_summary_df =
   add_column(" " = c(1:9), .before = "status_Developed")
 
 table = as.data.frame(t(best_summary_df[-1])) %>% 
+<<<<<<< HEAD
   rename("1" = "V1", "2" = "V2", "3" = "V3","4" = "V4", "5" = "V5", "6" = "V6","7" = "V7", "8" = "V8", "9" = "V9")
+=======
+  rename("1" = "V1", "2" = "V2", "3" = "V3","4" = "V4", "5" = "V5", "6" = "V6","7" = "V7", "8" = "V8","9" = "V9")
+>>>>>>> 1cb88371370677146e084f9cd8e5b3db982a5b87
 ```
 
 ```{r}
@@ -109,7 +165,11 @@ table %>%
 Model_comparison =
   tibble(
 	n_pred = c(1:9),
+<<<<<<< HEAD
 	"Adjusted R2" = best_summary$adjr2,
+=======
+	"Adj R2" = best_summary$adjr2,
+>>>>>>> 1cb88371370677146e084f9cd8e5b3db982a5b87
 	"BIC" = best_summary$bic,
 	"Cp" = best_summary$cp,
 	"RSE" = best_summary$rsq,
@@ -129,43 +189,76 @@ Model_comparison =
 Model_comparison
 ```
 
+*Final Best Subsets Model*
+```{r}
+mod_3 = lm(le ~ adult_mort + bmi + under_five + polio_high + hiv_aids + gdp + HDI + schooling, data = le_df)
+```
 
 <br>
 <br>
 
+**Lasso Regression:**
+
+```{r}
+#define response variable
+y = le_df$le
+
+#define matrix of predictor variables
+x = data.matrix(le_df[, c('status_Developed', 'adult_mort', 'infantdeaths', 'alcohol', 'percent_exp', 'hepatitis_b_high', 'measles', 'bmi', 'under_five', 'polio_high', 'total_exp', 'diphtheria_high', 'hiv_aids', 'gdp', 'population', 'thin_1_19', 'thin_5_9', 'HDI', 'schooling')])
+
+#perform k-fold cross-validation to find optimal lambda value
+cv_lasso_model <- cv.glmnet(x, y, alpha = 1)
+
+#find optimal lambda value that minimizes test MSE
+best_lasso_lambda <- cv_lasso_model$lambda.min
+best_lasso_lambda
+
+mod_4 = glmnet(x, y, alpha = 1, lambda = best_lasso_lambda)
+coef(mod_4)
+#No coefficient is shown for the predictor measles and population because the lasso regression shrunk the coefficients all the way to zero. This means it was completely dropped from the model because it wasn’t influential enough.
+
+plot(cv_lasso_model)
+```
+
+<br>
+<br>
+
+**Ridge Regression:**
+
+```{r}
+#define response variable
+y = le_df$le
+
+#define matrix of predictor variables
+x = data.matrix(le_df[, c('status_Developed', 'adult_mort', 'infantdeaths', 'alcohol', 'percent_exp', 'hepatitis_b_high', 'measles', 'bmi', 'under_five', 'polio_high', 'total_exp', 'diphtheria_high', 'hiv_aids', 'gdp', 'population', 'thin_1_19', 'thin_5_9', 'HDI', 'schooling')])
+
+<<<<<<< HEAD
+#best subsets selection 
+mod_7 = lm(le ~ adult_mort + infantdeaths + polio_high + hiv_aids + gdp + HDI + schooling, data = le_df)
+```
+=======
+#fit ridge regression model
+mod_5 = glmnet(x, y, alpha = 0)
+
+#view summary of model
+summary(mod_5)
+dim(coef(mod_5))
+>>>>>>> 1cb88371370677146e084f9cd8e5b3db982a5b87
+```
+
+
+
+<br>
+<br>
 <hr>
 
 ## Cross Validation
 
 ```{r include=FALSE}
-#stepwise
-mod_1 = lm(le ~ status_Developed + adult_mort + bmi + polio_high + diphtheria_low + hiv_aids + gdp + thin_1_19 + HDI + schooling, data = le_df)
-
-#health
-mod_2 = lm(le ~ polio_high + total_exp + diphtheria_low + hiv_aids + thin_1_19, data = le_df)
-
-#full model
-mod_3 = lm(le ~ status_Developed + adult_mort + infantdeaths + bmi + polio_high + diphtheria_low + hiv_aids + gdp + HDI + schooling, data = le_df)
-
-# model_7
-mod_4 = lm(le ~ status_Developed + percent_exp + HDI + adult_mort + infantdeaths + schooling, data = le_df)
-
-#backward
-mod_5 = lm(le ~ status_Developed + adult_mort + bmi + polio_high + diphtheria_low + hiv_aids + gdp + thin_1_19 + HDI + schooling, data = le_df)
-
-#forward
-mod_6 = lm(le ~ status_Developed + adult_mort + infantdeaths + bmi + polio_high + diphtheria_low + hiv_aids + gdp + HDI + schooling, data = le_df)
-
-#best subsets selection 
-mod_7 = lm(le ~ adult_mort + infantdeaths + polio_high + hiv_aids + gdp + HDI + schooling, data = le_df)
-```
-```
-
-```{r include=FALSE}
 set.seed(2)
 
 cv_df = 
-  crossv_mc(le_df,100) %>% 
+  crossv_mc(le_df, 100) %>% 
   mutate(
     train = map(train, as_tibble),
     test = map(test, as_tibble)
@@ -174,27 +267,39 @@ cv_df =
     mod_1 = map(train, ~lm(formula = formula(mod_1), data = .x)),
     mod_2 = map(train, ~lm(formula = formula(mod_2), data = .x)),
     mod_3 = map(train, ~lm(formula = formula(mod_3), data = .x)),
-    mod_4 = map(train, ~lm(formula = formula(mod_4), data = .x)),
-    mod_5 = map(train, ~lm(formula = formula(mod_5), data = .x)),
-    mod_6 = map(train, ~lm(formula = formula(mod_6), data = .x)),
-    mod_7 = map(train, ~lm(formula = formula(mod_7), data = .x))
+    mod_4 = map(train, ~glmnet(x, y, alpha = 1, lambda = best_lasso_lambda, data = .x)),
+    mod_5 = map(train, ~glmnet(x, y, alpha = 0,data = .x))
     ) %>% 
   mutate(
-    rmse_1 = map2_dbl(mod_1, test, ~rmse(model = .x, data = .y)),
-    rmse_2 = map2_dbl(mod_2, test, ~rmse(model = .x, data = .y)),
-    rmse_3 = map2_dbl(mod_3, test, ~rmse(model = .x, data = .y)),
-    rmse_4 = map2_dbl(mod_4, test, ~rmse(model = .x, data = .y)),
-    rmse_5 = map2_dbl(mod_5, test, ~rmse(model = .x, data = .y)),
-    rmse_6 = map2_dbl(mod_6, test, ~rmse(model = .x, data = .y)),
-    rmse_7 = map2_dbl(mod_7, test, ~rmse(model = .x, data = .y))
+    rmse_1 = map2_dbl(mod_1, test, ~modelr::rmse(model = .x, data = .y)),
+    rmse_2 = map2_dbl(mod_2, test, ~modelr::rmse(model = .x, data = .y)),
+    rmse_3 = map2_dbl(mod_3, test, ~modelr::rmse(model = .x, data = .y)),
+    rmse_4 = map2_dbl(mod_4, test, ~modelr::rmse(model = full_model, data = .y)),
+    rmse_5 = map2_dbl(mod_5, test, ~modelr::rmse(model = full_model, data = .y))
+    ) %>% 
+  mutate(
+    mae_1 = map2_dbl(mod_1, test, ~modelr::mae(model = .x, data = .y)),
+    mae_2 = map2_dbl(mod_2, test, ~modelr::mae(model = .x, data = .y)),
+    mae_3 = map2_dbl(mod_3, test, ~modelr::mae(model = .x, data = .y)),
+    mae_4 = map2_dbl(mod_4, test, ~modelr::mae(model = full_model, data = .y)),
+    mae_5 = map2_dbl(mod_5, test, ~modelr::mae(model = full_model, data = .y))
+    ) %>% 
+  mutate(
+    rsq_1 = map2_dbl(mod_1, test, ~modelr::rsquare(model = .x, data = .y)),
+    rsq_2 = map2_dbl(mod_2, test, ~modelr::rsquare(model = .x, data = .y)),
+    rsq_3 = map2_dbl(mod_3, test, ~modelr::rsquare(model = .x, data = .y)),
+    rsq_4 = map2_dbl(mod_4, test, ~modelr::rsquare(model = full_model, data = .y)),
+    rsq_5 = map2_dbl(mod_5, test, ~modelr::rsquare(model = full_model, data = .y))
     )
 ```
 
 
-```{r}
-cv_df %>% 
+### Cross-validating with Violin Plots
+```{r include=FALSE}
+rmse_table = 
+  cv_df %>%
   pivot_longer(
-    rmse_1:rmse_7,
+    rmse_1:rmse_4,
     names_to = "model", 
     values_to = "rmse",
     names_prefix = "rmse_") %>% 
@@ -202,20 +307,98 @@ cv_df %>%
          model = fct_recode(model, "Model 1" = "1",
                                    "Model 2" = "2",
                                    "Model 3" = "3",
-                                   "Model 4" = "4",
-                                   "Model 5" = "5",
-                                   "Model 6" = "6",
-                                   "Model 7" = "7")
-         ) %>% 
+                                   "Model 4" = "4"))
+rsq_table = 
+  cv_df %>% 
+  pivot_longer(
+    rsq_1:rsq_4,
+    names_to = "model", 
+    values_to = "rsq",
+    names_prefix = "rsq_") %>% 
+  mutate(model = fct_inorder(model),
+         model = fct_recode(model, "Model 1" = "1",
+                                   "Model 2" = "2",
+                                   "Model 3" = "3",
+                                   "Model 4" = "4"))
+mae_table = 
+  cv_df %>% 
+  pivot_longer(
+    mae_1:mae_4,
+    names_to = "model", 
+    values_to = "mae",
+    names_prefix = "mae_") %>% 
+  mutate(model = fct_inorder(model),
+         model = fct_recode(model, "Model 1" = "1",
+                                   "Model 2" = "2",
+                                   "Model 3" = "3",
+                                   "Model 4" = "4"))
+```
+
+
+```{r}
+rmse_plot =
+  rmse_table %>% 
   ggplot(aes(x = model, y = rmse, fill = model)) + 
   geom_violin() + 
   labs(x = "",
-       y = "RMSE", 
-       title = "Cross Validation") +
-  scale_fill_brewer(type = 'seq', palette = 'Blues') +
+       y = "RMSE") +
+  scale_fill_brewer(type = 'seq', palette = 'Set2') +
   theme(legend.position = 'none',
         plot.title = element_text(hjust = 0.5))
+
+rsq_plot =
+  rsq_table %>% 
+  ggplot(aes(x = model, y = rsq, fill = model)) + 
+  geom_violin() + 
+  labs(x = "",
+       y = "RSquared") +
+  scale_fill_brewer(type = 'seq', palette = 'Set2') +
+  theme(legend.position = 'none',
+        plot.title = element_text(hjust = 0.5))
+
+mae_plot =
+  mae_table %>% 
+  ggplot(aes(x = model, y = mae, fill = model)) + 
+  geom_violin() + 
+  labs(x = "",
+       y = "MAE") +
+  scale_fill_brewer(type = 'seq', palette = 'Set2') +
+  theme(legend.position = 'none',
+        plot.title = element_text(hjust = 0.5))
+
+rmse_plot/rsq_plot/mae_plot
 ```
+
+<br>
+<br>
+
+### Cross Validation Table
+```{r message=FALSE}
+mean_rmse =
+  rmse_table %>% 
+  group_by(model) %>% 
+  summarize(mean_rmse = mean(rmse))
+
+mean_mae = 
+  mae_table %>%
+  group_by(model) %>% 
+  summarize(mean_mae = mean(mae))
+
+mean_rsquare = 
+  rsq_table %>% 
+  group_by(model) %>% 
+  summarize(mean_rsq = mean(rsq))
+
+Model_comparison_table =
+  full_join(inner_join(mean_rmse, mean_rsquare), mean_mae) %>% 
+  knitr::kable()
+
+Model_comparison_table 
+```
+
+
+<br>
+<hr>
 
 ## Results
 
