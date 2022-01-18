@@ -328,7 +328,7 @@ h1.title {
 <p>We will perform two-sample T-Test since the true variance of the populations is unknown. And also use F-test to test if the variances of the two populations are equal.</p>
 <pre class="r"><code>var.test(Developed$Mean_LE, Developing$Mean_LE) %&gt;% 
   broom::tidy() %&gt;% 
-  select(c(4,5,8,9)) %&gt;% 
+  dplyr::select(c(4,5,8,9)) %&gt;% 
   knitr::kable(table.attr = &quot;style=&#39;width:30%;&#39;&quot;)</code></pre>
 <table>
 <thead>

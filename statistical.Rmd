@@ -84,10 +84,10 @@ Developing =
   summarize(Mean_LE = mean(le))
 ```
 
-```{r, message=FALSE, fig.width=5}
+```{r, message=FALSE, fig.width=5, eval=T, warning=F, error=F}
 var.test(Developed$Mean_LE, Developing$Mean_LE) %>% 
   broom::tidy() %>% 
-  select(c(4,5,8,9)) %>% 
+  dplyr::select(c(4,5,8,9)) %>% 
   knitr::kable(table.attr = "style='width:30%;'")
 ```
 
