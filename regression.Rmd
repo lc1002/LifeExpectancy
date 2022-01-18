@@ -11,6 +11,7 @@ library(mgcv)
 library(corrplot)
 library(leaps)
 library(caret)
+library(patchwork)
 
 knitr::opts_chunk$set(
   echo = TRUE,
@@ -85,10 +86,10 @@ best_summary = summary(sub_fit)
 best_summary_df = 
   as.data.frame(best_summary$outmat) %>% 
   remove_rownames() %>% 
-  add_column(" " = c(1:8), .before = "year")
+  add_column(" " = c(1:9), .before = "status_Developed")
 
 table = as.data.frame(t(best_summary_df[-1])) %>% 
-  rename("1" = "V1", "2" = "V2", "3" = "V3","4" = "V4", "5" = "V5", "6" = "V6","7" = "V7", "8" = "V8")
+  rename("1" = "V1", "2" = "V2", "3" = "V3","4" = "V4", "5" = "V5", "6" = "V6","7" = "V7", "8" = "V8","9" = "V9")
 ```
 
 ```{r}
@@ -102,8 +103,8 @@ table %>%
 ```{r}
 Model_comparison =
   tibble(
-	n_pred = c(1:8),
-	"Adjusted R2" = best_summary$adjr2,
+	n_pred = c(1:9),
+	"Adj R2" = best_summary$adjr2,
 	"BIC" = best_summary$bic,
 	"Cp" = best_summary$cp,
 	"RSE" = best_summary$rsq,
@@ -141,7 +142,7 @@ mod_2 = lm(le ~ status_Developed + percent_exp + HDI + adult_mort + infantdeaths
 mod_3 = lm(le ~ status_Developed + adult_mort + bmi + polio_high + diphtheria_high + hiv_aids + gdp + thin_1_19 + HDI + schooling, data = le_df)
 
 #best subsets selection 
-mod_4 = lm(le ~ adult_mort + infantdeaths + polio_high + hiv_aids + gdp + HDI + schooling, data = le_df)
+mod_4 = lm(le ~ adult_mort + bmi + under_five + polio_high + hiv_aids + gdp + HDI + schooling, data = le_df)
 
 ```
 
@@ -165,12 +166,26 @@ cv_df =
     rmse_2 = map2_dbl(mod_2, test, ~rmse(model = .x, data = .y)),
     rmse_3 = map2_dbl(mod_3, test, ~rmse(model = .x, data = .y)),
     rmse_4 = map2_dbl(mod_4, test, ~rmse(model = .x, data = .y))
+    ) %>% 
+  mutate(
+    mae_1 = map2_dbl(mod_1, test, ~mae(model = .x, data = .y)),
+    mae_2 = map2_dbl(mod_2, test, ~mae(model = .x, data = .y)),
+    mae_3 = map2_dbl(mod_3, test, ~mae(model = .x, data = .y)),
+    mae_4 = map2_dbl(mod_4, test, ~mae(model = .x, data = .y))
+    ) %>% 
+  mutate(
+    rsq_1 = map2_dbl(mod_1, test, ~rsquare(model = .x, data = .y)),
+    rsq_2 = map2_dbl(mod_2, test, ~rsquare(model = .x, data = .y)),
+    rsq_3 = map2_dbl(mod_3, test, ~rsquare(model = .x, data = .y)),
+    rsq_4 = map2_dbl(mod_4, test, ~rsquare(model = .x, data = .y))
     )
 ```
 
 
-```{r}
-cv_df %>% 
+**Cross-validating with Violin Plots**
+```{r include=FALSE}
+rmse_table = 
+  cv_df %>%
   pivot_longer(
     rmse_1:rmse_4,
     names_to = "model", 
@@ -180,17 +195,95 @@ cv_df %>%
          model = fct_recode(model, "Model 1" = "1",
                                    "Model 2" = "2",
                                    "Model 3" = "3",
-                                   "Model 4" = "4")
-         ) %>% 
+                                   "Model 4" = "4"))
+rsq_table = 
+  cv_df %>% 
+  pivot_longer(
+    rsq_1:rsq_4,
+    names_to = "model", 
+    values_to = "rsq",
+    names_prefix = "rsq_") %>% 
+  mutate(model = fct_inorder(model),
+         model = fct_recode(model, "Model 1" = "1",
+                                   "Model 2" = "2",
+                                   "Model 3" = "3",
+                                   "Model 4" = "4"))
+mae_table = 
+  cv_df %>% 
+  pivot_longer(
+    mae_1:mae_4,
+    names_to = "model", 
+    values_to = "mae",
+    names_prefix = "mae_") %>% 
+  mutate(model = fct_inorder(model),
+         model = fct_recode(model, "Model 1" = "1",
+                                   "Model 2" = "2",
+                                   "Model 3" = "3",
+                                   "Model 4" = "4"))
+```
+
+
+```{r}
+rmse_plot =
+  rmse_table %>% 
   ggplot(aes(x = model, y = rmse, fill = model)) + 
   geom_violin() + 
   labs(x = "",
-       y = "RMSE", 
-       title = "Cross Validation") +
-  scale_fill_brewer(type = 'seq', palette = 'Blues') +
+       y = "RMSE") +
+  scale_fill_brewer(type = 'seq', palette = 'Set2') +
   theme(legend.position = 'none',
         plot.title = element_text(hjust = 0.5))
+
+rsq_plot =
+  rsq_table %>% 
+  ggplot(aes(x = model, y = rsq, fill = model)) + 
+  geom_violin() + 
+  labs(x = "",
+       y = "RSquared") +
+  scale_fill_brewer(type = 'seq', palette = 'Set2') +
+  theme(legend.position = 'none',
+        plot.title = element_text(hjust = 0.5))
+
+mae_plot =
+  mae_table %>% 
+  ggplot(aes(x = model, y = mae, fill = model)) + 
+  geom_violin() + 
+  labs(x = "",
+       y = "MAE") +
+  scale_fill_brewer(type = 'seq', palette = 'Set2') +
+  theme(legend.position = 'none',
+        plot.title = element_text(hjust = 0.5))
+
+rmse_plot/rsq_plot/mae_plot
 ```
+
+<br>
+<br>
+
+**Cross Validation Table**
+```{r message=FALSE}
+mean_rmse =
+  rmse_table %>% 
+  group_by(model) %>% 
+  summarize(mean_rmse = mean(rmse))
+
+mean_mae = 
+  mae_table %>%
+  group_by(model) %>% 
+  summarize(mean_mae = mean(mae))
+
+mean_rsquare = 
+  rsq_table %>% 
+  group_by(model) %>% 
+  summarize(mean_rsq = mean(rsq))
+
+Model_comparison_table =
+  full_join(inner_join(mean_rmse, mean_rsquare), mean_mae) %>% 
+  knitr::kable()
+
+Model_comparison_table 
+```
+
 
 <br>
 <hr>
