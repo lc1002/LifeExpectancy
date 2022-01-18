@@ -11,6 +11,8 @@ library(mgcv)
 library(corrplot)
 library(olsrr)
 library(leaps)
+library(glmnet)
+library(rsample)
 
 knitr::opts_chunk$set(
   echo = TRUE,
@@ -89,10 +91,10 @@ best_summary = summary(sub_fit)
 best_summary_df = 
   as.data.frame(best_summary$outmat) %>% 
   remove_rownames() %>% 
-  add_column(" " = c(1:8), .before = "year")
+  add_column(" " = c(1:9), .before = "status_Developed")
 
 table = as.data.frame(t(best_summary_df[-1])) %>% 
-  rename("1" = "V1", "2" = "V2", "3" = "V3","4" = "V4", "5" = "V5", "6" = "V6","7" = "V7", "8" = "V8")
+  rename("1" = "V1", "2" = "V2", "3" = "V3","4" = "V4", "5" = "V5", "6" = "V6","7" = "V7", "8" = "V8", "9" = "V9")
 ```
 
 ```{r}
@@ -106,7 +108,7 @@ table %>%
 ```{r}
 Model_comparison =
   tibble(
-	n_pred = c(1:8),
+	n_pred = c(1:9),
 	"Adjusted R2" = best_summary$adjr2,
 	"BIC" = best_summary$bic,
 	"Cp" = best_summary$cp,
@@ -156,7 +158,7 @@ mod_6 = lm(le ~ status_Developed + adult_mort + infantdeaths + bmi + polio_high 
 
 #best subsets selection 
 mod_7 = lm(le ~ adult_mort + infantdeaths + polio_high + hiv_aids + gdp + HDI + schooling, data = le_df)
-
+```
 ```
 
 ```{r include=FALSE}
