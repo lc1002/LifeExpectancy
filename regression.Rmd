@@ -11,16 +11,13 @@ library(modelr)
 library(mgcv)
 library(corrplot)
 library(leaps)
-<<<<<<< HEAD
 library(glmnet)
 library(rsample)
-=======
 library(caret)
 library(patchwork)
 library(Metrics)
 library(MASS)
 library(glmnet)
->>>>>>> 1cb88371370677146e084f9cd8e5b3db982a5b87
 
 knitr::opts_chunk$set(
   echo = TRUE,
@@ -146,11 +143,7 @@ best_summary_df =
   add_column(" " = c(1:9), .before = "status_Developed")
 
 table = as.data.frame(t(best_summary_df[-1])) %>% 
-<<<<<<< HEAD
-  rename("1" = "V1", "2" = "V2", "3" = "V3","4" = "V4", "5" = "V5", "6" = "V6","7" = "V7", "8" = "V8", "9" = "V9")
-=======
   rename("1" = "V1", "2" = "V2", "3" = "V3","4" = "V4", "5" = "V5", "6" = "V6","7" = "V7", "8" = "V8","9" = "V9")
->>>>>>> 1cb88371370677146e084f9cd8e5b3db982a5b87
 ```
 
 ```{r}
@@ -165,11 +158,8 @@ table %>%
 Model_comparison =
   tibble(
 	n_pred = c(1:9),
-<<<<<<< HEAD
 	"Adjusted R2" = best_summary$adjr2,
-=======
 	"Adj R2" = best_summary$adjr2,
->>>>>>> 1cb88371370677146e084f9cd8e5b3db982a5b87
 	"BIC" = best_summary$bic,
 	"Cp" = best_summary$cp,
 	"RSE" = best_summary$rsq,
@@ -232,19 +222,16 @@ y = le_df$le
 #define matrix of predictor variables
 x = data.matrix(le_df[, c('status_Developed', 'adult_mort', 'infantdeaths', 'alcohol', 'percent_exp', 'hepatitis_b_high', 'measles', 'bmi', 'under_five', 'polio_high', 'total_exp', 'diphtheria_high', 'hiv_aids', 'gdp', 'population', 'thin_1_19', 'thin_5_9', 'HDI', 'schooling')])
 
-<<<<<<< HEAD
 #best subsets selection 
 mod_7 = lm(le ~ adult_mort + infantdeaths + polio_high + hiv_aids + gdp + HDI + schooling, data = le_df)
 ```
-=======
+
 #fit ridge regression model
 mod_5 = glmnet(x, y, alpha = 0)
 
 #view summary of model
 summary(mod_5)
 dim(coef(mod_5))
->>>>>>> 1cb88371370677146e084f9cd8e5b3db982a5b87
-```
 
 
 

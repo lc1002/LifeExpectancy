@@ -865,11 +865,8 @@ summary(forward_mod)</code></pre>
 <pre class="r"><code>Model_comparison =
   tibble(
     n_pred = c(1:9),
-<<<<<<< HEAD
     &quot;Adjusted R2&quot; = best_summary$adjr2,
-=======
     &quot;Adj R2&quot; = best_summary$adjr2,
->>>>>>> 1cb88371370677146e084f9cd8e5b3db982a5b87
     &quot;BIC&quot; = best_summary$bic,
     &quot;Cp&quot; = best_summary$cp,
     &quot;RSE&quot; = best_summary$rsq,
@@ -904,31 +901,31 @@ cv_lasso_model &lt;- cv.glmnet(x, y, alpha = 1)
 #find optimal lambda value that minimizes test MSE
 best_lasso_lambda &lt;- cv_lasso_model$lambda.min
 best_lasso_lambda</code></pre>
-<pre><code>## [1] 0.003488968</code></pre>
+<pre><code>## [1] 0.001996516</code></pre>
 <pre class="r"><code>mod_4 = glmnet(x, y, alpha = 1, lambda = best_lasso_lambda)
 coef(mod_4)</code></pre>
 <pre><code>## 20 x 1 sparse Matrix of class &quot;dgCMatrix&quot;
 ##                             s0
-## (Intercept)       5.681863e+01
-## status_Developed  1.430978e+00
-## adult_mort       -1.678470e-02
-## infantdeaths      8.592883e-02
-## alcohol           8.484722e-03
-## percent_exp       5.070890e-05
-## hepatitis_b_high  4.482229e-02
-## measles          -5.057143e-09
-## bmi               3.957832e-02
-## under_five       -6.398781e-02
-## polio_high        1.860788e+00
-## total_exp         3.502150e-02
-## diphtheria_high   1.147423e+00
-## hiv_aids         -4.935099e-01
-## gdp               4.828201e-05
-## population        1.038695e-10
-## thin_1_19        -5.142361e-02
-## thin_5_9         -1.963396e-02
-## HDI               6.284552e+00
-## schooling         6.712439e-01</code></pre>
+## (Intercept)       5.685428e+01
+## status_Developed  1.431903e+00
+## adult_mort       -1.677214e-02
+## infantdeaths      9.022366e-02
+## alcohol           1.033513e-02
+## percent_exp       5.066230e-05
+## hepatitis_b_high  5.425928e-02
+## measles           .           
+## bmi               3.951042e-02
+## under_five       -6.712981e-02
+## polio_high        1.853203e+00
+## total_exp         3.525273e-02
+## diphtheria_high   1.134257e+00
+## hiv_aids         -4.931279e-01
+## gdp               4.850510e-05
+## population        7.652348e-12
+## thin_1_19        -5.103173e-02
+## thin_5_9         -2.091766e-02
+## HDI               6.254699e+00
+## schooling         6.701917e-01</code></pre>
 <pre class="r"><code>#No coefficient is shown for the predictor measles and population because the lasso regression shrunk the coefficients all the way to zero. This means it was completely dropped from the model because it wasn’t influential enough.
 
 plot(cv_lasso_model)</code></pre>
@@ -941,60 +938,20 @@ y = le_df$le
 #define matrix of predictor variables
 x = data.matrix(le_df[, c(&#39;status_Developed&#39;, &#39;adult_mort&#39;, &#39;infantdeaths&#39;, &#39;alcohol&#39;, &#39;percent_exp&#39;, &#39;hepatitis_b_high&#39;, &#39;measles&#39;, &#39;bmi&#39;, &#39;under_five&#39;, &#39;polio_high&#39;, &#39;total_exp&#39;, &#39;diphtheria_high&#39;, &#39;hiv_aids&#39;, &#39;gdp&#39;, &#39;population&#39;, &#39;thin_1_19&#39;, &#39;thin_5_9&#39;, &#39;HDI&#39;, &#39;schooling&#39;)])
 
-#fit ridge regression model
-mod_5 = glmnet(x, y, alpha = 0)
-
-#view summary of model
-summary(mod_5)</code></pre>
-<pre><code>##           Length Class     Mode   
-## a0         100   -none-    numeric
-## beta      1900   dgCMatrix S4     
-## df         100   -none-    numeric
-## dim          2   -none-    numeric
-## lambda     100   -none-    numeric
-## dev.ratio  100   -none-    numeric
-## nulldev      1   -none-    numeric
-## npasses      1   -none-    numeric
-## jerr         1   -none-    numeric
-## offset       1   -none-    logical
-## call         4   -none-    call   
-## nobs         1   -none-    numeric</code></pre>
-<pre class="r"><code>dim(coef(mod_5))</code></pre>
-<pre><code>## [1]  20 100</code></pre>
+#best subsets selection 
+mod_7 = lm(le ~ adult_mort + infantdeaths + polio_high + hiv_aids + gdp + HDI + schooling, data = le_df)</code></pre>
+<p>#fit ridge regression model mod_5 = glmnet(x, y, alpha = 0)</p>
+<p>#view summary of model summary(mod_5) dim(coef(mod_5))</p>
 <br> <br>
 <hr>
 </div>
 </div>
 <div id="cross-validation" class="section level2">
 <h2>Cross Validation</h2>
-<<<<<<< HEAD
-<pre><code>
-
-
-
-
-```r
-cv_df %&gt;% 
-  pivot_longer(
-    rmse_1:rmse_7,
-    names_to = &quot;model&quot;, 
-    values_to = &quot;rmse&quot;,
-    names_prefix = &quot;rmse_&quot;) %&gt;% 
-  mutate(model = fct_inorder(model),
-         model = fct_recode(model, &quot;Model 1&quot; = &quot;1&quot;,
-                                   &quot;Model 2&quot; = &quot;2&quot;,
-                                   &quot;Model 3&quot; = &quot;3&quot;,
-                                   &quot;Model 4&quot; = &quot;4&quot;,
-                                   &quot;Model 5&quot; = &quot;5&quot;,
-                                   &quot;Model 6&quot; = &quot;6&quot;,
-                                   &quot;Model 7&quot; = &quot;7&quot;)
-         ) %&gt;% 
-=======
 <div id="cross-validating-with-violin-plots" class="section level3">
 <h3>Cross-validating with Violin Plots</h3>
 <pre class="r"><code>rmse_plot =
   rmse_table %&gt;% 
->>>>>>> 1cb88371370677146e084f9cd8e5b3db982a5b87
   ggplot(aes(x = model, y = rmse, fill = model)) + 
   geom_violin() + 
   labs(x = &quot;&quot;,
@@ -1107,59 +1064,13 @@ Model_comparison_table </code></pre>
 <tbody>
 <tr class="odd">
 <td align="left">(Intercept)</td>
-<<<<<<< HEAD
-<td align="right">57.5663967</td>
-<td align="right">0.5321359</td>
-<td align="right">108.179873</td>
-=======
 <td align="right">56.8966265</td>
 <td align="right">0.3958633</td>
 <td align="right">143.727982</td>
->>>>>>> 1cb88371370677146e084f9cd8e5b3db982a5b87
 <td align="right">0.0000000</td>
 </tr>
 <tr class="even">
 <td align="left">status_Developed</td>
-<<<<<<< HEAD
-<td align="right">1.3579794</td>
-<td align="right">0.2381854</td>
-<td align="right">5.701354</td>
-<td align="right">0.0000000</td>
-</tr>
-<tr class="odd">
-<td align="left">adult_mort</td>
-<td align="right">-0.0171233</td>
-<td align="right">0.0007831</td>
-<td align="right">-21.866622</td>
-<td align="right">0.0000000</td>
-</tr>
-<tr class="even">
-<td align="left">bmi</td>
-<td align="right">0.0413340</td>
-<td align="right">0.0047612</td>
-<td align="right">8.681337</td>
-<td align="right">0.0000000</td>
-</tr>
-<tr class="odd">
-<td align="left">polio_high</td>
-<td align="right">2.0381603</td>
-<td align="right">0.3100413</td>
-<td align="right">6.573836</td>
-<td align="right">0.0000000</td>
-</tr>
-<tr class="even">
-<td align="left">diphtheria_low</td>
-<td align="right">-1.3557329</td>
-<td align="right">0.3110504</td>
-<td align="right">-4.358564</td>
-<td align="right">0.0000135</td>
-</tr>
-<tr class="odd">
-<td align="left">hiv_aids</td>
-<td align="right">-0.5039861</td>
-<td align="right">0.0170105</td>
-<td align="right">-29.627976</td>
-=======
 <td align="right">1.3617600</td>
 <td align="right">0.2534639</td>
 <td align="right">5.372598</td>
@@ -1198,37 +1109,10 @@ Model_comparison_table </code></pre>
 <td align="right">0.8909016</td>
 <td align="right">0.0396209</td>
 <td align="right">22.485621</td>
->>>>>>> 1cb88371370677146e084f9cd8e5b3db982a5b87
 <td align="right">0.0000000</td>
 </tr>
 <tr class="even">
 <td align="left">gdp</td>
-<<<<<<< HEAD
-<td align="right">0.0000514</td>
-<td align="right">0.0000065</td>
-<td align="right">7.948955</td>
-<td align="right">0.0000000</td>
-</tr>
-<tr class="odd">
-<td align="left">thin_1_19</td>
-<td align="right">-0.0662437</td>
-<td align="right">0.0204055</td>
-<td align="right">-3.246370</td>
-<td align="right">0.0011821</td>
-</tr>
-<tr class="even">
-<td align="left">HDI</td>
-<td align="right">6.8041714</td>
-<td align="right">0.6021456</td>
-<td align="right">11.299877</td>
-<td align="right">0.0000000</td>
-</tr>
-<tr class="odd">
-<td align="left">schooling</td>
-<td align="right">0.6887047</td>
-<td align="right">0.0387744</td>
-<td align="right">17.761841</td>
-=======
 <td align="right">0.0000587</td>
 <td align="right">0.0000132</td>
 <td align="right">4.464205</td>
@@ -1244,7 +1128,6 @@ Model_comparison_table </code></pre>
 <tr class="even">
 <td align="left">percent_exp:gdp</td>
 <td align="right">0.0000000</td>
->>>>>>> 1cb88371370677146e084f9cd8e5b3db982a5b87
 <td align="right">0.0000000</td>
 <td align="right">-3.672232</td>
 <td align="right">0.0002447</td>
