@@ -65,14 +65,14 @@ corrplot(cor(cm_df), type = "upper", diag = FALSE, method = "square", addCoef.co
 
 ### Model Based on Prior Research
 
+<center>
+$ Life \ Expectancy = \beta_{0} + \beta_{1}*(Developed \ Status) + \beta_{2}*(Percent \ Expenditure) + \beta_{3}*(HDI) + \beta_{4}*(Adult \ Mortality) + \beta_{5}*(Infant \ Deaths) + \beta_{6}*(Schooling) + \beta_{7}*(HIV/AIDS) + \beta_{8}*(GDP * Percent \ Expenditure)$
+</center>
+
 ```{r}
 mod_1 = lm(le ~ status_Developed + percent_exp + HDI + adult_mort + infantdeaths + schooling + gdp + hiv_aids + gdp * percent_exp, data = le_df)
+mod_1_vif = check_collinearity(mod_1) 
 summary(mod_1)
-```
-
-
-```{r}
-check_collinearity(mod_1)
 ```
 
 
@@ -85,6 +85,11 @@ check_collinearity(mod_1)
 full_model = lm(le ~ status_Developed + adult_mort + infantdeaths + alcohol + percent_exp + hepatitis_b_high + measles + bmi + under_five + polio_high + total_exp + diphtheria_high  + hiv_aids + gdp + population + thin_1_19 + thin_5_9 + HDI + schooling, data = le_df)
 ```
 
+Full Model:
+
+<center>
+$ Life \ Expectancy = \beta_{0} + \beta_{1}*(Developed \ Status) + \beta_{2}*(Adult \ Mortality) + \beta_{3}*(Infant \ Deaths) + \beta_{4}*(Alcohol) + \beta_{5}*(Percent \ Expenditure) + \beta_{6}*(High \ Hepatitis \ B) + \beta_{7}*(Measles) + \beta_{8}*(BMI) + \beta_{9}*(Under-five \ Deaths) + \beta_{10}*(High \ Polio) + \beta_{11}*(Total \ Expenditure) + \beta_{12}*(High \ Diphtheria) + \beta_{13}*(HIV/AIDS) + \beta_{14}*(GDP) + \beta_{15}*(Population) + \beta_{16}*(Prevalence \ of \ thinness 10-19) + \beta_{17}*(Prevalence \ of \ thinness 5-9) + \beta_{18}*(HDI) + \beta_{19}*(Schooling)$
+</center>
 
 **Stepwise Regression:**
 
@@ -100,6 +105,11 @@ check_collinearity(step_model)
 mod_2 = lm(le ~ status_Developed + adult_mort + bmi + polio_high + diphtheria_high + hiv_aids + gdp + thin_1_19 + HDI + schooling, data = le_df)
 ```
 
+Final Stepwise Model:
+
+<center>
+$ Life \ Expectancy = \beta_{0} + \beta_{1}*(Developed \ Status) + \beta_{2}*(Adult \ Mortality) + \beta_{3}*(BMI) + \beta_{4}*(High \ Polio) + \beta_{5}*(High \ Diphtheria) + \beta_{6}*(HIV/AIDS) + \beta_{7}*(GDP) + \beta_{8}*(Prevalence \ of \ thinness 10-19) + \beta_{9}*(HDI) + \beta_{10}*(Schooling)$
+</center>
 
 <br>
 <br>
@@ -185,10 +195,24 @@ Model_comparison
 mod_3 = lm(le ~ adult_mort + under_five + polio_high + hiv_aids + gdp + HDI + schooling, data = le_df)
 ```
 
+Final Best Subsets Model:
+
+<center>
+$ Life \ Expectancy = \beta_{0} + \beta_{1}*(Adult \ Mortality) + \beta_{2}*(Under-five Deaths) + \beta_{3}*(High \ Polio) + \beta_{4}*(HIV/AIDS) + \beta_{5}*(GDP) + \beta_{6}*(HDI) + \beta_{7}*(Schooling)$
+</center>
+
 <br>
 <br>
+<hr>
+
+When developing regression models for our dataset, one problem that rises to our attention is the multicollinearity, our dataset contains multiple predictor variables that are highly correlated to each other, which concerns us that they might not provide unique or independent information in the regression models.Thus, in addition to the multiple linear regression models above, we also applied regularization method to resolve multicollinearity issues using ridge regression and lasso regression.
 
 **Ridge Regression:**
+
+Mathematical equation of Ridge Regression: 
+
+$\sum_{i=1}^n{(y_{i} - \beta_{0} - \sum_{j=1}^{p}{\beta_{i}x_{ij}})^2} + \lambda \sum_{j=1}^{p}{\beta_{j}^2} = RSS + \lambda \sum_{j=1}^{p}{\beta_{j}^2}$
+
 ```{r}
 #define response variable
 y = le_df$le
@@ -203,21 +227,23 @@ ridge_model = glmnet(x, y, alpha = 0)
 cv_ridge_model = cv.glmnet(x, y, alpha = 0)
 
 best_lambda = cv_ridge_model$lambda.min
-best_lambda
 
 best_ridge_model = glmnet(x, y, alpha = 0, lambda = best_lambda)
-coef(best_ridge_model)
 
+par(mfrow=c(1,1))
 #produce plot of test MSE by lambda value
-plot(cv_ridge_model) 
+plot(cv_ridge_model) + title("Plot of MSE by Lambda value",line = 2.5)
 ```
-
+* The lambda value that minimizes the test MSE turns out to be `r best_lambda`.
 
 <br>
 <br>
-
 
 **Lasso Regression:**
+
+Mathematical equation of Ridge Regression: 
+
+$\sum_{i=1}^n{(y_{i} - \beta_{0} - \sum_{j=1}^{p}{\beta_{i}x_{ij}})^2} + \lambda \sum_{j=1}^{p}{|\beta_{j}|} = RSS + \lambda \sum_{j=1}^{p}{|\beta_{j}|}$
 
 ```{r}
 #define response variable
@@ -226,20 +252,29 @@ y = le_df$le
 #define matrix of predictor variables
 x = data.matrix(le_df[, c('status_Developed', 'adult_mort', 'infantdeaths', 'alcohol', 'percent_exp', 'hepatitis_b_high', 'measles', 'bmi', 'under_five', 'polio_high', 'total_exp', 'diphtheria_high', 'hiv_aids', 'gdp', 'population', 'thin_1_19', 'thin_5_9', 'HDI', 'schooling')])
 
+lasso_model = glmnet(x, y, alpha = 1)
+
 #perform k-fold cross-validation to find optimal lambda value
 cv_lasso_model = cv.glmnet(x, y, alpha = 1)
 
 #find optimal lambda value that minimizes test MSE
 best_lasso_lambda = cv_lasso_model$lambda.min
-best_lasso_lambda
 
 best_lasso_model = glmnet(x, y, alpha = 1, lambda = best_lasso_lambda)
-coef(best_lasso_model)
 
 new_x = data.matrix(le_df[, c('status_Developed', 'adult_mort', 'infantdeaths', 'alcohol', 'percent_exp', 'hepatitis_b_high', 'bmi', 'under_five', 'polio_high', 'total_exp', 'diphtheria_high', 'hiv_aids', 'gdp', 'thin_1_19', 'thin_5_9', 'HDI', 'schooling')])
-
-plot(cv_lasso_model)
 ```
+
+* The lambda value that minimizes the test MSE turns out to be `r best_lasso_lambda`.
+
+```{r}
+#produce plot of test MSE by lambda value
+plot(cv_lasso_model) + title("Plot of MSE by Lambda value",line = 2.5)
+
+coef(best_lasso_model)
+```
+
+* The coefficients of the predictor `measles` and `population` was shrunk all the way to zero, which means it was completely removed from the model since it wasn’t influential.
 
 <br>
 <br>
@@ -299,11 +334,12 @@ rmse_table =
     values_to = "rmse",
     names_prefix = "rmse_") %>% 
   mutate(model = fct_inorder(model),
-         model = fct_recode(model, "Model 1" = "1",
-                                   "Model 2" = "2",
-                                   "Model 3" = "3",
-                                   "Model 4" = "4",
-                                   "Model 5" = "5" ))
+         model = fct_recode(model, "Model 1 (Research)" = "1",
+                                   "Model 2 (Stepwise)" = "2",
+                                   "Model 3(Best Subsets)" = "3",
+                                   "Model 4 (Ridge)" = "4",
+                                   "Model 5 (Lasso)" = "5" ))
+
 rsq_table = 
   cv_df %>% 
   pivot_longer(
@@ -312,11 +348,11 @@ rsq_table =
     values_to = "rsq",
     names_prefix = "rsq_") %>% 
   mutate(model = fct_inorder(model),
-         model = fct_recode(model, "Model 1" = "1",
-                                   "Model 2" = "2",
-                                   "Model 3" = "3",
-                                   "Model 4" = "4",
-                                   "Model 5" = "5" ))
+         model = fct_recode(model, "Model 1 (Research)" = "1",
+                                   "Model 2 (Stepwise)" = "2",
+                                   "Model 3(Best Subsets)" = "3",
+                                   "Model 4 (Ridge)" = "4",
+                                   "Model 5 (Lasso)" = "5" ))
 mae_table = 
   cv_df %>% 
   pivot_longer(
@@ -325,11 +361,11 @@ mae_table =
     values_to = "mae",
     names_prefix = "mae_") %>% 
   mutate(model = fct_inorder(model),
-         model = fct_recode(model, "Model 1" = "1",
-                                   "Model 2" = "2",
-                                   "Model 3" = "3",
-                                   "Model 4" = "4",
-                                   "Model 5" = "5" ))
+         model = fct_recode(model, "Model 1 (Research)" = "1",
+                                   "Model 2 (Stepwise)" = "2",
+                                   "Model 3(Best Subsets)" = "3",
+                                   "Model 4 (Ridge)" = "4",
+                                   "Model 5 (Lasso)" = "5" ))
 ```
 
 
@@ -400,9 +436,38 @@ Model_comparison_table
 
 ## Results
 
+Based on performance measures among all models Lasso regression shows least Mean Absolute Error (MAE = 2.873414) and Root Mean Square Error (RMSE = 3.840274), and highest R-square value of 0.8378577. Thus, Lasso regression is considered as best model to predict Life expectancy.
+
+The coefficients for the best model we obtain are as follows: 
+
 ```{r}
-mod_1 %>% 
-  broom::tidy() %>% 
-  knitr::kable()
+lasso_coeff <- coef(best_lasso_model)
+
+data.frame(name = lasso_coeff@Dimnames[[1]][lasso_coeff@i + 1], coefficient = lasso_coeff@x) %>% 
+  as_tibble()
+
+plot(lasso_model, xvar = "lambda") + title("Lasso trace plot",line = 2.5)
 ```
+
+```{r}
+optimal_model = train(le ~ status_Developed + adult_mort + infantdeaths + alcohol + percent_exp + hepatitis_b_high + bmi + under_five + polio_high + total_exp + diphtheria_high + hiv_aids + gdp + thin_1_19 + thin_5_9 + HDI + schooling, data = training(initial_split(le_df, prop = 0.75))[,-1], trControl=trainControl(method="cv", number = 5), method="glmnet", preProcess = c("center", "scale"),tuneGrid = expand.grid(alpha = 1, lambda = best_lasso_lambda))
+
+ggplot(varImp(optimal_model)) + 
+  labs( 
+    title = "Most important variables from elastic CV",
+    x = "Predictors") 
+      
+Lasso_lm <- lm(le ~ status_Developed + adult_mort + infantdeaths + alcohol + percent_exp + hepatitis_b_high + bmi + under_five + polio_high + total_exp + diphtheria_high + hiv_aids + gdp + thin_1_19 + thin_5_9 + HDI + schooling, data = le_df)
+
+summary(Lasso_lm)
+```
+
+* The most important variables we get from this are under-five deaths, infant deaths, Schooling, HIV/AIDS, Adult mortality, HDI, BMI and High Polio (Percentage of Polio immunization coverage among 1-year-olds $\ge 80$.
+
+* GDP, Developed Status, Diphtheria, Hepatitis B and total expenditure are less important.
+Alcohol and Polio are right in the middle of the variable importance graph.
+
+* Not all predictors that the Lasso selects are statistically significant at a 5% level. Thinness..1.19.years, for example, has a p-value of about 0.14.
+
+
 
