@@ -2,6 +2,7 @@
 title: "Regression Analysis"
 output: html_document
 ---
+
 <br>
 
 ```{r include=FALSE, message=FALSE}
@@ -132,16 +133,16 @@ forward = lm(le ~ status_Developed + adult_mort + infantdeaths + bmi + polio_hig
 
 *Best Fitting Models Based on the Numbers of Predictors*
 ```{r include=FALSE}
-sub_fit = regsubsets(le ~ status_Developed + adult_mort + infantdeaths + alcohol + percent_exp + hepatitis_b_high + hepatitis_b_low + measles + bmi + under_five + polio_high + polio_low + total_exp + diphtheria_high + diphtheria_low + hiv_aids + gdp + population + thin_1_19 + thin_5_9 + HDI + schooling, data = le_df)
+sub_fit = regsubsets(le ~ status_Developed + adult_mort + infantdeaths + alcohol + percent_exp + hepatitis_b_high + measles + bmi + under_five + polio_high + total_exp + diphtheria_high  + hiv_aids + gdp + population + thin_1_19 + thin_5_9 + HDI + schooling, data = le_df)
 
 best_summary = summary(sub_fit)
 best_summary_df = 
   as.data.frame(best_summary$outmat) %>% 
   remove_rownames() %>% 
-  add_column(" " = c(1:9), .before = "status_Developed")
+  add_column(" " = c(1:8), .before = "status_Developed")
 
 table = as.data.frame(t(best_summary_df[-1])) %>% 
-  rename("1" = "V1", "2" = "V2", "3" = "V3","4" = "V4", "5" = "V5", "6" = "V6","7" = "V7", "8" = "V8","9" = "V9")
+  rename("1" = "V1", "2" = "V2", "3" = "V3","4" = "V4", "5" = "V5", "6" = "V6","7" = "V7", "8" = "V8")
 ```
 
 ```{r}
@@ -155,7 +156,7 @@ table %>%
 ```{r}
 Model_comparison =
   tibble(
-	n_pred = c(1:9),
+	n_pred = c(1:8),
 	"Adj R2" = best_summary$adjr2,
 	"BIC" = best_summary$bic,
 	"Cp" = best_summary$cp,
@@ -178,7 +179,7 @@ Model_comparison
 
 *Final Best Subsets Model*
 ```{r}
-mod_3 = lm(le ~ adult_mort + bmi + under_five + polio_high + hiv_aids + gdp + HDI + schooling, data = le_df)
+mod_3 = lm(le ~ adult_mort + under_five + polio_high + hiv_aids + gdp + HDI + schooling, data = le_df)
 ```
 
 <br>
@@ -249,7 +250,7 @@ cv_df =
     mod_2 = map(train, ~lm(formula = formula(mod_2), data = .x)),
     mod_3 = map(train, ~lm(formula = formula(mod_3), data = .x)),
     mod_4 = map(train, ~glmnet(x, y, alpha = 1, lambda = best_lasso_lambda, data = .x)),
-    mod_5 = map(train, ~glmnet(x, y, alpha = 0,data = .x))
+    mod_5 = map(train, ~glmnet(x, y, alpha = 0, data = .x))
     ) %>% 
   mutate(
     rmse_1 = map2_dbl(mod_1, test, ~modelr::rmse(model = .x, data = .y)),
@@ -280,7 +281,7 @@ cv_df =
 rmse_table = 
   cv_df %>%
   pivot_longer(
-    rmse_1:rmse_4,
+    rmse_1:rmse_5,
     names_to = "model", 
     values_to = "rmse",
     names_prefix = "rmse_") %>% 
@@ -288,11 +289,12 @@ rmse_table =
          model = fct_recode(model, "Model 1" = "1",
                                    "Model 2" = "2",
                                    "Model 3" = "3",
-                                   "Model 4" = "4"))
+                                   "Model 4" = "4",
+                                   "Model 5" = "5" ))
 rsq_table = 
   cv_df %>% 
   pivot_longer(
-    rsq_1:rsq_4,
+    rsq_1:rsq_5,
     names_to = "model", 
     values_to = "rsq",
     names_prefix = "rsq_") %>% 
@@ -300,11 +302,12 @@ rsq_table =
          model = fct_recode(model, "Model 1" = "1",
                                    "Model 2" = "2",
                                    "Model 3" = "3",
-                                   "Model 4" = "4"))
+                                   "Model 4" = "4",
+                                   "Model 5" = "5" ))
 mae_table = 
   cv_df %>% 
   pivot_longer(
-    mae_1:mae_4,
+    mae_1:mae_5,
     names_to = "model", 
     values_to = "mae",
     names_prefix = "mae_") %>% 
@@ -312,7 +315,8 @@ mae_table =
          model = fct_recode(model, "Model 1" = "1",
                                    "Model 2" = "2",
                                    "Model 3" = "3",
-                                   "Model 4" = "4"))
+                                   "Model 4" = "4",
+                                   "Model 5" = "5" ))
 ```
 
 
