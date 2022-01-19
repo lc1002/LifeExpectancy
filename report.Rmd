@@ -49,13 +49,30 @@ Following are resources that have inspired this project:
 
 ## Research Questions
 
+In this data science project, we analyzed the Life expectancy dataset to have a bettering understanding on the trends and effects of life expectancy and related factors. In reality, life expectancy is  affected by a variety of socioeconomic, demographic and health factors. Therefore, we would like to conduct this study to investigate and better understand the measure of life expectancy. We intend to provide an in-depth observation with an exploratory data analysis, visualizations (plots, interactive map, correlation matrix), in addition to statistical analysis and modeling. 
+
+We want to dive into the dataset to grasp some interesting findings as well as answers to some of questions of interest. 
+
+1. How does Infant and Adult mortality rates affect life expectancy?
+2. Does Life Expectancy has a correlation with eating habits, drinking alcohol etc. 
+3. What is the impact of schooling on the life expectancy of humans?
+4. Does countries with higher GDP or more healthcare expenditure tends to have longer life expectancy?
+5. How does a development status of a country affect average life expectancy. Does individuals living in a developed country an a better standard of living have higher average life expectancy?
+
+Nevertheless, our ultimate goal is to determine the most significant factors which affects life expectancy to create an optimal regression model for predicting life expectancy through examining evaluation metrics such as MAE, RMSE, and R-Squared to evaluate the performance of different regression models.
+
 
 <br>
 <hr>
 ## Data
 
 ### Data Sources
-The primary dataset ([Life Expectancy (WHO)](https://www.kaggle.com/kumarajarshi/life-expectancy-who)) used in this project is a combined dataset from the the Global Health Observatory (GHO) data repository under World Health Organization (WHO) and United Nations website with the help of Deeksha Russell and Duan Wang.This data consists of immunization related factors, mortality factors, economical factors and social factors for all countries from 2000 to 2015. We also used the [country-to-continent dataset](https://www.kaggle.com/statchaitya/country-to-continent) and [World borders dataset](http://thematicmapping.org/downloads/world_borders.php) to supplement our analysis.
+
+
+The primary dataset ([Life Expectancy (WHO)](https://www.kaggle.com/kumarajarshi/life-expectancy-who)) used in this project was collected from the Global Health Observatory (GHO) under The World Health Organization (WHO) and United Nations website with the help of Deeksha Russell and Duan Wang. This dataset contains data related to life expectancy along with many other factors in significant categories such as health, demographic, socioeconomic, mortality, and immunization for 193 countries from year 2000-2015. 
+
+In addition to the Life Expectancy dataset we also incorporated [country-to-continent dataset](https://www.kaggle.com/statchaitya/country-to-continent) which contains a list of all countries and continent they are located in order to better visualize the data by regions when performing exploratory analysis. We also used [World borders dataset](http://thematicmapping.org/downloads/world_borders.php) dataset to supplement our analysis for the [interactive map](interactive_map.html).
+
 
 <br>
 <hr>
