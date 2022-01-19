@@ -901,31 +901,31 @@ cv_lasso_model &lt;- cv.glmnet(x, y, alpha = 1)
 #find optimal lambda value that minimizes test MSE
 best_lasso_lambda &lt;- cv_lasso_model$lambda.min
 best_lasso_lambda</code></pre>
-<pre><code>## [1] 0.002639276</code></pre>
+<pre><code>## [1] 0.002896603</code></pre>
 <pre class="r"><code>mod_4 = glmnet(x, y, alpha = 1, lambda = best_lasso_lambda)
 coef(mod_4)</code></pre>
 <pre><code>## 20 x 1 sparse Matrix of class &quot;dgCMatrix&quot;
 ##                             s0
-## (Intercept)       5.683899e+01
-## status_Developed  1.431511e+00
-## adult_mort       -1.677749e-02
-## infantdeaths      8.838382e-02
-## alcohol           9.540926e-03
-## percent_exp       5.067948e-05
-## hepatitis_b_high  5.020634e-02
+## (Intercept)       5.683270e+01
+## status_Developed  1.431348e+00
+## adult_mort       -1.677970e-02
+## infantdeaths      8.762769e-02
+## alcohol           9.216143e-03
+## percent_exp       5.069173e-05
+## hepatitis_b_high  4.856443e-02
 ## measles           .           
-## bmi               3.953931e-02
-## under_five       -6.578386e-02
-## polio_high        1.856453e+00
-## total_exp         3.515345e-02
-## diphtheria_high   1.139900e+00
-## hiv_aids         -4.932914e-01
-## gdp               4.840972e-05
-## population        4.874210e-11
-## thin_1_19        -5.120041e-02
-## thin_5_9         -2.036702e-02
-## HDI               6.267492e+00
-## schooling         6.706446e-01</code></pre>
+## bmi               3.955150e-02
+## under_five       -6.523079e-02
+## polio_high        1.857784e+00
+## total_exp         3.511414e-02
+## diphtheria_high   1.142209e+00
+## hiv_aids         -4.933594e-01
+## gdp               4.837013e-05
+## population        6.589138e-11
+## thin_1_19        -5.126987e-02
+## thin_5_9         -2.013977e-02
+## HDI               6.272751e+00
+## schooling         6.708289e-01</code></pre>
 <pre class="r"><code>#No coefficient is shown for the predictor measles and population because the lasso regression shrunk the coefficients all the way to zero. This means it was completely dropped from the model because it wasn’t influential enough.
 
 plot(cv_lasso_model)</code></pre>

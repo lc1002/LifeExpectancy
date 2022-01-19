@@ -353,7 +353,7 @@ h1.title {
 </ul>
 <pre class="r"><code>t.test(Developed$Mean_LE, Developing$Mean_LE, alternative = &quot;greater&quot;, var.equal = FALSE) %&gt;% 
   broom::tidy() %&gt;% 
-  select(c(4,5,6,9)) %&gt;% 
+  dplyr::select(c(4,5,6,9)) %&gt;% 
   knitr::kable(table.attr = &quot;style=&#39;width:30%;&#39;&quot;)</code></pre>
 <table>
 <thead>
@@ -406,7 +406,7 @@ h1.title {
 </center>
 <pre class="r"><code>prop.test(x, n, correct = FALSE) %&gt;% 
   broom::tidy() %&gt;% 
-  select(c(3,4,5,8)) %&gt;% 
+  dplyr::select(c(3,4,5,8)) %&gt;% 
   knitr::kable(digits = 4)</code></pre>
 <table>
 <colgroup>
@@ -533,7 +533,7 @@ health_High =
 
 t.test(health_Low$Mean_exp, health_High$Mean_exp) %&gt;% 
   broom::tidy() %&gt;% 
-  select(c(4,5,6,9)) %&gt;% 
+  dplyr::select(c(4,5,6,9)) %&gt;% 
   knitr::kable(table.attr = &quot;style=&#39;width:30%;&#39;&quot;)</code></pre>
 <table>
 <thead>
@@ -712,7 +712,7 @@ summary(remove_HDI)</code></pre>
 <p><br></p>
 <pre class="r"><code>var.test(school_low$mean_le, school_high$mean_le) %&gt;% 
   broom::tidy() %&gt;% 
-  select(c(4,5,8,9)) %&gt;% 
+  dplyr::select(c(4,5,8,9)) %&gt;% 
   knitr::kable(table.attr = &quot;style=&#39;width:30%;&#39;&quot;)</code></pre>
 <table>
 <thead>
@@ -735,9 +735,9 @@ summary(remove_HDI)</code></pre>
 <ul>
 <li>We obtain a p-value of <span class="math inline">\(1e^{-7}\)</span> which is less than <span class="math inline">\(\alpha = 0.05\)</span>. Hence we reject the null hypothesis and conclude that the variance of two populations is not equal.</li>
 </ul>
-<pre class="r"><code>t.test(school_low$mean_le, school_high$mean_le, alternative = &quot;less&quot;, var.equal = FALSE) %&gt;% 
+<pre class="r"><code>t.test(school_low$mean_le, school_high$mean_le, alternative = &quot;less&quot;, var.equal = FALSE) %&gt;%
   broom::tidy() %&gt;% 
-  select(c(4,5,6,9)) %&gt;% 
+  dplyr::select(c(4,5,6,9)) %&gt;% 
   knitr::kable(table.attr = &quot;style=&#39;width:30%;&#39;&quot;)</code></pre>
 <table>
 <thead>
