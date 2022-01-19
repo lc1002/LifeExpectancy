@@ -87,7 +87,7 @@ Developing =
 ```{r, message=FALSE, fig.width=5}
 var.test(Developed$Mean_LE, Developing$Mean_LE) %>% 
   broom::tidy() %>% 
-  select(c(4,5,8,9)) %>% 
+  dplyr::select(c(4,5,8,9)) %>% 
   knitr::kable(table.attr = "style='width:30%;'")
 ```
 
@@ -96,7 +96,7 @@ var.test(Developed$Mean_LE, Developing$Mean_LE) %>%
 ```{r}
 t.test(Developed$Mean_LE, Developing$Mean_LE, alternative = "greater", var.equal = FALSE) %>% 
   broom::tidy() %>% 
-  select(c(4,5,6,9)) %>% 
+  dplyr::select(c(4,5,6,9)) %>% 
   knitr::kable(table.attr = "style='width:30%;'")
 ```
 
@@ -159,7 +159,7 @@ n = c(1000,1000)
 ```{r,message=FALSE}
 prop.test(x, n, correct = FALSE) %>% 
   broom::tidy() %>% 
-  select(c(3,4,5,8)) %>% 
+  dplyr::select(c(3,4,5,8)) %>% 
   knitr::kable(digits = 4)
 ```
 
@@ -313,7 +313,7 @@ health_High =
 
 t.test(health_Low$Mean_exp, health_High$Mean_exp) %>% 
   broom::tidy() %>% 
-  select(c(4,5,6,9)) %>% 
+  dplyr::select(c(4,5,6,9)) %>% 
   knitr::kable(table.attr = "style='width:30%;'")
 ```
 
@@ -409,7 +409,7 @@ school_high =
 ```{r, message=FALSE, fig.width=5}
 var.test(school_low$mean_le, school_high$mean_le) %>% 
   broom::tidy() %>% 
-  select(c(4,5,8,9)) %>% 
+  dplyr::select(c(4,5,8,9)) %>% 
   knitr::kable(table.attr = "style='width:30%;'")
 ```
 
@@ -418,7 +418,7 @@ var.test(school_low$mean_le, school_high$mean_le) %>%
 ```{r}
 t.test(school_low$mean_le, school_high$mean_le, alternative = "less", var.equal = FALSE) %>% 
   broom::tidy() %>% 
-  select(c(4,5,6,9)) %>% 
+  dplyr::select(c(4,5,6,9)) %>% 
   knitr::kable(table.attr = "style='width:30%;'")
 ```
 

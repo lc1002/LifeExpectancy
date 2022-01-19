@@ -328,7 +328,7 @@ h1.title {
 <p>We will perform two-sample T-Test since the true variance of the populations is unknown. And also use F-test to test if the variances of the two populations are equal.</p>
 <pre class="r"><code>var.test(Developed$Mean_LE, Developing$Mean_LE) %&gt;% 
   broom::tidy() %&gt;% 
-  select(c(4,5,8,9)) %&gt;% 
+  dplyr::select(c(4,5,8,9)) %&gt;% 
   knitr::kable(table.attr = &quot;style=&#39;width:30%;&#39;&quot;)</code></pre>
 <table>
 <thead>
@@ -353,7 +353,7 @@ h1.title {
 </ul>
 <pre class="r"><code>t.test(Developed$Mean_LE, Developing$Mean_LE, alternative = &quot;greater&quot;, var.equal = FALSE) %&gt;% 
   broom::tidy() %&gt;% 
-  select(c(4,5,6,9)) %&gt;% 
+  dplyr::select(c(4,5,6,9)) %&gt;% 
   knitr::kable(table.attr = &quot;style=&#39;width:30%;&#39;&quot;)</code></pre>
 <table>
 <thead>
@@ -406,7 +406,7 @@ h1.title {
 </center>
 <pre class="r"><code>prop.test(x, n, correct = FALSE) %&gt;% 
   broom::tidy() %&gt;% 
-  select(c(3,4,5,8)) %&gt;% 
+  dplyr::select(c(3,4,5,8)) %&gt;% 
   knitr::kable(digits = 4)</code></pre>
 <table>
 <colgroup>
@@ -533,7 +533,7 @@ health_High =
 
 t.test(health_Low$Mean_exp, health_High$Mean_exp) %&gt;% 
   broom::tidy() %&gt;% 
-  select(c(4,5,6,9)) %&gt;% 
+  dplyr::select(c(4,5,6,9)) %&gt;% 
   knitr::kable(table.attr = &quot;style=&#39;width:30%;&#39;&quot;)</code></pre>
 <table>
 <thead>
@@ -712,7 +712,7 @@ summary(remove_HDI)</code></pre>
 <p><br></p>
 <pre class="r"><code>var.test(school_low$mean_le, school_high$mean_le) %&gt;% 
   broom::tidy() %&gt;% 
-  select(c(4,5,8,9)) %&gt;% 
+  dplyr::select(c(4,5,8,9)) %&gt;% 
   knitr::kable(table.attr = &quot;style=&#39;width:30%;&#39;&quot;)</code></pre>
 <table>
 <thead>
@@ -737,7 +737,7 @@ summary(remove_HDI)</code></pre>
 </ul>
 <pre class="r"><code>t.test(school_low$mean_le, school_high$mean_le, alternative = &quot;less&quot;, var.equal = FALSE) %&gt;% 
   broom::tidy() %&gt;% 
-  select(c(4,5,6,9)) %&gt;% 
+  dplyr::select(c(4,5,6,9)) %&gt;% 
   knitr::kable(table.attr = &quot;style=&#39;width:30%;&#39;&quot;)</code></pre>
 <table>
 <thead>
