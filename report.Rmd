@@ -79,6 +79,7 @@ In addition to the Life Expectancy dataset we also incorporated [country-to-cont
 ### Data Cleaning
 
 
+
 ### Variables of Interest
 
 **Response Variable:**
@@ -87,8 +88,6 @@ In addition to the Life Expectancy dataset we also incorporated [country-to-cont
 
 **Predictor Variables:**
 
-* `continent`: Name of the continent in which the country is located
-* `year` : 2000 to 2015
 * `status`: Development status of the country (Developed or Developing)
 * `adult_mort`: Adult mortality rates of both sexes (Probability of dying between 15 and 60 years old per 1000 population)
 * `infantdeaths`: Number of infant deaths per 1000 population
