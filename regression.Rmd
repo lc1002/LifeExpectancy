@@ -12,6 +12,8 @@ library(modelr)
 library(mgcv)
 library(corrplot)
 library(leaps)
+library(glmnet)
+library(rsample)
 library(caret)
 library(patchwork)
 library(Metrics)
@@ -156,7 +158,12 @@ table %>%
 ```{r}
 Model_comparison =
   tibble(
+<<<<<<< HEAD
 	n_pred = c(1:8),
+=======
+	n_pred = c(1:9),
+	"Adjusted R2" = best_summary$adjr2,
+>>>>>>> 969693c10c56bfd07c55b785afdd67fcd99de6e0
 	"Adj R2" = best_summary$adjr2,
 	"BIC" = best_summary$bic,
 	"Cp" = best_summary$cp,
@@ -220,13 +227,16 @@ y = le_df$le
 #define matrix of predictor variables
 x = data.matrix(le_df[, c('status_Developed', 'adult_mort', 'infantdeaths', 'alcohol', 'percent_exp', 'hepatitis_b_high', 'measles', 'bmi', 'under_five', 'polio_high', 'total_exp', 'diphtheria_high', 'hiv_aids', 'gdp', 'population', 'thin_1_19', 'thin_5_9', 'HDI', 'schooling')])
 
+#best subsets selection 
+mod_7 = lm(le ~ adult_mort + infantdeaths + polio_high + hiv_aids + gdp + HDI + schooling, data = le_df)
+```
+
 #fit ridge regression model
 mod_5 = glmnet(x, y, alpha = 0)
 
 #view summary of model
 summary(mod_5)
 dim(coef(mod_5))
-```
 
 
 
