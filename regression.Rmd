@@ -112,7 +112,7 @@ summary(mod_1)
 
 ### Models Based on Automated Model Selection
 
-Automated selection procedures are often used when there are many potential variables available in the data, and there are uncertainties in selecting the most appropriate variables for a reliable prediction. Using automatic model selection performed in R, we have generated four models. Outlined below are the four automatic model selection procedures performed: **stepwise selection**,**backward/forward selection**, **best subsets selection**, **lasso regression** and **ridge regression**.
+Automated selection procedures are often used when there are many potential variables available in the data, and there are uncertainties in selecting the most appropriate variables for a reliable prediction. Using automated model selection performed in R, we have generated four models. Outlined below are the four automated model selection procedures performed: **stepwise selection**,**backward/forward selection**, **best subsets selection**, **lasso regression** and **ridge regression**.
 
 ```{r include=FALSE}
 full_model = lm(le ~ status_Developed + adult_mort + infantdeaths + alcohol + percent_exp + hepatitis_b_high + measles + bmi + under_five + polio_high + total_exp + diphtheria_high  + hiv_aids + gdp + population + thin_1_19 + thin_5_9 + HDI + schooling, data = le_df)
@@ -231,8 +231,6 @@ Based on the results shown above, the model contains 8 predictors has the highes
 
 After removing high correlation variables from the resulted models, we obtained our final best subsets model. 
 
-Here is our final best subset model:
-
 <br>
 
 ```{r include=FALSE}
@@ -310,7 +308,7 @@ best_lasso_model = glmnet(x, y, alpha = 1, lambda = best_lasso_lambda)
 new_x = data.matrix(le_df[, c('status_Developed', 'adult_mort', 'infantdeaths', 'alcohol', 'percent_exp', 'hepatitis_b_high', 'bmi', 'under_five', 'polio_high', 'total_exp', 'diphtheria_high', 'hiv_aids', 'gdp', 'thin_1_19', 'thin_5_9', 'HDI', 'schooling')])
 ```
 
-* The lambda value that minimizes the test MSE turns out to be `r best_lasso_lambda`.
+The lambda value that minimizes the test MSE turns out to be `r best_lasso_lambda`.
 
 ```{r}
 #produce plot of test MSE by lambda value
@@ -319,7 +317,7 @@ plot(cv_lasso_model) + title("Plot of MSE by Lambda value",line = 2.5)
 coef(best_lasso_model)
 ```
 
-* The coefficients of the predictor `measles` and `population` was shrunk all the way to zero, which means it was completely removed from the model since it wasn’t influential.
+The coefficients of the predictor `measles` and `population` was shrunk all the way to zero, which means it was completely removed from the model since it wasn’t influential.
 
 <br>
 <br>
@@ -329,7 +327,7 @@ coef(best_lasso_model)
 
 Cross-validation is a statistical model evaluation method used to compare the prediction accuracy of competing models using the regression model accuracy metrics. In this section, we will use the `modelr` package to perform the cross validation process and compare the regression model accuracy metrics, including the root mean square deviation (RMSE), R-squared (R^2), and mean absolute error (MAE), across all models proposed from the **Model building** section above. 
 
-First, we will use `crossv_mc()` to perform the training/testing split and generate 100 random training and testing datasets. Then, we will fit all candidate models to the training data and obtain the corresponding RMSE, R^2 and MAE for the testing data using `map()` and `map2_dbl()`. Finally, we will plot the distribution of RMSE, R^2 and MAE of all models using violin plots, and use them to visualize and compare the performance of the candidate models.
+First, we will use `crossv_mc()` to generate 100 random partitions by performing the training/testing split. Indeed, 80% of the random partitions will be the training datasets, and 20% will be the testing datasets. Then, we will fit all candidate models to the training data and obtain the corresponding RMSE, R^2 and MAE for the testing data using `map()` and `map2_dbl()`. Finally, we will plot the distribution of RMSE, R^2 and MAE of all models using violin plots, and visualize and compare the performance of the candidate models.
 
 
 ```{r}
