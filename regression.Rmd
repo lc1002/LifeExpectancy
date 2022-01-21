@@ -1,13 +1,34 @@
 ---
-title: "Regression Analysis"
-output: html_document
+title: "Predictive Model for Life Expectancy"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
 ---
 
+<style type="text/css">
+
+h1.title {
+  font-size: 50px;
+  text-align: left;   
+  font-family: Papyrus;
+  font-weight: bold;
+  font-variant: small-caps
+}
+</style>
+
+The main objective of this study is to analyze the relationship between life expectancy and relevant variables that can potentially affect an individual's lifespan. In conjunction with the exploratory and statistical analyses, we will now build a predictive model for life expectancy using existing data of all countries from 2000 to 2015.
+
+In this page, we will first examine the correlation between life expectancy and potential predictors in our dataset using **correlation matrix**. Then we will propose several models based on **prior research** and **automated model selection**. Next, we will evaluate and compare the performance of the models with metrics of evaluation using **cross-validation**. Finally, we will report the **results** and draw a conclusion based on our best-fitted model.
+
 <br>
+<br>
+<hr>
 
 ```{r include=FALSE, message=FALSE}
 library(tidyverse)
 library(performance)
+library(see)
 library(modelr)
 library(mgcv)
 library(corrplot)
@@ -45,9 +66,11 @@ le_df =
   read_csv("./data/Dummy_Data.CSV")
 ```
 
-<br>
+## **Correlation Matrix**
 
-## Correlation Matrix
+One of the essential steps of building a regression model is to detect multicollinearity between the independent variables. Below is a table that displays correlations between variables in our dataset.
+
+<br>
 
 ```{r}
 cm_df =
@@ -59,17 +82,48 @@ corrplot(cor(cm_df), type = "upper", diag = FALSE, method = "square", addCoef.co
 
 <br>
 
+* From the correlation matrix, we can see that life expectancy has a high positive correlation with `HDI` and `schooling`, and a high negative correlation with `adult_mort` and moderate negative correlation with `hiv_aids`. Indeed,  we would expect the outcome variable, life expectancy, to be highly impacted by these predictors.
+
+* We can also see that many of our variables are moderately correlated with each other. `HDI` highly correlated with `schooling` and moderately correlated with multiple variables. It is positively associated with `alcohol`, `percent_exp`, `bmi`, `gdp`, `status_Developing`, `polio_low`,  `hepatitis_b_low` and `diphtheria_low` , and negatively associated with `adult_mort`, `status_Developed`, `thin_1_19`, `thin_5_9`,`polio_high`,  `hepatitis_b_high` and `diphtheria_high`. 
+
+* Some of our variables are also highly correlated with each other. For example, `gdp` has a strong positive correlation with `percent_exp`. 
+
+* The variable `infant deaths` and `under-five deaths` are highly correlated. 
+
+* `thin_1_19` and `thin_5_9` are highly correlated.
+
+* In addition, dummy variables created from the same categorical variable are also highly correlated (e.g. `status_Developed` and `status_Developing`). Therefore, multicollinearity must be taken into consideration when selecting our model.
+
+(For a detailed analysis of the predictors in our dataset, please visit [statistical analysis]( https://lc1002.github.io/LifeExpectancy/statistical.html) page.)
+
+
+<br>
+<br>
 <hr>
 
-## Model building 
+## **Model building** 
+
+Variable selection is an essential aspect of statistical model building. Carefully selecting the truly predictive variables from a large pool of candidate predictors to build a predictive model with minimal prediction error, is often considered the most difficult step of model building. To find the best-fitted model for life expectancy prediction, we have proposed several models based on prior research and automatic model selection.
+
+<br>
 
 ### Model Based on Prior Research
+
+Theory and findings from relevant research can provide good guidance when deciding which variables to include in the model. 
+
+Studies have shown that socioeconomic developments and health measures are associated with life expectancy. Lin et al. have conducted a [study]( https://bmcpublichealth.biomedcentral.com/articles/10.1186/1471-2458-12-85) to examine the longitudinal contributions of four socioeconomic indicators, economy, educational environment, nutritional status, and political regime, in less developed countries. The results of the study proven that the increases in life expectancy of less developed countries over time were associated with all four factors.(Lin et al., 2012) Another research from [Kruk et al., 2018]( https://www.sciencedirect.com/science/article/pii/S0140673618316684) shows that 58% of all amenable mortality in low-income and middle-income countries are attributed to low-quality health system. Indeed, using mortality rates as health measures, we see that low-quality health system was associated with the decrease of life expectancy in these countries. Although these studies were only conducted in less developed countries, we believe that the results are still good indicators of the determinants of life expectancy.
+
+Based on prior research and analyses, we proposed the following model using socioeconomic and health-related variables from our dataset:
+
+<br>
+
+**Research Model:**
 
 <center>
 $Life \ Expectancy = \beta_{0} + \beta_{1}*(Developed \ Status) + \beta_{2}*(Percent \ Expenditure) + \beta_{3}*(HDI) + \beta_{4}*(Adult \ Mortality) + \beta_{5}*(Infant \ Deaths) + \beta_{6}*(Schooling) + \beta_{7}*(HIV/AIDS) + \beta_{8}*(GDP * Percent \ Expenditure)$
 </center>
 
-```{r}
+```{r include=FALSE}
 mod_1 = lm(le ~ status_Developed + percent_exp + HDI + adult_mort + infantdeaths + schooling + gdp + hiv_aids + gdp * percent_exp, data = le_df)
 mod_1_vif = check_collinearity(mod_1) 
 summary(mod_1)
@@ -81,53 +135,57 @@ summary(mod_1)
 
 ### Models Based on Automated Model Selection
 
-```{r include = FALSE}
+Automated selection procedures are often used when there are many potential variables available in the data, and there are uncertainties in selecting the most appropriate variables for a reliable prediction. Using automated model selection performed in R, we have generated four models. Outlined below are the four automated model selection procedures performed: **stepwise selection**,**backward/forward selection**, **best subsets selection**, **lasso regression** and **ridge regression**.
+
+```{r include=FALSE}
 full_model = lm(le ~ status_Developed + adult_mort + infantdeaths + alcohol + percent_exp + hepatitis_b_high + measles + bmi + under_five + polio_high + total_exp + diphtheria_high  + hiv_aids + gdp + population + thin_1_19 + thin_5_9 + HDI + schooling, data = le_df)
 ```
 
-Full Model:
+<br>
 
 <center>
 $Life \ Expectancy = \beta_{0} + \beta_{1}*(Developed \ Status) + \beta_{2}*(Adult \ Mortality) + \beta_{3}*(Infant \ Deaths) + \beta_{4}*(Alcohol) + \beta_{5}*(Percent \ Expenditure) + \beta_{6}*(High \ Hepatitis \ B) + \beta_{7}*(Measles) + \beta_{8}*(BMI) + \beta_{9}*(Under-five \ Deaths) + \beta_{10}*(High \ Polio) + \beta_{11}*(Total \ Expenditure) + \beta_{12}*(High \ Diphtheria) + \beta_{13}*(HIV/AIDS) + \beta_{14}*(GDP) + \beta_{15}*(Population) + \beta_{16}*(Prevalence \ of \ thinness 10-19) + \beta_{17}*(Prevalence \ of \ thinness 5-9) + \beta_{18}*(HDI) + \beta_{19}*(Schooling)$
 </center>
 
-**Stepwise Regression:**
+#### **Stepwise Regression:**
 
-```{r}
+Stepwise model selection was performed using `stepAIC()` from the `MASS` package. High correlation variables and insignificant variables were detected using `check.collinearity()` from the `performance` package and `summary()` from base R, respectively. Below is the final model obtained using stepwise selection.
+
+<br>
+
+```{r include = FALSE}
 step_model = stepAIC(full_model, direction = "both", trace = FALSE)
 summary(step_model)
 check_collinearity(step_model)
-```
 
-*Final Stepwise Model*
-```{r}
 ## remove insignificant and high correlation variables (under_five, infantdeaths)
 mod_2 = lm(le ~ status_Developed + adult_mort + bmi + polio_high + diphtheria_high + hiv_aids + gdp + thin_1_19 + HDI + schooling, data = le_df)
 ```
 
-Final Stepwise Model:
+**Stepwise Model:**
 
 <center>
 $Life \ Expectancy = \beta_{0} + \beta_{1}*(Developed \ Status) + \beta_{2}*(Adult \ Mortality) + \beta_{3}*(BMI) + \beta_{4}*(High \ Polio) + \beta_{5}*(High \ Diphtheria) + \beta_{6}*(HIV/AIDS) + \beta_{7}*(GDP) + \beta_{8}*(Prevalence \ of \ thinness 10-19) + \beta_{9}*(HDI) + \beta_{10}*(Schooling)$
+
 </center>
 
 <br>
 <br>
 
-**Forward/Backward Selection:**
+#### **Forward/Backward Selection:**
 
-*Backward Elimination*
-```{r}
+Backward elimination was generated using `stepAIC()` with `direction = backward`, from the `MASS` package. Similarly, forward selection was generated using `stepAIC()` with `direction = forward`. Then, high correlation and insignificant variables were detected and removed from the resulted models. Surprisingly, after removing these variables, we obtained two identical models from the backward and forward selection, which is also the exact same model generated from the stepwise selection. 
+
+Since models produced by backward, forward and stepwise selection are identical, we will only include one of them in further analysis. For simplicity, we will label this model as stepwise model.
+
+```{r include = FALSE}
 back_mod = stepAIC(full_model, direction = "backward", 
                       trace = FALSE, scope = formula(full_model))
 summary(back_mod)
 check_collinearity(back_mod)
 
 backward = lm(le ~ status_Developed + adult_mort + bmi + polio_high + diphtheria_high + hiv_aids + gdp + thin_1_19 + HDI + schooling, data = le_df)
-```
 
-*Forward Selection*
-```{r}
 forward_mod = stepAIC(full_model, direction = "forward", trace = FALSE, scope = formula(full_model))
 summary(forward_mod)
 check_collinearity(forward_mod)
@@ -136,14 +194,16 @@ forward = lm(le ~ status_Developed + adult_mort + infantdeaths + bmi + polio_hig
 ```
 
 <br>
+
+#### **Best Subsets Regression:**
+
+Best subset regression was performed using `regsubsets()` from the `leaps` package. Unlike stepwise, forward, and backward selection that generates only one regression model, best subset regression produces multiple models after fitting all models based on the number of independent variables specified.
+
+Below is a table that displays the best fitting models generated from best subset regression of different sizes.
+
 <br>
 
-
-**Best Subsets Regression:**
-
-<br>
-
-*Best Fitting Models Based on the Numbers of Predictors*
+#### *Best Fitting Models Based on the Numbers of Predictors*
 ```{r include=FALSE}
 sub_fit = regsubsets(le ~ status_Developed + adult_mort + infantdeaths + alcohol + percent_exp + hepatitis_b_high + measles + bmi + under_five + polio_high + total_exp + diphtheria_high  + hiv_aids + gdp + population + thin_1_19 + thin_5_9 + HDI + schooling, data = le_df)
 
@@ -164,12 +224,15 @@ table %>%
 
 <br>
 
-*Comparison Based on Model Selection Criteria*
+Since best subset regression did not specify the best model among the models generated, we will need to compare the model selection criteria to determine the final best subset model. Here is a plot that compares the model selection criteria across all models generated from the best subset regression:
+
+<br>
+
+#### *Comparison Based on Model Selection Criteria*
 ```{r}
 Model_comparison =
   tibble(
 	n_pred = c(1:8),
-	"Adjusted R2" = best_summary$adjr2,
 	"Adj R2" = best_summary$adjr2,
 	"BIC" = best_summary$bic,
 	"Cp" = best_summary$cp,
@@ -190,12 +253,19 @@ Model_comparison =
 Model_comparison
 ```
 
-*Final Best Subsets Model*
-```{r}
+<br>
+
+Based on the results shown above, the model contains 8 predictors has the highest adjusted R squared and relative standard error (RSE), and the lowest bayesian Information criterion(BIC), Mallow’s Cp value, and residual sum of squares (RSS). Therefore, it is the best-fitting best subset model among all candidate models.
+
+After removing high correlation variables from the resulted models, we obtained our final best subsets model. 
+
+<br>
+
+```{r include=FALSE}
 mod_3 = lm(le ~ adult_mort + under_five + polio_high + hiv_aids + gdp + HDI + schooling, data = le_df)
 ```
 
-Final Best Subsets Model:
+**Best Subsets Model:**
 
 <center>
 $Life \ Expectancy = \beta_{0} + \beta_{1}*(Adult \ Mortality) + \beta_{2}*(Under-five Deaths) + \beta_{3}*(High \ Polio) + \beta_{4}*(HIV/AIDS) + \beta_{5}*(GDP) + \beta_{6}*(HDI) + \beta_{7}*(Schooling)$
@@ -203,13 +273,14 @@ $Life \ Expectancy = \beta_{0} + \beta_{1}*(Adult \ Mortality) + \beta_{2}*(Unde
 
 <br>
 <br>
-<hr>
 
 When developing regression models for our dataset, one problem that rises to our attention is the multicollinearity, our dataset contains multiple predictor variables that are highly correlated to each other, which concerns us that they might not provide unique or independent information in the regression models.Thus, in addition to the multiple linear regression models above, we also applied regularization method to resolve multicollinearity issues using ridge regression and lasso regression.
 
-**Ridge Regression:**
+<br>
 
-Mathematical equation of Ridge Regression: 
+#### **Ridge Regression:**
+
+**Mathematical equation of Ridge Regression:**
 
 $\sum_{i=1}^n{(y_{i} - \beta_{0} - \sum_{j=1}^{p}{\beta_{i}x_{ij}})^2} + \lambda \sum_{j=1}^{p}{\beta_{j}^2} = RSS + \lambda \sum_{j=1}^{p}{\beta_{j}^2}$
 
@@ -234,14 +305,14 @@ par(mfrow=c(1,1))
 #produce plot of test MSE by lambda value
 plot(cv_ridge_model) + title("Plot of MSE by Lambda value",line = 2.5)
 ```
-* The lambda value that minimizes the test MSE turns out to be `r best_lambda`.
+The lambda value that minimizes the test MSE turns out to be `r best_lambda`.
 
 <br>
 <br>
 
-**Lasso Regression:**
+#### **Lasso Regression:**
 
-Mathematical equation of Ridge Regression: 
+**Mathematical equation of Ridge Regression:**
 
 $\sum_{i=1}^n{(y_{i} - \beta_{0} - \sum_{j=1}^{p}{\beta_{i}x_{ij}})^2} + \lambda \sum_{j=1}^{p}{|\beta_{j}|} = RSS + \lambda \sum_{j=1}^{p}{|\beta_{j}|}$
 
@@ -265,7 +336,7 @@ best_lasso_model = glmnet(x, y, alpha = 1, lambda = best_lasso_lambda)
 new_x = data.matrix(le_df[, c('status_Developed', 'adult_mort', 'infantdeaths', 'alcohol', 'percent_exp', 'hepatitis_b_high', 'bmi', 'under_five', 'polio_high', 'total_exp', 'diphtheria_high', 'hiv_aids', 'gdp', 'thin_1_19', 'thin_5_9', 'HDI', 'schooling')])
 ```
 
-* The lambda value that minimizes the test MSE turns out to be `r best_lasso_lambda`.
+The lambda value that minimizes the test MSE turns out to be `r best_lasso_lambda`.
 
 ```{r}
 #produce plot of test MSE by lambda value
@@ -274,15 +345,20 @@ plot(cv_lasso_model) + title("Plot of MSE by Lambda value",line = 2.5)
 coef(best_lasso_model)
 ```
 
-* The coefficients of the predictor `measles` and `population` was shrunk all the way to zero, which means it was completely removed from the model since it wasn’t influential.
+The coefficients of the predictor `measles` and `population` was shrunk all the way to zero, which means it was completely removed from the model since it wasn’t influential.
 
 <br>
 <br>
 <hr>
 
-## Cross Validation
+## **Cross Validation**
 
-```{r include=FALSE}
+Cross-validation is a statistical model evaluation method used to compare the prediction accuracy of competing models using the regression model accuracy metrics. In this section, we will use the `modelr` package to perform the cross validation process and compare the regression model accuracy metrics, including the root mean square deviation (RMSE), R-squared (R^2), and mean absolute error (MAE), across all models proposed from the **Model building** section above. 
+
+First, we will use `crossv_mc()` to generate 100 random partitions by performing the training/testing split. Indeed, 80% of the random partitions will be the training datasets, and 20% will be the testing datasets. Then, we will fit all candidate models to the training data and obtain the corresponding RMSE, R^2 and MAE for the testing data using `map()` and `map2_dbl()`. Finally, we will plot the distribution of RMSE, R^2 and MAE of all models using violin plots, and visualize and compare the performance of the candidate models.
+
+
+```{r}
 set.seed(2)
 
 cv_df = 
@@ -295,11 +371,8 @@ cv_df =
     mod_1 = map(train, ~lm(formula = formula(mod_1), data = .x)),
     mod_2 = map(train, ~lm(formula = formula(mod_2), data = .x)),
     mod_3 = map(train, ~lm(formula = formula(mod_3), data = .x)),
-    
     mod_4 = map(train, ~train(le ~ status_Developed + adult_mort + infantdeaths + alcohol + percent_exp + hepatitis_b_high + measles + bmi + under_five + polio_high + total_exp + diphtheria_high + hiv_aids + gdp + population + thin_1_19 + thin_5_9 + HDI + schooling, data = training(initial_split(le_df, prop = 0.75))[,-1], trControl=trainControl(method="cv", number = 5), method="glmnet", preProcess = c("center", "scale"),tuneGrid = expand.grid(alpha = 0, lambda = best_lambda)), data = .x),
-    
     mod_5 = map(train, ~train(le ~ status_Developed + adult_mort + infantdeaths + alcohol + percent_exp + hepatitis_b_high + bmi + under_five + polio_high + total_exp + diphtheria_high + hiv_aids + gdp + thin_1_19 + thin_5_9 + HDI + schooling, data = training(initial_split(le_df, prop = 0.75))[,-1], trControl=trainControl(method="cv", number = 5), method="glmnet", preProcess = c("center", "scale"),tuneGrid = expand.grid(alpha = 1, lambda = best_lasso_lambda)), data = .x)) %>% 
-  
   mutate(
     rmse_1 = map2_dbl(mod_1, test, ~modelr::rmse(model = .x, data = .y)),
     rmse_2 = map2_dbl(mod_2, test, ~modelr::rmse(model = .x, data = .y)),
@@ -323,8 +396,9 @@ cv_df =
     )
 ```
 
+<br>
 
-### Cross-validating with Violin Plots
+### *Cross-validating with Violin Plots*
 ```{r include=FALSE}
 rmse_table = 
   cv_df %>%
@@ -334,11 +408,11 @@ rmse_table =
     values_to = "rmse",
     names_prefix = "rmse_") %>% 
   mutate(model = fct_inorder(model),
-         model = fct_recode(model, "Model 1 (Research)" = "1",
-                                   "Model 2 (Stepwise)" = "2",
-                                   "Model 3(Best Subsets)" = "3",
-                                   "Model 4 (Ridge)" = "4",
-                                   "Model 5 (Lasso)" = "5" ))
+         model = fct_recode(model, "Research Model" = "1",
+                                   "Stepwise Model" = "2",
+                                   "BestSub Model" = "3",
+                                   "Ridge Model" = "4",
+                                   "Lasso Model" = "5"))
 
 rsq_table = 
   cv_df %>% 
@@ -348,11 +422,11 @@ rsq_table =
     values_to = "rsq",
     names_prefix = "rsq_") %>% 
   mutate(model = fct_inorder(model),
-         model = fct_recode(model, "Model 1 (Research)" = "1",
-                                   "Model 2 (Stepwise)" = "2",
-                                   "Model 3(Best Subsets)" = "3",
-                                   "Model 4 (Ridge)" = "4",
-                                   "Model 5 (Lasso)" = "5" ))
+         model = fct_recode(model, "Research Model" = "1",
+                                   "Stepwise Model" = "2",
+                                   "BestSub Model" = "3",
+                                   "Ridge Model" = "4",
+                                   "Lasso Model" = "5" ))
 mae_table = 
   cv_df %>% 
   pivot_longer(
@@ -361,11 +435,11 @@ mae_table =
     values_to = "mae",
     names_prefix = "mae_") %>% 
   mutate(model = fct_inorder(model),
-         model = fct_recode(model, "Model 1 (Research)" = "1",
-                                   "Model 2 (Stepwise)" = "2",
-                                   "Model 3(Best Subsets)" = "3",
-                                   "Model 4 (Ridge)" = "4",
-                                   "Model 5 (Lasso)" = "5" ))
+         model = fct_recode(model, "Research Model" = "1",
+                                   "Stepwise Model" = "2",
+                                   "BestSub Model" = "3",
+                                   "Ridge Model" = "4",
+                                   "Lasso Model" = "5" ))
 ```
 
 
@@ -404,9 +478,12 @@ rmse_plot/rsq_plot/mae_plot
 ```
 
 <br>
+
+In addition, we also create a table that displays the mean RMSE, mean R^2 and mean MAE of all models.
+
 <br>
 
-### Cross Validation Table
+### *Cross Validation Table*
 ```{r message=FALSE}
 mean_rmse =
   rmse_table %>% 
@@ -430,13 +507,12 @@ Model_comparison_table =
 Model_comparison_table 
 ```
 
-
 <br>
 <hr>
 
-## Results
+## **Results**
 
-Based on performance measures among all models Lasso regression shows least Mean Absolute Error (MAE = 2.873414) and Root Mean Square Error (RMSE = 3.840274), and highest R-square value of 0.8378577. Thus, Lasso regression is considered as best model to predict Life expectancy.
+Based on performance measures among all models Lasso regression shows least Mean Absolute Error (MAE = 2.873414) and Root Mean Square Error (RMSE = 3.840274), and highest R-square value of 0.8378577. Thus, Lasso regression is considered as the best model to predict Life expectancy.
 
 The coefficients for the best model we obtain are as follows: 
 
@@ -456,18 +532,27 @@ ggplot(varImp(optimal_model)) +
   labs( 
     title = "Most important variables from elastic CV",
     x = "Predictors") 
-      
-Lasso_lm <- lm(le ~ status_Developed + adult_mort + infantdeaths + alcohol + percent_exp + hepatitis_b_high + bmi + under_five + polio_high + total_exp + diphtheria_high + hiv_aids + gdp + thin_1_19 + thin_5_9 + HDI + schooling, data = le_df)
-
-summary(Lasso_lm)
 ```
 
-* The most important variables we get from this are under-five deaths, infant deaths, Schooling, HIV/AIDS, Adult mortality, HDI, BMI and High Polio (Percentage of Polio immunization coverage among 1-year-olds $\ge 80$.
+* The most important variables we get from this are `under-five deaths`, `infant deaths`, `Schooling`, `HIV/AIDS`, `Adult mortality`, `HDI`, `BMI`, and `High Polio` (Percentage of Polio immunization coverage among 1-year-olds $\ge 80$.
+* GDP, Diphtheria, Development Status and Polio are next influential predictors according to the variable importance graph.
+* `Thin_1_9`, `Percent_exp`, `Total_exp`, `Thin_5_9`, `Hepatitis B` and `Alcohol` are less important.
 
-* GDP, Developed Status, Diphtheria, Hepatitis B and total expenditure are less important.
-Alcohol and Polio are right in the middle of the variable importance graph.
+```{r}
+Lasso_lm <- lm(le ~ status_Developed + adult_mort + infantdeaths + alcohol + percent_exp + hepatitis_b_high + bmi + under_five + polio_high + total_exp + diphtheria_high + hiv_aids + gdp + thin_1_19 + thin_5_9 + HDI + schooling, data = le_df)
+check_model(Lasso_lm, check = c("linearity", "outliers", "qq", "normality"))
 
-* Not all predictors that the Lasso selects are statistically significant at a 5% level. Thinness..1.19.years, for example, has a p-value of about 0.14.
+```
+
+* From the QQ plot, we can say that the residuals are skewed with thick tails on both end. The residual vs. fitted plot suggests non-constant variance.
 
 
+<br>
+<hr>
 
+<center>
+<font size="2"> Contributors: AnMei Chen and Lynn Chen</font><br>
+<font size="2">The Github repository for this website can be found [here ](https://github.com/lc1002/LifeExpectancy), and the corresponding Github repository for this project is located [here](https://github.com/lc1002/LifeExpectancyAnalysis). </font> 
+
+<img src="image/mailman.png" alt="logo" style="width:30%; height:20%; ">
+</center>

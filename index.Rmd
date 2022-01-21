@@ -43,6 +43,9 @@ According to statistics, the average life expectancy at birth was 82.1 years in 
 <br>
 <hr> 
 
-<font size="2"> <span style="text-decoration:underline"> **Contributors:**</span> AnMei Chen and Lynn Chen</font>  
-
+<center>
+<font size="2"> Contributors: AnMei Chen and Lynn Chen</font><br>
 <font size="2">The Github repository for this website can be found [here ](https://github.com/lc1002/LifeExpectancy), and the corresponding Github repository for this project is located [here](https://github.com/lc1002/LifeExpectancyAnalysis). </font> 
+
+<img src="image/mailman.png" alt="logo" style="width:20%; height:10%; ">
+</center>

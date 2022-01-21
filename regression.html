@@ -11,7 +11,7 @@
 
 
 
-<title>Regression Analysis</title>
+<title>Predictive Model for Life Expectancy</title>
 
 <script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -29,6 +29,9 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
@@ -224,6 +227,69 @@ $(document).ready(function () {
 
 
 
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
 
 </head>
 
@@ -231,6 +297,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -297,15 +373,29 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Regression Analysis</h1>
+<h1 class="title toc-ignore">Predictive Model for Life Expectancy</h1>
 
 </div>
 
 
-<p><br></p>
-<p><br></p>
+<style type="text/css">
+
+h1.title {
+  font-size: 50px;
+  text-align: left;   
+  font-family: Papyrus;
+  font-weight: bold;
+  font-variant: small-caps
+}
+</style>
+<p>The main objective of this study is to analyze the relationship between life expectancy and relevant variables that can potentially affect an individual’s lifespan. In conjunction with the exploratory and statistical analyses, we will now build a predictive model for life expectancy using existing data of all countries from 2000 to 2015.</p>
+<p>In this page, we will first examine the correlation between life expectancy and potential predictors in our dataset using <strong>correlation matrix</strong>. Then we will propose several models based on <strong>prior research</strong> and <strong>automated model selection</strong>. Next, we will evaluate and compare the performance of the models with metrics of evaluation using <strong>cross-validation</strong>. Finally, we will report the <strong>results</strong> and draw a conclusion based on our best-fitted model.</p>
+<br> <br>
+<hr>
 <div id="correlation-matrix" class="section level2">
-<h2>Correlation Matrix</h2>
+<h2><strong>Correlation Matrix</strong></h2>
+<p>One of the essential steps of building a regression model is to detect multicollinearity between the independent variables. Below is a table that displays correlations between variables in our dataset.</p>
+<p><br></p>
 <pre class="r"><code>cm_df =
   le_df %&gt;%
   dplyr::select(-c(country,continent,year))
@@ -313,266 +403,65 @@ $(document).ready(function () {
 corrplot(cor(cm_df), type = &quot;upper&quot;, diag = FALSE, method = &quot;square&quot;, addCoef.col = &quot;black&quot;, number.cex = .3, tl.col = &quot;black&quot;, tl.cex = .7)</code></pre>
 <p><img src="regression_files/figure-html/unnamed-chunk-3-1.png" width="80%" /></p>
 <p><br></p>
+<ul>
+<li><p>From the correlation matrix, we can see that life expectancy has a high positive correlation with <code>HDI</code> and <code>schooling</code>, and a high negative correlation with <code>adult_mort</code> and moderate negative correlation with <code>hiv_aids</code>. Indeed, we would expect the outcome variable, life expectancy, to be highly impacted by these predictors.</p></li>
+<li><p>We can also see that many of our variables are moderately correlated with each other. <code>HDI</code> highly correlated with <code>schooling</code> and moderately correlated with multiple variables. It is positively associated with <code>alcohol</code>, <code>percent_exp</code>, <code>bmi</code>, <code>gdp</code>, <code>status_Developing</code>, <code>polio_low</code>, <code>hepatitis_b_low</code> and <code>diphtheria_low</code> , and negatively associated with <code>adult_mort</code>, <code>status_Developed</code>, <code>thin_1_19</code>, <code>thin_5_9</code>,<code>polio_high</code>, <code>hepatitis_b_high</code> and <code>diphtheria_high</code>.</p></li>
+<li><p>Some of our variables are also highly correlated with each other. For example, <code>gdp</code> has a strong positive correlation with <code>percent_exp</code>.</p></li>
+<li><p>The variable <code>infant deaths</code> and <code>under-five deaths</code> are highly correlated.</p></li>
+<li><p><code>thin_1_19</code> and <code>thin_5_9</code> are highly correlated.</p></li>
+<li><p>In addition, dummy variables created from the same categorical variable are also highly correlated (e.g. <code>status_Developed</code> and <code>status_Developing</code>). Therefore, multicollinearity must be taken into consideration when selecting our model.</p></li>
+</ul>
+<p>(For a detailed analysis of the predictors in our dataset, please visit <a href="https://lc1002.github.io/LifeExpectancy/statistical.html">statistical analysis</a> page.)</p>
+<br> <br>
 <hr>
 </div>
 <div id="model-building" class="section level2">
-<h2>Model building</h2>
+<h2><strong>Model building</strong></h2>
+<p>Variable selection is an essential aspect of statistical model building. Carefully selecting the truly predictive variables from a large pool of candidate predictors to build a predictive model with minimal prediction error, is often considered the most difficult step of model building. To find the best-fitted model for life expectancy prediction, we have proposed several models based on prior research and automatic model selection.</p>
+<p><br></p>
 <div id="model-based-on-prior-research" class="section level3">
 <h3>Model Based on Prior Research</h3>
+<p>Theory and findings from relevant research can provide good guidance when deciding which variables to include in the model.</p>
+<p>Studies have shown that socioeconomic developments and health measures are associated with life expectancy. Lin et al. have conducted a <a href="https://bmcpublichealth.biomedcentral.com/articles/10.1186/1471-2458-12-85">study</a> to examine the longitudinal contributions of four socioeconomic indicators, economy, educational environment, nutritional status, and political regime, in less developed countries. The results of the study proven that the increases in life expectancy of less developed countries over time were associated with all four factors.(Lin et al., 2012) Another research from <a href="https://www.sciencedirect.com/science/article/pii/S0140673618316684">Kruk et al., 2018</a> shows that 58% of all amenable mortality in low-income and middle-income countries are attributed to low-quality health system. Indeed, using mortality rates as health measures, we see that low-quality health system was associated with the decrease of life expectancy in these countries. Although these studies were only conducted in less developed countries, we believe that the results are still good indicators of the determinants of life expectancy.</p>
+<p>Based on prior research and analyses, we proposed the following model using socioeconomic and health-related variables from our dataset:</p>
+<p><br></p>
+<p><strong>Research Model:</strong></p>
 <center>
-$ Life  Expectancy = <em>{0} + </em>{1}*(Developed  Status) + _{2}*(Percent  Expenditure) + _{3}*(HDI) + _{4}*(Adult  Mortality) + _{5}*(Infant  Deaths) + _{6}*(Schooling) + _{7}*(HIV/AIDS) + _{8}<em>(GDP </em> Percent  Expenditure)$
+<span class="math inline">\(Life \ Expectancy = \beta_{0} + \beta_{1}*(Developed \ Status) + \beta_{2}*(Percent \ Expenditure) + \beta_{3}*(HDI) + \beta_{4}*(Adult \ Mortality) + \beta_{5}*(Infant \ Deaths) + \beta_{6}*(Schooling) + \beta_{7}*(HIV/AIDS) + \beta_{8}*(GDP * Percent \ Expenditure)\)</span>
 </center>
-<pre class="r"><code>mod_1 = lm(le ~ status_Developed + percent_exp + HDI + adult_mort + infantdeaths + schooling + gdp + hiv_aids + gdp * percent_exp, data = le_df)
-mod_1_vif = check_collinearity(mod_1) 
-summary(mod_1)</code></pre>
-<pre><code>## 
-## Call:
-## lm(formula = le ~ status_Developed + percent_exp + HDI + adult_mort + 
-##     infantdeaths + schooling + gdp + hiv_aids + gdp * percent_exp, 
-##     data = le_df)
-## 
-## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -22.496  -2.230   0.032   2.470  20.269 
-## 
-## Coefficients:
-##                    Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)       5.690e+01  3.959e-01 143.728  &lt; 2e-16 ***
-## status_Developed  1.362e+00  2.535e-01   5.373 8.37e-08 ***
-## percent_exp       3.396e-04  1.285e-04   2.642 0.008281 ** 
-## HDI               8.323e+00  6.361e-01  13.085  &lt; 2e-16 ***
-## adult_mort       -1.879e-02  8.260e-04 -22.747  &lt; 2e-16 ***
-## infantdeaths     -3.857e-03  6.746e-04  -5.716 1.20e-08 ***
-## schooling         8.909e-01  3.962e-02  22.486  &lt; 2e-16 ***
-## gdp               5.874e-05  1.316e-05   4.464 8.34e-06 ***
-## hiv_aids         -5.341e-01  1.798e-02 -29.699  &lt; 2e-16 ***
-## percent_exp:gdp  -5.549e-09  1.511e-09  -3.672 0.000245 ***
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## Residual standard error: 4.206 on 2928 degrees of freedom
-## Multiple R-squared:  0.8053, Adjusted R-squared:  0.8047 
-## F-statistic:  1345 on 9 and 2928 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p><br> <br></p>
 </div>
 <div id="models-based-on-automated-model-selection" class="section level3">
 <h3>Models Based on Automated Model Selection</h3>
-<p>Full Model:</p>
-<center>
-$ Life  Expectancy = <em>{0} + </em>{1}*(Developed  Status) + _{2}*(Adult  Mortality) + _{3}*(Infant  Deaths) + _{4}*(Alcohol) + _{5}*(Percent  Expenditure) + _{6}*(High  Hepatitis  B) + _{7}*(Measles) + _{8}*(BMI) + _{9}*(Under-five  Deaths) + _{10}*(High  Polio) + _{11}*(Total  Expenditure) + _{12}*(High  Diphtheria) + _{13}*(HIV/AIDS) + _{14}*(GDP) + _{15}*(Population) + _{16}*(Prevalence  of  thinness 10-19) + _{17}*(Prevalence  of  thinness 5-9) + _{18}*(HDI) + _{19}*(Schooling)$
-</center>
-<p><strong>Stepwise Regression:</strong></p>
-<pre class="r"><code>step_model = stepAIC(full_model, direction = &quot;both&quot;, trace = FALSE)
-summary(step_model)</code></pre>
-<pre><code>## 
-## Call:
-## lm(formula = le ~ status_Developed + adult_mort + infantdeaths + 
-##     bmi + under_five + polio_high + diphtheria_high + hiv_aids + 
-##     gdp + thin_1_19 + HDI + schooling, data = le_df)
-## 
-## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -20.209  -2.170  -0.009   2.263  16.812 
-## 
-## Coefficients:
-##                    Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)       5.711e+01  4.246e-01 134.525  &lt; 2e-16 ***
-## status_Developed  1.575e+00  2.327e-01   6.768 1.58e-11 ***
-## adult_mort       -1.671e-02  7.634e-04 -21.886  &lt; 2e-16 ***
-## infantdeaths      9.918e-02  7.740e-03  12.815  &lt; 2e-16 ***
-## bmi               3.995e-02  4.634e-03   8.621  &lt; 2e-16 ***
-## under_five       -7.371e-02  5.702e-03 -12.927  &lt; 2e-16 ***
-## polio_high        1.854e+00  3.026e-01   6.128 1.01e-09 ***
-## diphtheria_high   1.163e+00  3.031e-01   3.838 0.000127 ***
-## hiv_aids         -4.900e-01  1.661e-02 -29.506  &lt; 2e-16 ***
-## gdp               5.519e-05  6.297e-06   8.764  &lt; 2e-16 ***
-## thin_1_19        -7.734e-02  2.175e-02  -3.557 0.000382 ***
-## HDI               6.095e+00  5.891e-01  10.348  &lt; 2e-16 ***
-## schooling         6.766e-01  3.775e-02  17.925  &lt; 2e-16 ***
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## Residual standard error: 3.854 on 2925 degrees of freedom
-## Multiple R-squared:  0.8366, Adjusted R-squared:  0.836 
-## F-statistic:  1248 on 12 and 2925 DF,  p-value: &lt; 2.2e-16</code></pre>
-<pre class="r"><code>check_collinearity(step_model)</code></pre>
-<pre><code>## # Check for Multicollinearity
-## 
-## Low Correlation
-## 
-##              Term  VIF Increased SE Tolerance
-##  status_Developed 1.27         1.13      0.79
-##        adult_mort 2.84         1.69      0.35
-##               bmi 2.86         1.69      0.35
-##          hiv_aids 1.92         1.38      0.52
-##               gdp 1.00         1.00      1.00
-##               HDI 3.35         1.83      0.30
-##         schooling 4.75         2.18      0.21
-## 
-## Moderate Correlation
-## 
-##             Term  VIF Increased SE Tolerance
-##       polio_high 7.26         2.69      0.14
-##  diphtheria_high 6.78         2.60      0.15
-## 
-## High Correlation
-## 
-##          Term     VIF Increased SE Tolerance
-##  infantdeaths 5856.27        76.53      0.00
-##    under_five 5846.13        76.46      0.00
-##     thin_1_19   11.75         3.43      0.09</code></pre>
-<p><em>Final Stepwise Model</em></p>
-<pre class="r"><code>## remove insignificant and high correlation variables (under_five, infantdeaths)
-mod_2 = lm(le ~ status_Developed + adult_mort + bmi + polio_high + diphtheria_high + hiv_aids + gdp + thin_1_19 + HDI + schooling, data = le_df)</code></pre>
-<p>Final Stepwise Model:</p>
-<center>
-$ Life  Expectancy = <em>{0} + </em>{1}*(Developed  Status) + _{2}*(Adult  Mortality) + _{3}*(BMI) + _{4}*(High  Polio) + _{5}*(High  Diphtheria) + _{6}*(HIV/AIDS) + _{7}*(GDP) + _{8}*(Prevalence  of  thinness 10-19) + _{9}*(HDI) + _{10}*(Schooling)$
-</center>
-<p><br> <br></p>
-<p><strong>Forward/Backward Selection:</strong></p>
-<p><em>Backward Elimination</em></p>
-<pre class="r"><code>back_mod = stepAIC(full_model, direction = &quot;backward&quot;, 
-                      trace = FALSE, scope = formula(full_model))
-summary(back_mod)</code></pre>
-<pre><code>## 
-## Call:
-## lm(formula = le ~ status_Developed + adult_mort + infantdeaths + 
-##     bmi + under_five + polio_high + diphtheria_high + hiv_aids + 
-##     gdp + thin_1_19 + HDI + schooling, data = le_df)
-## 
-## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -20.209  -2.170  -0.009   2.263  16.812 
-## 
-## Coefficients:
-##                    Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)       5.711e+01  4.246e-01 134.525  &lt; 2e-16 ***
-## status_Developed  1.575e+00  2.327e-01   6.768 1.58e-11 ***
-## adult_mort       -1.671e-02  7.634e-04 -21.886  &lt; 2e-16 ***
-## infantdeaths      9.918e-02  7.740e-03  12.815  &lt; 2e-16 ***
-## bmi               3.995e-02  4.634e-03   8.621  &lt; 2e-16 ***
-## under_five       -7.371e-02  5.702e-03 -12.927  &lt; 2e-16 ***
-## polio_high        1.854e+00  3.026e-01   6.128 1.01e-09 ***
-## diphtheria_high   1.163e+00  3.031e-01   3.838 0.000127 ***
-## hiv_aids         -4.900e-01  1.661e-02 -29.506  &lt; 2e-16 ***
-## gdp               5.519e-05  6.297e-06   8.764  &lt; 2e-16 ***
-## thin_1_19        -7.734e-02  2.175e-02  -3.557 0.000382 ***
-## HDI               6.095e+00  5.891e-01  10.348  &lt; 2e-16 ***
-## schooling         6.766e-01  3.775e-02  17.925  &lt; 2e-16 ***
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## Residual standard error: 3.854 on 2925 degrees of freedom
-## Multiple R-squared:  0.8366, Adjusted R-squared:  0.836 
-## F-statistic:  1248 on 12 and 2925 DF,  p-value: &lt; 2.2e-16</code></pre>
-<pre class="r"><code>check_collinearity(back_mod)</code></pre>
-<pre><code>## # Check for Multicollinearity
-## 
-## Low Correlation
-## 
-##              Term  VIF Increased SE Tolerance
-##  status_Developed 1.27         1.13      0.79
-##        adult_mort 2.84         1.69      0.35
-##               bmi 2.86         1.69      0.35
-##          hiv_aids 1.92         1.38      0.52
-##               gdp 1.00         1.00      1.00
-##               HDI 3.35         1.83      0.30
-##         schooling 4.75         2.18      0.21
-## 
-## Moderate Correlation
-## 
-##             Term  VIF Increased SE Tolerance
-##       polio_high 7.26         2.69      0.14
-##  diphtheria_high 6.78         2.60      0.15
-## 
-## High Correlation
-## 
-##          Term     VIF Increased SE Tolerance
-##  infantdeaths 5856.27        76.53      0.00
-##    under_five 5846.13        76.46      0.00
-##     thin_1_19   11.75         3.43      0.09</code></pre>
-<pre class="r"><code>backward = lm(le ~ status_Developed + adult_mort + bmi + polio_high + diphtheria_high + hiv_aids + gdp + thin_1_19 + HDI + schooling, data = le_df)</code></pre>
-<p><em>Forward Selection</em></p>
-<pre class="r"><code>forward_mod = stepAIC(full_model, direction = &quot;forward&quot;, trace = FALSE, scope = formula(full_model))
-summary(forward_mod)</code></pre>
-<pre><code>## 
-## Call:
-## lm(formula = le ~ status_Developed + adult_mort + infantdeaths + 
-##     alcohol + percent_exp + hepatitis_b_high + measles + bmi + 
-##     under_five + polio_high + total_exp + diphtheria_high + hiv_aids + 
-##     gdp + population + thin_1_19 + thin_5_9 + HDI + schooling, 
-##     data = le_df)
-## 
-## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -20.4808  -2.1461   0.0048   2.2608  16.7409 
-## 
-## Coefficients:
-##                    Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)       5.694e+01  4.621e-01 123.215  &lt; 2e-16 ***
-## status_Developed  1.435e+00  2.584e-01   5.552 3.08e-08 ***
-## adult_mort       -1.674e-02  7.716e-04 -21.689  &lt; 2e-16 ***
-## infantdeaths      1.004e-01  7.970e-03  12.592  &lt; 2e-16 ***
-## alcohol           1.426e-02  2.427e-02   0.587   0.5569    
-## percent_exp       4.938e-05  7.963e-05   0.620   0.5352    
-## hepatitis_b_high  7.132e-02  2.430e-01   0.293   0.7692    
-## measles           5.274e-07  7.313e-06   0.072   0.9425    
-## bmi               3.930e-02  4.713e-03   8.338  &lt; 2e-16 ***
-## under_five       -7.455e-02  5.845e-03 -12.755  &lt; 2e-16 ***
-## polio_high        1.836e+00  3.070e-01   5.980 2.50e-09 ***
-## total_exp         3.557e-02  3.110e-02   1.144   0.2528    
-## diphtheria_high   1.105e+00  3.409e-01   3.243   0.0012 ** 
-## hiv_aids         -4.921e-01  1.674e-02 -29.386  &lt; 2e-16 ***
-## gdp               4.912e-05  1.221e-05   4.022 5.91e-05 ***
-## population       -2.774e-10  1.582e-09  -0.175   0.8608    
-## thin_1_19        -5.000e-02  4.624e-02  -1.081   0.2796    
-## thin_5_9         -2.412e-02  4.565e-02  -0.528   0.5973    
-## HDI               6.186e+00  5.936e-01  10.421  &lt; 2e-16 ***
-## schooling         6.682e-01  3.875e-02  17.243  &lt; 2e-16 ***
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## Residual standard error: 3.857 on 2918 degrees of freedom
-## Multiple R-squared:  0.8368, Adjusted R-squared:  0.8357 
-## F-statistic: 787.5 on 19 and 2918 DF,  p-value: &lt; 2.2e-16</code></pre>
-<pre class="r"><code>check_collinearity(forward_mod)</code></pre>
-<pre><code>## # Check for Multicollinearity
-## 
-## Low Correlation
-## 
-##              Term  VIF Increased SE Tolerance
-##  status_Developed 1.63         1.28      0.61
-##        adult_mort 2.07         1.44      0.48
-##           alcohol 2.23         1.49      0.45
-##       percent_exp 1.11         1.05      0.90
-##           measles 1.00         1.00      1.00
-##               bmi 3.49         1.87      0.29
-##         total_exp 1.48         1.22      0.68
-##          hiv_aids 1.66         1.29      0.60
-##               gdp 1.01         1.00      0.99
-##        population 1.00         1.00      1.00
-##               HDI 3.85         1.96      0.26
-## 
-## Moderate Correlation
-## 
-##              Term  VIF Increased SE Tolerance
-##  hepatitis_b_high 5.87         2.42      0.17
-##        polio_high 9.39         3.06      0.11
-##         schooling 6.15         2.48      0.16
-## 
-## High Correlation
-## 
-##             Term     VIF Increased SE Tolerance
-##     infantdeaths 5978.58        77.32      0.00
-##       under_five 5987.53        77.38      0.00
-##  diphtheria_high   10.30         3.21      0.10
-##        thin_1_19   60.00         7.75      0.02
-##         thin_5_9   64.04         8.00      0.02</code></pre>
-<pre class="r"><code>forward = lm(le ~ status_Developed + adult_mort + infantdeaths + bmi + polio_high + diphtheria_low + hiv_aids + gdp + HDI + schooling, data = le_df)</code></pre>
-<p><br> <br></p>
-<p><strong>Best Subsets Regression:</strong></p>
+<p>Automated selection procedures are often used when there are many potential variables available in the data, and there are uncertainties in selecting the most appropriate variables for a reliable prediction. Using automated model selection performed in R, we have generated four models. Outlined below are the four automated model selection procedures performed: <strong>stepwise selection</strong>,<strong>backward/forward selection</strong>, <strong>best subsets selection</strong>, <strong>lasso regression</strong> and <strong>ridge regression</strong>.</p>
 <p><br></p>
-<p><em>Best Fitting Models Based on the Numbers of Predictors</em></p>
+<center>
+<span class="math inline">\(Life \ Expectancy = \beta_{0} + \beta_{1}*(Developed \ Status) + \beta_{2}*(Adult \ Mortality) + \beta_{3}*(Infant \ Deaths) + \beta_{4}*(Alcohol) + \beta_{5}*(Percent \ Expenditure) + \beta_{6}*(High \ Hepatitis \ B) + \beta_{7}*(Measles) + \beta_{8}*(BMI) + \beta_{9}*(Under-five \ Deaths) + \beta_{10}*(High \ Polio) + \beta_{11}*(Total \ Expenditure) + \beta_{12}*(High \ Diphtheria) + \beta_{13}*(HIV/AIDS) + \beta_{14}*(GDP) + \beta_{15}*(Population) + \beta_{16}*(Prevalence \ of \ thinness 10-19) + \beta_{17}*(Prevalence \ of \ thinness 5-9) + \beta_{18}*(HDI) + \beta_{19}*(Schooling)\)</span>
+</center>
+<div id="stepwise-regression" class="section level4">
+<h4><strong>Stepwise Regression:</strong></h4>
+<p>Stepwise model selection was performed using <code>stepAIC()</code> from the <code>MASS</code> package. High correlation variables and insignificant variables were detected using <code>check.collinearity()</code> from the <code>performance</code> package and <code>summary()</code> from base R, respectively. Below is the final model obtained using stepwise selection.</p>
+<p><br></p>
+<p><strong>Stepwise Model:</strong></p>
+<center>
+<p><span class="math inline">\(Life \ Expectancy = \beta_{0} + \beta_{1}*(Developed \ Status) + \beta_{2}*(Adult \ Mortality) + \beta_{3}*(BMI) + \beta_{4}*(High \ Polio) + \beta_{5}*(High \ Diphtheria) + \beta_{6}*(HIV/AIDS) + \beta_{7}*(GDP) + \beta_{8}*(Prevalence \ of \ thinness 10-19) + \beta_{9}*(HDI) + \beta_{10}*(Schooling)\)</span></p>
+</center>
+<p><br> <br></p>
+</div>
+<div id="forwardbackward-selection" class="section level4">
+<h4><strong>Forward/Backward Selection:</strong></h4>
+<p>Backward elimination was generated using <code>stepAIC()</code> with <code>direction = backward</code>, from the <code>MASS</code> package. Similarly, forward selection was generated using <code>stepAIC()</code> with <code>direction = forward</code>. Then, high correlation and insignificant variables were detected and removed from the resulted models. Surprisingly, after removing these variables, we obtained two identical models from the backward and forward selection, which is also the exact same model generated from the stepwise selection.</p>
+<p>Since models produced by backward, forward and stepwise selection are identical, we will only include one of them in further analysis. For simplicity, we will label this model as stepwise model.</p>
+<p><br></p>
+</div>
+<div id="best-subsets-regression" class="section level4">
+<h4><strong>Best Subsets Regression:</strong></h4>
+<p>Best subset regression was performed using <code>regsubsets()</code> from the <code>leaps</code> package. Unlike stepwise, forward, and backward selection that generates only one regression model, best subset regression produces multiple models after fitting all models based on the number of independent variables specified.</p>
+<p>Below is a table that displays the best fitting models generated from best subset regression of different sizes.</p>
+<p><br></p>
+</div>
+<div id="best-fitting-models-based-on-the-numbers-of-predictors" class="section level4">
+<h4><em>Best Fitting Models Based on the Numbers of Predictors</em></h4>
 <pre class="r"><code>table %&gt;% 
      knitr::kable()</code></pre>
 <table>
@@ -802,11 +691,14 @@ summary(forward_mod)</code></pre>
 </tbody>
 </table>
 <p><br></p>
-<p><em>Comparison Based on Model Selection Criteria</em></p>
+<p>Since best subset regression did not specify the best model among the models generated, we will need to compare the model selection criteria to determine the final best subset model. Here is a plot that compares the model selection criteria across all models generated from the best subset regression:</p>
+<p><br></p>
+</div>
+<div id="comparison-based-on-model-selection-criteria" class="section level4">
+<h4><em>Comparison Based on Model Selection Criteria</em></h4>
 <pre class="r"><code>Model_comparison =
   tibble(
     n_pred = c(1:8),
-    &quot;Adjusted R2&quot; = best_summary$adjr2,
     &quot;Adj R2&quot; = best_summary$adjr2,
     &quot;BIC&quot; = best_summary$bic,
     &quot;Cp&quot; = best_summary$cp,
@@ -825,18 +717,22 @@ summary(forward_mod)</code></pre>
       )
 
 Model_comparison</code></pre>
-<p><img src="regression_files/figure-html/unnamed-chunk-12-1.png" width="80%" /></p>
-<p><em>Final Best Subsets Model</em></p>
-<pre class="r"><code>mod_3 = lm(le ~ adult_mort + under_five + polio_high + hiv_aids + gdp + HDI + schooling, data = le_df)</code></pre>
-<p>Final Best Subsets Model:</p>
+<p><img src="regression_files/figure-html/unnamed-chunk-10-1.png" width="80%" /></p>
+<p><br></p>
+<p>Based on the results shown above, the model contains 8 predictors has the highest adjusted R squared and relative standard error (RSE), and the lowest bayesian Information criterion(BIC), Mallow’s Cp value, and residual sum of squares (RSS). Therefore, it is the best-fitting best subset model among all candidate models.</p>
+<p>After removing high correlation variables from the resulted models, we obtained our final best subsets model.</p>
+<p><br></p>
+<p><strong>Best Subsets Model:</strong></p>
 <center>
-$ Life  Expectancy = <em>{0} + </em>{1}*(Adult  Mortality) + _{2}*(Under-five Deaths) + _{3}*(High  Polio) + _{4}*(HIV/AIDS) + _{5}*(GDP) + _{6}*(HDI) + _{7}*(Schooling)$
+<span class="math inline">\(Life \ Expectancy = \beta_{0} + \beta_{1}*(Adult \ Mortality) + \beta_{2}*(Under-five Deaths) + \beta_{3}*(High \ Polio) + \beta_{4}*(HIV/AIDS) + \beta_{5}*(GDP) + \beta_{6}*(HDI) + \beta_{7}*(Schooling)\)</span>
 </center>
-<br> <br>
-<hr>
+<p><br> <br></p>
 <p>When developing regression models for our dataset, one problem that rises to our attention is the multicollinearity, our dataset contains multiple predictor variables that are highly correlated to each other, which concerns us that they might not provide unique or independent information in the regression models.Thus, in addition to the multiple linear regression models above, we also applied regularization method to resolve multicollinearity issues using ridge regression and lasso regression.</p>
-<p><strong>Ridge Regression:</strong></p>
-<p>Mathematical equation of Ridge Regression:</p>
+<p><br></p>
+</div>
+<div id="ridge-regression" class="section level4">
+<h4><strong>Ridge Regression:</strong></h4>
+<p><strong>Mathematical equation of Ridge Regression:</strong></p>
 <p><span class="math inline">\(\sum_{i=1}^n{(y_{i} - \beta_{0} - \sum_{j=1}^{p}{\beta_{i}x_{ij}})^2} + \lambda \sum_{j=1}^{p}{\beta_{j}^2} = RSS + \lambda \sum_{j=1}^{p}{\beta_{j}^2}\)</span></p>
 <pre class="r"><code>#define response variable
 y = le_df$le
@@ -857,14 +753,14 @@ best_ridge_model = glmnet(x, y, alpha = 0, lambda = best_lambda)
 par(mfrow=c(1,1))
 #produce plot of test MSE by lambda value
 plot(cv_ridge_model) + title(&quot;Plot of MSE by Lambda value&quot;,line = 2.5)</code></pre>
-<p><img src="regression_files/figure-html/unnamed-chunk-14-1.png" width="80%" /></p>
+<p><img src="regression_files/figure-html/unnamed-chunk-12-1.png" width="80%" /></p>
 <pre><code>## integer(0)</code></pre>
-<ul>
-<li>The lambda value that minimizes the test MSE turns out to be 0.7175106.</li>
-</ul>
+<p>The lambda value that minimizes the test MSE turns out to be 0.7175106.</p>
 <p><br> <br></p>
-<p><strong>Lasso Regression:</strong></p>
-<p>Mathematical equation of Ridge Regression:</p>
+</div>
+<div id="lasso-regression" class="section level4">
+<h4><strong>Lasso Regression:</strong></h4>
+<p><strong>Mathematical equation of Ridge Regression:</strong></p>
 <p><span class="math inline">\(\sum_{i=1}^n{(y_{i} - \beta_{0} - \sum_{j=1}^{p}{\beta_{i}x_{ij}})^2} + \lambda \sum_{j=1}^{p}{|\beta_{j}|} = RSS + \lambda \sum_{j=1}^{p}{|\beta_{j}|}\)</span></p>
 <pre class="r"><code>#define response variable
 y = le_df$le
@@ -883,47 +779,82 @@ best_lasso_lambda = cv_lasso_model$lambda.min
 best_lasso_model = glmnet(x, y, alpha = 1, lambda = best_lasso_lambda)
 
 new_x = data.matrix(le_df[, c(&#39;status_Developed&#39;, &#39;adult_mort&#39;, &#39;infantdeaths&#39;, &#39;alcohol&#39;, &#39;percent_exp&#39;, &#39;hepatitis_b_high&#39;, &#39;bmi&#39;, &#39;under_five&#39;, &#39;polio_high&#39;, &#39;total_exp&#39;, &#39;diphtheria_high&#39;, &#39;hiv_aids&#39;, &#39;gdp&#39;, &#39;thin_1_19&#39;, &#39;thin_5_9&#39;, &#39;HDI&#39;, &#39;schooling&#39;)])</code></pre>
-<ul>
-<li>The lambda value that minimizes the test MSE turns out to be 0.0016575.</li>
-</ul>
+<p>The lambda value that minimizes the test MSE turns out to be 0.0018192.</p>
 <pre class="r"><code>#produce plot of test MSE by lambda value
 plot(cv_lasso_model) + title(&quot;Plot of MSE by Lambda value&quot;,line = 2.5)</code></pre>
-<p><img src="regression_files/figure-html/unnamed-chunk-16-1.png" width="80%" /></p>
+<p><img src="regression_files/figure-html/unnamed-chunk-14-1.png" width="80%" /></p>
 <pre><code>## integer(0)</code></pre>
 <pre class="r"><code>coef(best_lasso_model)</code></pre>
 <pre><code>## 20 x 1 sparse Matrix of class &quot;dgCMatrix&quot;
 ##                             s0
-## (Intercept)       5.686219e+01
-## status_Developed  1.432139e+00
-## adult_mort       -1.676946e-02
-## infantdeaths      9.115129e-02
-## alcohol           1.073753e-02
-## percent_exp       5.065888e-05
-## hepatitis_b_high  5.635705e-02
+## (Intercept)       5.685836e+01
+## status_Developed  1.432009e+00
+## adult_mort       -1.677072e-02
+## infantdeaths      9.071023e-02
+## alcohol           1.054538e-02
+## percent_exp       5.066224e-05
+## hepatitis_b_high  5.535325e-02
 ## measles           .           
-## bmi               3.949487e-02
-## under_five       -6.781075e-02
-## polio_high        1.851516e+00
-## total_exp         3.530760e-02
-## diphtheria_high   1.131401e+00
-## hiv_aids         -4.930447e-01
-## gdp               4.855340e-05
+## bmi               3.950266e-02
+## under_five       -6.748620e-02
+## polio_high        1.852337e+00
+## total_exp         3.528072e-02
+## diphtheria_high   1.132755e+00
+## hiv_aids         -4.930851e-01
+## gdp               4.853011e-05
 ## population        .           
-## thin_1_19        -5.095772e-02
-## thin_5_9         -2.119315e-02
-## HDI               6.248119e+00
-## schooling         6.699518e-01</code></pre>
-<ul>
-<li>The coefficients of the predictor <code>measles</code> and <code>population</code> was shrunk all the way to zero, which means it was completely removed from the model since it wasn’t influential.</li>
-</ul>
+## thin_1_19        -5.099266e-02
+## thin_5_9         -2.106267e-02
+## HDI               6.251284e+00
+## schooling         6.700695e-01</code></pre>
+<p>The coefficients of the predictor <code>measles</code> and <code>population</code> was shrunk all the way to zero, which means it was completely removed from the model since it wasn’t influential.</p>
 <br> <br>
 <hr>
 </div>
 </div>
+</div>
 <div id="cross-validation" class="section level2">
-<h2>Cross Validation</h2>
+<h2><strong>Cross Validation</strong></h2>
+<p>Cross-validation is a statistical model evaluation method used to compare the prediction accuracy of competing models using the regression model accuracy metrics. In this section, we will use the <code>modelr</code> package to perform the cross validation process and compare the regression model accuracy metrics, including the root mean square deviation (RMSE), R-squared (R^2), and mean absolute error (MAE), across all models proposed from the <strong>Model building</strong> section above.</p>
+<p>First, we will use <code>crossv_mc()</code> to generate 100 random partitions by performing the training/testing split. Indeed, 80% of the random partitions will be the training datasets, and 20% will be the testing datasets. Then, we will fit all candidate models to the training data and obtain the corresponding RMSE, R^2 and MAE for the testing data using <code>map()</code> and <code>map2_dbl()</code>. Finally, we will plot the distribution of RMSE, R^2 and MAE of all models using violin plots, and visualize and compare the performance of the candidate models.</p>
+<pre class="r"><code>set.seed(2)
+
+cv_df = 
+  crossv_mc(le_df, 100) %&gt;% 
+  mutate(
+    train = map(train, as_tibble),
+    test = map(test, as_tibble)
+  ) %&gt;% 
+  mutate(
+    mod_1 = map(train, ~lm(formula = formula(mod_1), data = .x)),
+    mod_2 = map(train, ~lm(formula = formula(mod_2), data = .x)),
+    mod_3 = map(train, ~lm(formula = formula(mod_3), data = .x)),
+    mod_4 = map(train, ~train(le ~ status_Developed + adult_mort + infantdeaths + alcohol + percent_exp + hepatitis_b_high + measles + bmi + under_five + polio_high + total_exp + diphtheria_high + hiv_aids + gdp + population + thin_1_19 + thin_5_9 + HDI + schooling, data = training(initial_split(le_df, prop = 0.75))[,-1], trControl=trainControl(method=&quot;cv&quot;, number = 5), method=&quot;glmnet&quot;, preProcess = c(&quot;center&quot;, &quot;scale&quot;),tuneGrid = expand.grid(alpha = 0, lambda = best_lambda)), data = .x),
+    mod_5 = map(train, ~train(le ~ status_Developed + adult_mort + infantdeaths + alcohol + percent_exp + hepatitis_b_high + bmi + under_five + polio_high + total_exp + diphtheria_high + hiv_aids + gdp + thin_1_19 + thin_5_9 + HDI + schooling, data = training(initial_split(le_df, prop = 0.75))[,-1], trControl=trainControl(method=&quot;cv&quot;, number = 5), method=&quot;glmnet&quot;, preProcess = c(&quot;center&quot;, &quot;scale&quot;),tuneGrid = expand.grid(alpha = 1, lambda = best_lasso_lambda)), data = .x)) %&gt;% 
+  mutate(
+    rmse_1 = map2_dbl(mod_1, test, ~modelr::rmse(model = .x, data = .y)),
+    rmse_2 = map2_dbl(mod_2, test, ~modelr::rmse(model = .x, data = .y)),
+    rmse_3 = map2_dbl(mod_3, test, ~modelr::rmse(model = .x, data = .y)),
+    rmse_4 = map2_dbl(mod_4, test, ~modelr::rmse(model = .x, data = .y)),
+    rmse_5 = map2_dbl(mod_5, test, ~modelr::rmse(model = .x, data = .y))
+    ) %&gt;% 
+  mutate(
+    mae_1 = map2_dbl(mod_1, test, ~modelr::mae(model = .x, data = .y)),
+    mae_2 = map2_dbl(mod_2, test, ~modelr::mae(model = .x, data = .y)),
+    mae_3 = map2_dbl(mod_3, test, ~modelr::mae(model = .x, data = .y)),
+    mae_4 = map2_dbl(mod_4, test, ~modelr::mae(model = .x, data = .y)),
+    mae_5 = map2_dbl(mod_5, test, ~modelr::mae(model = .x, data = .y))
+    ) %&gt;% 
+  mutate(
+    rsq_1 = map2_dbl(mod_1, test, ~modelr::rsquare(model = .x, data = .y)),
+    rsq_2 = map2_dbl(mod_2, test, ~modelr::rsquare(model = .x, data = .y)),
+    rsq_3 = map2_dbl(mod_3, test, ~modelr::rsquare(model = .x, data = .y)),
+    rsq_4 = map2_dbl(mod_4, test, ~modelr::rsquare(model = .x, data = .y)),
+    rsq_5 = map2_dbl(mod_5, test, ~modelr::rsquare(model = .x, data = .y))
+    )</code></pre>
+<p><br></p>
 <div id="cross-validating-with-violin-plots" class="section level3">
-<h3>Cross-validating with Violin Plots</h3>
+<h3><em>Cross-validating with Violin Plots</em></h3>
 <pre class="r"><code>rmse_plot =
   rmse_table %&gt;% 
   ggplot(aes(x = model, y = rmse, fill = model)) + 
@@ -955,11 +886,13 @@ mae_plot =
         plot.title = element_text(hjust = 0.5))
 
 rmse_plot/rsq_plot/mae_plot</code></pre>
-<p><img src="regression_files/figure-html/unnamed-chunk-19-1.png" width="80%" /></p>
-<p><br> <br></p>
+<p><img src="regression_files/figure-html/unnamed-chunk-17-1.png" width="80%" /></p>
+<p><br></p>
+<p>In addition, we also create a table that displays the mean RMSE, mean R^2 and mean MAE of all models.</p>
+<p><br></p>
 </div>
 <div id="cross-validation-table" class="section level3">
-<h3>Cross Validation Table</h3>
+<h3><em>Cross Validation Table</em></h3>
 <pre class="r"><code>mean_rmse =
   rmse_table %&gt;% 
   group_by(model) %&gt;% 
@@ -991,34 +924,34 @@ Model_comparison_table </code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">Model 1 (Research)</td>
+<td align="left">Research Model</td>
 <td align="right">4.209394</td>
 <td align="right">0.8053251</td>
 <td align="right">3.091406</td>
 </tr>
 <tr class="even">
-<td align="left">Model 2 (Stepwise)</td>
+<td align="left">Stepwise Model</td>
 <td align="right">3.970951</td>
 <td align="right">0.8267516</td>
 <td align="right">2.964913</td>
 </tr>
 <tr class="odd">
-<td align="left">Model 3(Best Subsets)</td>
+<td align="left">BestSub Model</td>
 <td align="right">4.073934</td>
 <td align="right">0.8176339</td>
 <td align="right">3.012049</td>
 </tr>
 <tr class="even">
-<td align="left">Model 4 (Ridge)</td>
+<td align="left">Ridge Model</td>
 <td align="right">3.946632</td>
 <td align="right">0.8287651</td>
 <td align="right">2.957489</td>
 </tr>
 <tr class="odd">
-<td align="left">Model 5 (Lasso)</td>
-<td align="right">3.840213</td>
-<td align="right">0.8378628</td>
-<td align="right">2.873417</td>
+<td align="left">Lasso Model</td>
+<td align="right">3.840274</td>
+<td align="right">0.8378577</td>
+<td align="right">2.873414</td>
 </tr>
 </tbody>
 </table>
@@ -1027,8 +960,8 @@ Model_comparison_table </code></pre>
 </div>
 </div>
 <div id="results" class="section level2">
-<h2>Results</h2>
-<p>Based on performance measures among all models Lasso regression shows least Mean Absolute Error (MAE = 2.873414) and Root Mean Square Error (RMSE = 3.840274), and highest R-square value of 0.8378577. Thus, Lasso regression is considered as best model to predict Life expectancy.</p>
+<h2><strong>Results</strong></h2>
+<p>Based on performance measures among all models Lasso regression shows least Mean Absolute Error (MAE = 2.873414) and Root Mean Square Error (RMSE = 3.840274), and highest R-square value of 0.8378577. Thus, Lasso regression is considered as the best model to predict Life expectancy.</p>
 <p>The coefficients for the best model we obtain are as follows:</p>
 <pre class="r"><code>lasso_coeff &lt;- coef(best_lasso_model)
 
@@ -1040,23 +973,23 @@ data.frame(name = lasso_coeff@Dimnames[[1]][lasso_coeff@i + 1], coefficient = la
 ##  1 (Intercept)       56.9      
 ##  2 status_Developed   1.43     
 ##  3 adult_mort        -0.0168   
-##  4 infantdeaths       0.0912   
-##  5 alcohol            0.0107   
+##  4 infantdeaths       0.0907   
+##  5 alcohol            0.0105   
 ##  6 percent_exp        0.0000507
-##  7 hepatitis_b_high   0.0564   
+##  7 hepatitis_b_high   0.0554   
 ##  8 bmi                0.0395   
-##  9 under_five        -0.0678   
+##  9 under_five        -0.0675   
 ## 10 polio_high         1.85     
 ## 11 total_exp          0.0353   
 ## 12 diphtheria_high    1.13     
 ## 13 hiv_aids          -0.493    
-## 14 gdp                0.0000486
+## 14 gdp                0.0000485
 ## 15 thin_1_19         -0.0510   
-## 16 thin_5_9          -0.0212   
+## 16 thin_5_9          -0.0211   
 ## 17 HDI                6.25     
 ## 18 schooling          0.670</code></pre>
 <pre class="r"><code>plot(lasso_model, xvar = &quot;lambda&quot;) + title(&quot;Lasso trace plot&quot;,line = 2.5)</code></pre>
-<p><img src="regression_files/figure-html/unnamed-chunk-21-1.png" width="80%" /></p>
+<p><img src="regression_files/figure-html/unnamed-chunk-19-1.png" width="80%" /></p>
 <pre><code>## integer(0)</code></pre>
 <pre class="r"><code>optimal_model = train(le ~ status_Developed + adult_mort + infantdeaths + alcohol + percent_exp + hepatitis_b_high + bmi + under_five + polio_high + total_exp + diphtheria_high + hiv_aids + gdp + thin_1_19 + thin_5_9 + HDI + schooling, data = training(initial_split(le_df, prop = 0.75))[,-1], trControl=trainControl(method=&quot;cv&quot;, number = 5), method=&quot;glmnet&quot;, preProcess = c(&quot;center&quot;, &quot;scale&quot;),tuneGrid = expand.grid(alpha = 1, lambda = best_lasso_lambda))
 
@@ -1064,56 +997,30 @@ ggplot(varImp(optimal_model)) +
   labs( 
     title = &quot;Most important variables from elastic CV&quot;,
     x = &quot;Predictors&quot;) </code></pre>
-<p><img src="regression_files/figure-html/unnamed-chunk-22-1.png" width="80%" /></p>
-<pre class="r"><code>Lasso_lm &lt;- lm(le ~ status_Developed + adult_mort + infantdeaths + alcohol + percent_exp + hepatitis_b_high + bmi + under_five + polio_high + total_exp + diphtheria_high + hiv_aids + gdp + thin_1_19 + thin_5_9 + HDI + schooling, data = le_df)
-
-summary(Lasso_lm)</code></pre>
-<pre><code>## 
-## Call:
-## lm(formula = le ~ status_Developed + adult_mort + infantdeaths + 
-##     alcohol + percent_exp + hepatitis_b_high + bmi + under_five + 
-##     polio_high + total_exp + diphtheria_high + hiv_aids + gdp + 
-##     thin_1_19 + thin_5_9 + HDI + schooling, data = le_df)
-## 
-## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -20.4827  -2.1414   0.0047   2.2624  16.7343 
-## 
-## Coefficients:
-##                    Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)       5.694e+01  4.562e-01 124.827  &lt; 2e-16 ***
-## status_Developed  1.435e+00  2.583e-01   5.557 3.00e-08 ***
-## adult_mort       -1.674e-02  7.685e-04 -21.784  &lt; 2e-16 ***
-## infantdeaths      1.001e-01  7.830e-03  12.782  &lt; 2e-16 ***
-## alcohol           1.427e-02  2.423e-02   0.589  0.55590    
-## percent_exp       4.930e-05  7.960e-05   0.619  0.53577    
-## hepatitis_b_high  7.112e-02  2.430e-01   0.293  0.76977    
-## bmi               3.926e-02  4.704e-03   8.346  &lt; 2e-16 ***
-## under_five       -7.438e-02  5.772e-03 -12.887  &lt; 2e-16 ***
-## polio_high        1.836e+00  3.069e-01   5.982 2.48e-09 ***
-## total_exp         3.553e-02  3.105e-02   1.144  0.25261    
-## diphtheria_high   1.106e+00  3.407e-01   3.248  0.00118 ** 
-## hiv_aids         -4.920e-01  1.673e-02 -29.406  &lt; 2e-16 ***
-## gdp               4.913e-05  1.221e-05   4.025 5.84e-05 ***
-## thin_1_19        -5.028e-02  4.620e-02  -1.088  0.27653    
-## thin_5_9         -2.402e-02  4.560e-02  -0.527  0.59845    
-## HDI               6.184e+00  5.926e-01  10.436  &lt; 2e-16 ***
-## schooling         6.679e-01  3.869e-02  17.263  &lt; 2e-16 ***
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## Residual standard error: 3.856 on 2920 degrees of freedom
-## Multiple R-squared:  0.8368, Adjusted R-squared:  0.8358 
-## F-statistic: 880.7 on 17 and 2920 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p><img src="regression_files/figure-html/unnamed-chunk-20-1.png" width="80%" /></p>
 <ul>
-<li><p>The most important variables we get from this are under-five deaths, infant deaths, Schooling, HIV/AIDS, Adult mortality, HDI, BMI and High Polio (Percentage of Polio immunization coverage among 1-year-olds <span class="math inline">\(\ge 80\)</span>.</p></li>
-<li><p>GDP, Developed Status, Diphtheria, Hepatitis B and total expenditure are less important. Alcohol and Polio are right in the middle of the variable importance graph.</p></li>
-<li><p>Not all predictors that the Lasso selects are statistically significant at a 5% level. Thinness..1.19.years, for example, has a p-value of about 0.14.</p></li>
+<li>The most important variables we get from this are <code>under-five deaths</code>, <code>infant deaths</code>, <code>Schooling</code>, <code>HIV/AIDS</code>, <code>Adult mortality</code>, <code>HDI</code>, <code>BMI</code>, and <code>High Polio</code> (Percentage of Polio immunization coverage among 1-year-olds <span class="math inline">\(\ge 80\)</span>.</li>
+<li>GDP, Diphtheria, Development Status and Polio are next influential predictors according to the variable importance graph.</li>
+<li><code>Thin_1_9</code>, <code>Percent_exp</code>, <code>Total_exp</code>, <code>Thin_5_9</code>, <code>Hepatitis B</code> and <code>Alcohol</code> are less important.</li>
 </ul>
+<pre class="r"><code>Lasso_lm &lt;- lm(le ~ status_Developed + adult_mort + infantdeaths + alcohol + percent_exp + hepatitis_b_high + bmi + under_five + polio_high + total_exp + diphtheria_high + hiv_aids + gdp + thin_1_19 + thin_5_9 + HDI + schooling, data = le_df)
+check_model(Lasso_lm, check = c(&quot;linearity&quot;, &quot;outliers&quot;, &quot;qq&quot;, &quot;normality&quot;))</code></pre>
+<p><img src="regression_files/figure-html/unnamed-chunk-21-1.png" width="80%" /></p>
+<ul>
+<li>From the QQ plot, we can say that the residuals are skewed with thick tails on both end. The residual vs. fitted plot suggests non-constant variance.</li>
+</ul>
+<br>
+<hr>
+<center>
+<p><font size="2"> Contributors: AnMei Chen and Lynn Chen</font><br> <font size="2">The Github repository for this website can be found <a href="https://github.com/lc1002/LifeExpectancy">here</a>, and the corresponding Github repository for this project is located <a href="https://github.com/lc1002/LifeExpectancyAnalysis">here</a>. </font></p>
+<img src="image/mailman.png" alt="logo" style="width:30%; height:20%; ">
+</center>
 </div>
 
 
 
+</div>
+</div>
 
 </div>
 
@@ -1151,6 +1058,35 @@ $(document).ready(function () {
 });
 </script>
 
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
