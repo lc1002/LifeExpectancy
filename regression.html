@@ -29,6 +29,9 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
@@ -224,6 +227,69 @@ $(document).ready(function () {
 
 
 
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
 
 </head>
 
@@ -231,6 +297,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -302,7 +378,17 @@ $(document).ready(function () {
 </div>
 
 
-<p>The main objective of this study is to analyze the relationship between life expectancy and relevant variables that can potentially affect an individual’s lifespan. In conjunction with the exploratory and statistical analyses, we will now build a predictive model for life expectancy using the life expectancy data of all countries from 2000 to 2015.</p>
+<style type="text/css">
+
+h1.title {
+  font-size: 50px;
+  text-align: left;   
+  font-family: Papyrus;
+  font-weight: bold;
+  font-variant: small-caps
+}
+</style>
+<p>The main objective of this study is to analyze the relationship between life expectancy and relevant variables that can potentially affect an individual’s lifespan. In conjunction with the exploratory and statistical analyses, we will now build a predictive model for life expectancy using existing data of all countries from 2000 to 2015.</p>
 <p>In this page, we will first examine the correlation between life expectancy and potential predictors in our dataset using <strong>correlation matrix</strong>. Then we will propose several models based on <strong>prior research</strong> and <strong>automated model selection</strong>. Next, we will evaluate and compare the performance of the models with metrics of evaluation using <strong>cross-validation</strong>. Finally, we will report the <strong>results</strong> and draw a conclusion based on our best-fitted model.</p>
 <br> <br>
 <hr>
@@ -356,7 +442,7 @@ $ Life  Expectancy = <em>{0} + </em>{1}*(Developed  Status) + _{2}*(Adult  Mo
 <div id="forwardbackward-selection" class="section level4">
 <h4><strong>Forward/Backward Selection:</strong></h4>
 <p>Backward elimination was generated using <code>stepAIC()</code> with <code>direction = backward</code>, from the <code>MASS</code> package. Similarly, forward selection was generated using <code>stepAIC()</code> with <code>direction = forward</code>. Then, high correlation and insignificant variables were detected and removed from the resulted models. Surprisingly, after removing these variables, we obtained two identical models from the backward and forward selection, which is also the exact same model generated from the stepwise selection.</p>
-<p>Since backward, forward and stepwise selection generated the same model, we will only include one of them for further analysis. For simplicity, we will label this model as stepwise model.</p>
+<p>Since models produced by backward, forward and stepwise selection are identical, we will only include one of them in further analysis. For simplicity, we will label this model as stepwise model.</p>
 <p><br></p>
 </div>
 <div id="best-subsets-regression" class="section level4">
@@ -950,10 +1036,18 @@ summary(Lasso_lm)</code></pre>
 <li><p>GDP, Developed Status, Diphtheria, Hepatitis B and total expenditure are less important. Alcohol and Polio are right in the middle of the variable importance graph.</p></li>
 <li><p>Not all predictors that the Lasso selects are statistically significant at a 5% level. Thinness..1.19.years, for example, has a p-value of about 0.14.</p></li>
 </ul>
+<br>
+<hr>
+<center>
+<p><font size="2"> Contributors: AnMei Chen and Lynn Chen</font><br> <font size="2">The Github repository for this website can be found <a href="https://github.com/lc1002/LifeExpectancy">here</a>, and the corresponding Github repository for this project is located <a href="https://github.com/lc1002/LifeExpectancyAnalysis">here</a>. </font></p>
+<img src="image/mailman.png" alt="logo" style="width:30%; height:20%; ">
+</center>
 </div>
 
 
 
+</div>
+</div>
 
 </div>
 
@@ -991,6 +1085,35 @@ $(document).ready(function () {
 });
 </script>
 
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

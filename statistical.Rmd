@@ -427,3 +427,11 @@ t.test(school_low$mean_le, school_high$mean_le, alternative = "less", var.equal 
 
 * At significance level of 0.05, we reject the $H_{0}$ since $p-value < 2.2e^{-16} \approx 0 < \alpha = 0.05$. Thus, we conclude that the life expectancy for people with higher number of years of schooling is higher than the life expectancy of people with lower number of years of schooling. Thus, we schooling is a significant factor in predicting life expectancy. 
 
+<br>
+<hr>
+<center>
+<font size="2"> Contributors: AnMei Chen and Lynn Chen</font><br>
+<font size="2">The Github repository for this website can be found [here ](https://github.com/lc1002/LifeExpectancy), and the corresponding Github repository for this project is located [here](https://github.com/lc1002/LifeExpectancyAnalysis). </font> 
+
+<img src="image/mailman.png" alt="logo" style="width:30%; height:20%; ">
+</center>

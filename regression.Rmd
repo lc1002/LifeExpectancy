@@ -1,9 +1,23 @@
 ---
 title: "Predictive Model for Life Expectancy"
-output: html_document
+output: 
+  html_document:
+    toc: true
+    toc_float: true
 ---
 
-The main objective of this study is to analyze the relationship between life expectancy and relevant variables that can potentially affect an individual's lifespan. In conjunction with the exploratory and statistical analyses, we will now build a predictive model for life expectancy using the life expectancy data of all countries from 2000 to 2015.
+<style type="text/css">
+
+h1.title {
+  font-size: 50px;
+  text-align: left;   
+  font-family: Papyrus;
+  font-weight: bold;
+  font-variant: small-caps
+}
+</style>
+
+The main objective of this study is to analyze the relationship between life expectancy and relevant variables that can potentially affect an individual's lifespan. In conjunction with the exploratory and statistical analyses, we will now build a predictive model for life expectancy using existing data of all countries from 2000 to 2015.
 
 In this page, we will first examine the correlation between life expectancy and potential predictors in our dataset using **correlation matrix**. Then we will propose several models based on **prior research** and **automated model selection**. Next, we will evaluate and compare the performance of the models with metrics of evaluation using **cross-validation**. Finally, we will report the **results** and draw a conclusion based on our best-fitted model.
 
@@ -148,7 +162,7 @@ $ Life \ Expectancy = \beta_{0} + \beta_{1}*(Developed \ Status) + \beta_{2}*(Ad
 
 Backward elimination was generated using `stepAIC()` with `direction = backward`, from the `MASS` package. Similarly, forward selection was generated using `stepAIC()` with `direction = forward`. Then, high correlation and insignificant variables were detected and removed from the resulted models. Surprisingly, after removing these variables, we obtained two identical models from the backward and forward selection, which is also the exact same model generated from the stepwise selection. 
 
-Since backward, forward and stepwise selection generated the same model, we will only include one of them for further analysis. For simplicity, we will label this model as stepwise model.
+Since models produced by backward, forward and stepwise selection are identical, we will only include one of them in further analysis. For simplicity, we will label this model as stepwise model.
 
 ```{r include = FALSE}
 back_mod = stepAIC(full_model, direction = "backward", 
@@ -277,7 +291,7 @@ par(mfrow=c(1,1))
 #produce plot of test MSE by lambda value
 plot(cv_ridge_model) + title("Plot of MSE by Lambda value",line = 2.5)
 ```
-* The lambda value that minimizes the test MSE turns out to be `r best_lambda`.
+The lambda value that minimizes the test MSE turns out to be `r best_lambda`.
 
 <br>
 <br>
@@ -517,5 +531,12 @@ Alcohol and Polio are right in the middle of the variable importance graph.
 
 * Not all predictors that the Lasso selects are statistically significant at a 5% level. Thinness..1.19.years, for example, has a p-value of about 0.14.
 
+<br>
+<hr>
 
+<center>
+<font size="2"> Contributors: AnMei Chen and Lynn Chen</font><br>
+<font size="2">The Github repository for this website can be found [here ](https://github.com/lc1002/LifeExpectancy), and the corresponding Github repository for this project is located [here](https://github.com/lc1002/LifeExpectancyAnalysis). </font> 
 
+<img src="image/mailman.png" alt="logo" style="width:30%; height:20%; ">
+</center>

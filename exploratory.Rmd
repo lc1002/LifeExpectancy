@@ -3,6 +3,17 @@ title: "Exploring Life Expectancy Worldwide"
 output: html_document
 ---
 
+<style type="text/css">
+
+h1.title {
+  font-size: 50px;
+  text-align: left;   
+  font-family: Papyrus;
+  font-weight: bold;
+  font-variant: small-caps
+}
+</style>
+
 ```{r include=FALSE, message=FALSE}
 library(tidyverse)
 library(plotly)
@@ -307,3 +318,9 @@ ggplotly(gdp_le)
 <br>
 <hr> 
 
+<center>
+
+<font size="2"> Contributors: AnMei Chen and Lynn Chen</font><br>
+<font size="2">The Github repository for this website can be found [here ](https://github.com/lc1002/LifeExpectancy), and the corresponding Github repository for this project is located [here](https://github.com/lc1002/LifeExpectancyAnalysis). </font> 
+<img src="image/mailman.png" alt="logo" style="width:20%; height:10%; ">
+</center>
