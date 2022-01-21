@@ -66,7 +66,7 @@ corrplot(cor(cm_df), type = "upper", diag = FALSE, method = "square", addCoef.co
 ### Model Based on Prior Research
 
 <center>
-$ Life \ Expectancy = \beta_{0} + \beta_{1}*(Developed \ Status) + \beta_{2}*(Percent \ Expenditure) + \beta_{3}*(HDI) + \beta_{4}*(Adult \ Mortality) + \beta_{5}*(Infant \ Deaths) + \beta_{6}*(Schooling) + \beta_{7}*(HIV/AIDS) + \beta_{8}*(GDP * Percent \ Expenditure)$
+$Life \ Expectancy = \beta_{0} + \beta_{1}*(Developed \ Status) + \beta_{2}*(Percent \ Expenditure) + \beta_{3}*(HDI) + \beta_{4}*(Adult \ Mortality) + \beta_{5}*(Infant \ Deaths) + \beta_{6}*(Schooling) + \beta_{7}*(HIV/AIDS) + \beta_{8}*(GDP * Percent \ Expenditure)$
 </center>
 
 ```{r}
@@ -88,7 +88,7 @@ full_model = lm(le ~ status_Developed + adult_mort + infantdeaths + alcohol + pe
 Full Model:
 
 <center>
-$ Life \ Expectancy = \beta_{0} + \beta_{1}*(Developed \ Status) + \beta_{2}*(Adult \ Mortality) + \beta_{3}*(Infant \ Deaths) + \beta_{4}*(Alcohol) + \beta_{5}*(Percent \ Expenditure) + \beta_{6}*(High \ Hepatitis \ B) + \beta_{7}*(Measles) + \beta_{8}*(BMI) + \beta_{9}*(Under-five \ Deaths) + \beta_{10}*(High \ Polio) + \beta_{11}*(Total \ Expenditure) + \beta_{12}*(High \ Diphtheria) + \beta_{13}*(HIV/AIDS) + \beta_{14}*(GDP) + \beta_{15}*(Population) + \beta_{16}*(Prevalence \ of \ thinness 10-19) + \beta_{17}*(Prevalence \ of \ thinness 5-9) + \beta_{18}*(HDI) + \beta_{19}*(Schooling)$
+$Life \ Expectancy = \beta_{0} + \beta_{1}*(Developed \ Status) + \beta_{2}*(Adult \ Mortality) + \beta_{3}*(Infant \ Deaths) + \beta_{4}*(Alcohol) + \beta_{5}*(Percent \ Expenditure) + \beta_{6}*(High \ Hepatitis \ B) + \beta_{7}*(Measles) + \beta_{8}*(BMI) + \beta_{9}*(Under-five \ Deaths) + \beta_{10}*(High \ Polio) + \beta_{11}*(Total \ Expenditure) + \beta_{12}*(High \ Diphtheria) + \beta_{13}*(HIV/AIDS) + \beta_{14}*(GDP) + \beta_{15}*(Population) + \beta_{16}*(Prevalence \ of \ thinness 10-19) + \beta_{17}*(Prevalence \ of \ thinness 5-9) + \beta_{18}*(HDI) + \beta_{19}*(Schooling)$
 </center>
 
 **Stepwise Regression:**
@@ -108,7 +108,7 @@ mod_2 = lm(le ~ status_Developed + adult_mort + bmi + polio_high + diphtheria_hi
 Final Stepwise Model:
 
 <center>
-$ Life \ Expectancy = \beta_{0} + \beta_{1}*(Developed \ Status) + \beta_{2}*(Adult \ Mortality) + \beta_{3}*(BMI) + \beta_{4}*(High \ Polio) + \beta_{5}*(High \ Diphtheria) + \beta_{6}*(HIV/AIDS) + \beta_{7}*(GDP) + \beta_{8}*(Prevalence \ of \ thinness 10-19) + \beta_{9}*(HDI) + \beta_{10}*(Schooling)$
+$Life \ Expectancy = \beta_{0} + \beta_{1}*(Developed \ Status) + \beta_{2}*(Adult \ Mortality) + \beta_{3}*(BMI) + \beta_{4}*(High \ Polio) + \beta_{5}*(High \ Diphtheria) + \beta_{6}*(HIV/AIDS) + \beta_{7}*(GDP) + \beta_{8}*(Prevalence \ of \ thinness 10-19) + \beta_{9}*(HDI) + \beta_{10}*(Schooling)$
 </center>
 
 <br>
@@ -198,7 +198,7 @@ mod_3 = lm(le ~ adult_mort + under_five + polio_high + hiv_aids + gdp + HDI + sc
 Final Best Subsets Model:
 
 <center>
-$ Life \ Expectancy = \beta_{0} + \beta_{1}*(Adult \ Mortality) + \beta_{2}*(Under-five Deaths) + \beta_{3}*(High \ Polio) + \beta_{4}*(HIV/AIDS) + \beta_{5}*(GDP) + \beta_{6}*(HDI) + \beta_{7}*(Schooling)$
+$Life \ Expectancy = \beta_{0} + \beta_{1}*(Adult \ Mortality) + \beta_{2}*(Under-five Deaths) + \beta_{3}*(High \ Polio) + \beta_{4}*(HIV/AIDS) + \beta_{5}*(GDP) + \beta_{6}*(HDI) + \beta_{7}*(Schooling)$
 </center>
 
 <br>
@@ -213,7 +213,7 @@ Mathematical equation of Ridge Regression:
 
 $\sum_{i=1}^n{(y_{i} - \beta_{0} - \sum_{j=1}^{p}{\beta_{i}x_{ij}})^2} + \lambda \sum_{j=1}^{p}{\beta_{j}^2} = RSS + \lambda \sum_{j=1}^{p}{\beta_{j}^2}$
 
-```{r}
+```{r, message=FALSE}
 #define response variable
 y = le_df$le
 
@@ -245,7 +245,7 @@ Mathematical equation of Ridge Regression:
 
 $\sum_{i=1}^n{(y_{i} - \beta_{0} - \sum_{j=1}^{p}{\beta_{i}x_{ij}})^2} + \lambda \sum_{j=1}^{p}{|\beta_{j}|} = RSS + \lambda \sum_{j=1}^{p}{|\beta_{j}|}$
 
-```{r}
+```{r, message=FALSE}
 #define response variable
 y = le_df$le
 

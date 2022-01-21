@@ -832,8 +832,12 @@ Model_comparison</code></pre>
 <center>
 $ Life  Expectancy = <em>{0} + </em>{1}*(Adult  Mortality) + _{2}*(Under-five Deaths) + _{3}*(High  Polio) + _{4}*(HIV/AIDS) + _{5}*(GDP) + _{6}*(HDI) + _{7}*(Schooling)$
 </center>
-<p><br> <br></p>
+<br> <br>
+<hr>
+<p>When developing regression models for our dataset, one problem that rises to our attention is the multicollinearity, our dataset contains multiple predictor variables that are highly correlated to each other, which concerns us that they might not provide unique or independent information in the regression models.Thus, in addition to the multiple linear regression models above, we also applied regularization method to resolve multicollinearity issues using ridge regression and lasso regression.</p>
 <p><strong>Ridge Regression:</strong></p>
+<p>Mathematical equation of Ridge Regression:</p>
+<p><span class="math inline">\(\sum_{i=1}^n{(y_{i} - \beta_{0} - \sum_{j=1}^{p}{\beta_{i}x_{ij}})^2} + \lambda \sum_{j=1}^{p}{\beta_{j}^2} = RSS + \lambda \sum_{j=1}^{p}{\beta_{j}^2}\)</span></p>
 <pre class="r"><code>#define response variable
 y = le_df$le
 
@@ -847,78 +851,71 @@ ridge_model = glmnet(x, y, alpha = 0)
 cv_ridge_model = cv.glmnet(x, y, alpha = 0)
 
 best_lambda = cv_ridge_model$lambda.min
-best_lambda</code></pre>
-<pre><code>## [1] 0.7175106</code></pre>
-<pre class="r"><code>best_ridge_model = glmnet(x, y, alpha = 0, lambda = best_lambda)
-coef(best_ridge_model)</code></pre>
-<pre><code>## 20 x 1 sparse Matrix of class &quot;dgCMatrix&quot;
-##                             s0
-## (Intercept)       5.665864e+01
-## status_Developed  1.419822e+00
-## adult_mort       -1.677650e-02
-## infantdeaths      3.388878e-03
-## alcohol          -3.980988e-03
-## percent_exp       1.023173e-04
-## hepatitis_b_high  1.489192e-01
-## measles          -6.823574e-06
-## bmi               4.196995e-02
-## under_five       -3.327355e-03
-## polio_high        1.918101e+00
-## total_exp         3.581063e-02
-## diphtheria_high   1.415953e+00
-## hiv_aids         -4.744248e-01
-## gdp               4.033277e-05
-## population        2.817174e-09
-## thin_1_19        -5.565984e-02
-## thin_5_9         -2.060830e-02
-## HDI               7.136434e+00
-## schooling         6.062915e-01</code></pre>
-<pre class="r"><code>#produce plot of test MSE by lambda value
-plot(cv_ridge_model) </code></pre>
+
+best_ridge_model = glmnet(x, y, alpha = 0, lambda = best_lambda)
+
+par(mfrow=c(1,1))
+#produce plot of test MSE by lambda value
+plot(cv_ridge_model) + title(&quot;Plot of MSE by Lambda value&quot;,line = 2.5)</code></pre>
 <p><img src="regression_files/figure-html/unnamed-chunk-14-1.png" width="80%" /></p>
+<pre><code>## integer(0)</code></pre>
+<ul>
+<li>The lambda value that minimizes the test MSE turns out to be 0.7175106.</li>
+</ul>
 <p><br> <br></p>
 <p><strong>Lasso Regression:</strong></p>
+<p>Mathematical equation of Ridge Regression:</p>
+<p><span class="math inline">\(\sum_{i=1}^n{(y_{i} - \beta_{0} - \sum_{j=1}^{p}{\beta_{i}x_{ij}})^2} + \lambda \sum_{j=1}^{p}{|\beta_{j}|} = RSS + \lambda \sum_{j=1}^{p}{|\beta_{j}|}\)</span></p>
 <pre class="r"><code>#define response variable
 y = le_df$le
 
 #define matrix of predictor variables
 x = data.matrix(le_df[, c(&#39;status_Developed&#39;, &#39;adult_mort&#39;, &#39;infantdeaths&#39;, &#39;alcohol&#39;, &#39;percent_exp&#39;, &#39;hepatitis_b_high&#39;, &#39;measles&#39;, &#39;bmi&#39;, &#39;under_five&#39;, &#39;polio_high&#39;, &#39;total_exp&#39;, &#39;diphtheria_high&#39;, &#39;hiv_aids&#39;, &#39;gdp&#39;, &#39;population&#39;, &#39;thin_1_19&#39;, &#39;thin_5_9&#39;, &#39;HDI&#39;, &#39;schooling&#39;)])
 
+lasso_model = glmnet(x, y, alpha = 1)
+
 #perform k-fold cross-validation to find optimal lambda value
 cv_lasso_model = cv.glmnet(x, y, alpha = 1)
 
 #find optimal lambda value that minimizes test MSE
 best_lasso_lambda = cv_lasso_model$lambda.min
-best_lasso_lambda</code></pre>
-<pre><code>## [1] 0.001996516</code></pre>
-<pre class="r"><code>best_lasso_model = glmnet(x, y, alpha = 1, lambda = best_lasso_lambda)
-coef(best_lasso_model)</code></pre>
+
+best_lasso_model = glmnet(x, y, alpha = 1, lambda = best_lasso_lambda)
+
+new_x = data.matrix(le_df[, c(&#39;status_Developed&#39;, &#39;adult_mort&#39;, &#39;infantdeaths&#39;, &#39;alcohol&#39;, &#39;percent_exp&#39;, &#39;hepatitis_b_high&#39;, &#39;bmi&#39;, &#39;under_five&#39;, &#39;polio_high&#39;, &#39;total_exp&#39;, &#39;diphtheria_high&#39;, &#39;hiv_aids&#39;, &#39;gdp&#39;, &#39;thin_1_19&#39;, &#39;thin_5_9&#39;, &#39;HDI&#39;, &#39;schooling&#39;)])</code></pre>
+<ul>
+<li>The lambda value that minimizes the test MSE turns out to be 0.0016575.</li>
+</ul>
+<pre class="r"><code>#produce plot of test MSE by lambda value
+plot(cv_lasso_model) + title(&quot;Plot of MSE by Lambda value&quot;,line = 2.5)</code></pre>
+<p><img src="regression_files/figure-html/unnamed-chunk-16-1.png" width="80%" /></p>
+<pre><code>## integer(0)</code></pre>
+<pre class="r"><code>coef(best_lasso_model)</code></pre>
 <pre><code>## 20 x 1 sparse Matrix of class &quot;dgCMatrix&quot;
 ##                             s0
-## (Intercept)       5.685428e+01
-## status_Developed  1.431903e+00
-## adult_mort       -1.677214e-02
-## infantdeaths      9.022366e-02
-## alcohol           1.033513e-02
-## percent_exp       5.066230e-05
-## hepatitis_b_high  5.425928e-02
+## (Intercept)       5.686219e+01
+## status_Developed  1.432139e+00
+## adult_mort       -1.676946e-02
+## infantdeaths      9.115129e-02
+## alcohol           1.073753e-02
+## percent_exp       5.065888e-05
+## hepatitis_b_high  5.635705e-02
 ## measles           .           
-## bmi               3.951042e-02
-## under_five       -6.712981e-02
-## polio_high        1.853203e+00
-## total_exp         3.525273e-02
-## diphtheria_high   1.134257e+00
-## hiv_aids         -4.931279e-01
-## gdp               4.850510e-05
-## population        7.652348e-12
-## thin_1_19        -5.103173e-02
-## thin_5_9         -2.091766e-02
-## HDI               6.254699e+00
-## schooling         6.701917e-01</code></pre>
-<pre class="r"><code>new_x = data.matrix(le_df[, c(&#39;status_Developed&#39;, &#39;adult_mort&#39;, &#39;infantdeaths&#39;, &#39;alcohol&#39;, &#39;percent_exp&#39;, &#39;hepatitis_b_high&#39;, &#39;bmi&#39;, &#39;under_five&#39;, &#39;polio_high&#39;, &#39;total_exp&#39;, &#39;diphtheria_high&#39;, &#39;hiv_aids&#39;, &#39;gdp&#39;, &#39;thin_1_19&#39;, &#39;thin_5_9&#39;, &#39;HDI&#39;, &#39;schooling&#39;)])
-
-plot(cv_lasso_model)</code></pre>
-<p><img src="regression_files/figure-html/unnamed-chunk-15-1.png" width="80%" /></p>
+## bmi               3.949487e-02
+## under_five       -6.781075e-02
+## polio_high        1.851516e+00
+## total_exp         3.530760e-02
+## diphtheria_high   1.131401e+00
+## hiv_aids         -4.930447e-01
+## gdp               4.855340e-05
+## population        .           
+## thin_1_19        -5.095772e-02
+## thin_5_9         -2.119315e-02
+## HDI               6.248119e+00
+## schooling         6.699518e-01</code></pre>
+<ul>
+<li>The coefficients of the predictor <code>measles</code> and <code>population</code> was shrunk all the way to zero, which means it was completely removed from the model since it wasn’t influential.</li>
+</ul>
 <br> <br>
 <hr>
 </div>
@@ -958,7 +955,7 @@ mae_plot =
         plot.title = element_text(hjust = 0.5))
 
 rmse_plot/rsq_plot/mae_plot</code></pre>
-<p><img src="regression_files/figure-html/unnamed-chunk-18-1.png" width="80%" /></p>
+<p><img src="regression_files/figure-html/unnamed-chunk-19-1.png" width="80%" /></p>
 <p><br> <br></p>
 </div>
 <div id="cross-validation-table" class="section level3">
@@ -994,34 +991,34 @@ Model_comparison_table </code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">Model 1</td>
+<td align="left">Model 1 (Research)</td>
 <td align="right">4.209394</td>
 <td align="right">0.8053251</td>
 <td align="right">3.091406</td>
 </tr>
 <tr class="even">
-<td align="left">Model 2</td>
+<td align="left">Model 2 (Stepwise)</td>
 <td align="right">3.970951</td>
 <td align="right">0.8267516</td>
 <td align="right">2.964913</td>
 </tr>
 <tr class="odd">
-<td align="left">Model 3</td>
+<td align="left">Model 3(Best Subsets)</td>
 <td align="right">4.073934</td>
 <td align="right">0.8176339</td>
 <td align="right">3.012049</td>
 </tr>
 <tr class="even">
-<td align="left">Model 4</td>
+<td align="left">Model 4 (Ridge)</td>
 <td align="right">3.946632</td>
 <td align="right">0.8287651</td>
 <td align="right">2.957489</td>
 </tr>
 <tr class="odd">
-<td align="left">Model 5</td>
-<td align="right">3.840379</td>
-<td align="right">0.8378490</td>
-<td align="right">2.873413</td>
+<td align="left">Model 5 (Lasso)</td>
+<td align="right">3.840213</td>
+<td align="right">0.8378628</td>
+<td align="right">2.873417</td>
 </tr>
 </tbody>
 </table>
@@ -1031,92 +1028,88 @@ Model_comparison_table </code></pre>
 </div>
 <div id="results" class="section level2">
 <h2>Results</h2>
-<pre class="r"><code>mod_1 %&gt;% 
-  broom::tidy() %&gt;% 
-  knitr::kable()</code></pre>
-<table>
-<thead>
-<tr class="header">
-<th align="left">term</th>
-<th align="right">estimate</th>
-<th align="right">std.error</th>
-<th align="right">statistic</th>
-<th align="right">p.value</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">(Intercept)</td>
-<td align="right">56.8966265</td>
-<td align="right">0.3958633</td>
-<td align="right">143.727982</td>
-<td align="right">0.0000000</td>
-</tr>
-<tr class="even">
-<td align="left">status_Developed</td>
-<td align="right">1.3617600</td>
-<td align="right">0.2534639</td>
-<td align="right">5.372598</td>
-<td align="right">0.0000001</td>
-</tr>
-<tr class="odd">
-<td align="left">percent_exp</td>
-<td align="right">0.0003396</td>
-<td align="right">0.0001285</td>
-<td align="right">2.642179</td>
-<td align="right">0.0082813</td>
-</tr>
-<tr class="even">
-<td align="left">HDI</td>
-<td align="right">8.3230014</td>
-<td align="right">0.6360650</td>
-<td align="right">13.085142</td>
-<td align="right">0.0000000</td>
-</tr>
-<tr class="odd">
-<td align="left">adult_mort</td>
-<td align="right">-0.0187897</td>
-<td align="right">0.0008260</td>
-<td align="right">-22.746898</td>
-<td align="right">0.0000000</td>
-</tr>
-<tr class="even">
-<td align="left">infantdeaths</td>
-<td align="right">-0.0038565</td>
-<td align="right">0.0006746</td>
-<td align="right">-5.716483</td>
-<td align="right">0.0000000</td>
-</tr>
-<tr class="odd">
-<td align="left">schooling</td>
-<td align="right">0.8909016</td>
-<td align="right">0.0396209</td>
-<td align="right">22.485621</td>
-<td align="right">0.0000000</td>
-</tr>
-<tr class="even">
-<td align="left">gdp</td>
-<td align="right">0.0000587</td>
-<td align="right">0.0000132</td>
-<td align="right">4.464205</td>
-<td align="right">0.0000083</td>
-</tr>
-<tr class="odd">
-<td align="left">hiv_aids</td>
-<td align="right">-0.5340504</td>
-<td align="right">0.0179823</td>
-<td align="right">-29.698666</td>
-<td align="right">0.0000000</td>
-</tr>
-<tr class="even">
-<td align="left">percent_exp:gdp</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0000000</td>
-<td align="right">-3.672232</td>
-<td align="right">0.0002447</td>
-</tr>
-</tbody>
-</table>
+<p>Based on performance measures among all models Lasso regression shows least Mean Absolute Error (MAE = 2.873414) and Root Mean Square Error (RMSE = 3.840274), and highest R-square value of 0.8378577. Thus, Lasso regression is considered as best model to predict Life expectancy.</p>
+<p>The coefficients for the best model we obtain are as follows:</p>
+<pre class="r"><code>lasso_coeff &lt;- coef(best_lasso_model)
+
+data.frame(name = lasso_coeff@Dimnames[[1]][lasso_coeff@i + 1], coefficient = lasso_coeff@x) %&gt;% 
+  as_tibble()</code></pre>
+<pre><code>## # A tibble: 18 x 2
+##    name             coefficient
+##    &lt;chr&gt;                  &lt;dbl&gt;
+##  1 (Intercept)       56.9      
+##  2 status_Developed   1.43     
+##  3 adult_mort        -0.0168   
+##  4 infantdeaths       0.0912   
+##  5 alcohol            0.0107   
+##  6 percent_exp        0.0000507
+##  7 hepatitis_b_high   0.0564   
+##  8 bmi                0.0395   
+##  9 under_five        -0.0678   
+## 10 polio_high         1.85     
+## 11 total_exp          0.0353   
+## 12 diphtheria_high    1.13     
+## 13 hiv_aids          -0.493    
+## 14 gdp                0.0000486
+## 15 thin_1_19         -0.0510   
+## 16 thin_5_9          -0.0212   
+## 17 HDI                6.25     
+## 18 schooling          0.670</code></pre>
+<pre class="r"><code>plot(lasso_model, xvar = &quot;lambda&quot;) + title(&quot;Lasso trace plot&quot;,line = 2.5)</code></pre>
+<p><img src="regression_files/figure-html/unnamed-chunk-21-1.png" width="80%" /></p>
+<pre><code>## integer(0)</code></pre>
+<pre class="r"><code>optimal_model = train(le ~ status_Developed + adult_mort + infantdeaths + alcohol + percent_exp + hepatitis_b_high + bmi + under_five + polio_high + total_exp + diphtheria_high + hiv_aids + gdp + thin_1_19 + thin_5_9 + HDI + schooling, data = training(initial_split(le_df, prop = 0.75))[,-1], trControl=trainControl(method=&quot;cv&quot;, number = 5), method=&quot;glmnet&quot;, preProcess = c(&quot;center&quot;, &quot;scale&quot;),tuneGrid = expand.grid(alpha = 1, lambda = best_lasso_lambda))
+
+ggplot(varImp(optimal_model)) + 
+  labs( 
+    title = &quot;Most important variables from elastic CV&quot;,
+    x = &quot;Predictors&quot;) </code></pre>
+<p><img src="regression_files/figure-html/unnamed-chunk-22-1.png" width="80%" /></p>
+<pre class="r"><code>Lasso_lm &lt;- lm(le ~ status_Developed + adult_mort + infantdeaths + alcohol + percent_exp + hepatitis_b_high + bmi + under_five + polio_high + total_exp + diphtheria_high + hiv_aids + gdp + thin_1_19 + thin_5_9 + HDI + schooling, data = le_df)
+
+summary(Lasso_lm)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = le ~ status_Developed + adult_mort + infantdeaths + 
+##     alcohol + percent_exp + hepatitis_b_high + bmi + under_five + 
+##     polio_high + total_exp + diphtheria_high + hiv_aids + gdp + 
+##     thin_1_19 + thin_5_9 + HDI + schooling, data = le_df)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -20.4827  -2.1414   0.0047   2.2624  16.7343 
+## 
+## Coefficients:
+##                    Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)       5.694e+01  4.562e-01 124.827  &lt; 2e-16 ***
+## status_Developed  1.435e+00  2.583e-01   5.557 3.00e-08 ***
+## adult_mort       -1.674e-02  7.685e-04 -21.784  &lt; 2e-16 ***
+## infantdeaths      1.001e-01  7.830e-03  12.782  &lt; 2e-16 ***
+## alcohol           1.427e-02  2.423e-02   0.589  0.55590    
+## percent_exp       4.930e-05  7.960e-05   0.619  0.53577    
+## hepatitis_b_high  7.112e-02  2.430e-01   0.293  0.76977    
+## bmi               3.926e-02  4.704e-03   8.346  &lt; 2e-16 ***
+## under_five       -7.438e-02  5.772e-03 -12.887  &lt; 2e-16 ***
+## polio_high        1.836e+00  3.069e-01   5.982 2.48e-09 ***
+## total_exp         3.553e-02  3.105e-02   1.144  0.25261    
+## diphtheria_high   1.106e+00  3.407e-01   3.248  0.00118 ** 
+## hiv_aids         -4.920e-01  1.673e-02 -29.406  &lt; 2e-16 ***
+## gdp               4.913e-05  1.221e-05   4.025 5.84e-05 ***
+## thin_1_19        -5.028e-02  4.620e-02  -1.088  0.27653    
+## thin_5_9         -2.402e-02  4.560e-02  -0.527  0.59845    
+## HDI               6.184e+00  5.926e-01  10.436  &lt; 2e-16 ***
+## schooling         6.679e-01  3.869e-02  17.263  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 3.856 on 2920 degrees of freedom
+## Multiple R-squared:  0.8368, Adjusted R-squared:  0.8358 
+## F-statistic: 880.7 on 17 and 2920 DF,  p-value: &lt; 2.2e-16</code></pre>
+<ul>
+<li><p>The most important variables we get from this are under-five deaths, infant deaths, Schooling, HIV/AIDS, Adult mortality, HDI, BMI and High Polio (Percentage of Polio immunization coverage among 1-year-olds <span class="math inline">\(\ge 80\)</span>.</p></li>
+<li><p>GDP, Developed Status, Diphtheria, Hepatitis B and total expenditure are less important. Alcohol and Polio are right in the middle of the variable importance graph.</p></li>
+<li><p>Not all predictors that the Lasso selects are statistically significant at a 5% level. Thinness..1.19.years, for example, has a p-value of about 0.14.</p></li>
+</ul>
 </div>
 
 
