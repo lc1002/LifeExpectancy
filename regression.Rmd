@@ -505,18 +505,22 @@ Model_comparison_table
 
 Based on performance measures among all models Lasso regression shows least Mean Absolute Error (MAE = 2.873414) and Root Mean Square Error (RMSE = 3.840274), and highest R-square value of 0.8378577. Thus, Lasso regression is considered as the best model to predict Life expectancy.
 
-The coefficients for the best model we obtain are as follows: 
-
 ```{r}
-lasso_coeff <- coef(best_lasso_model)
-
-data.frame(name = lasso_coeff@Dimnames[[1]][lasso_coeff@i + 1], coefficient = lasso_coeff@x) %>% 
-  knitr::kable(
-    caption     = "Coefficients of the best model (Lasso Model)",
-    col.names   = c("Coefficient", "Estimate"))
-
 plot(lasso_model, xvar = "lambda") + title("Lasso trace plot",line = 2.5)
 ```
+The trace plot illustrates how the predictors go into the model in the order of their magnitude of true linear regression coefficients.The coefficient path of each variables with respect to $\sum_{i} |\beta_{i}|$ only changes when a new predictor enters the model. When a new predictor enters the model, it affects the slope of the coefficient path of all predictors that are already in the model in a deterministic way as shown. 
+
+
+The coefficients for the best model we obtain from lasso regression are as follows: 
+```{r}
+lasso_coeff <- as.data.frame(as.matrix(coef(best_lasso_model))) %>% 
+  knitr::kable()
+
+Lasso_lm <- glm(le ~ status_Developed + adult_mort + infantdeaths + alcohol + percent_exp + hepatitis_b_high + bmi + under_five + polio_high + total_exp + diphtheria_high + hiv_aids + gdp + thin_1_19 + thin_5_9 + HDI + schooling, data = le_df)
+summary(Lasso_lm) 
+```
+
+When we compare the coefficients with the OLS, the coefficients are pretty similar since the penalization, $\lambda$, was low.
 
 ```{r}
 optimal_model = train(le ~ status_Developed + adult_mort + infantdeaths + alcohol + percent_exp + hepatitis_b_high + bmi + under_five + polio_high + total_exp + diphtheria_high + hiv_aids + gdp + thin_1_19 + thin_5_9 + HDI + schooling, data = training(initial_split(le_df, prop = 0.75))[,-1], trControl=trainControl(method="cv", number = 5), method="glmnet", preProcess = c("center", "scale"),tuneGrid = expand.grid(alpha = 1, lambda = best_lasso_lambda))
@@ -527,18 +531,25 @@ ggplot(varImp(optimal_model)) +
     x = "Predictors") 
 ```
 
-* The most important variables we get from this are `under-five deaths`, `infant deaths`, `Schooling`, `HIV/AIDS`, `Adult mortality`, `HDI`, `BMI`, and `High Polio` (Percentage of Polio immunization coverage among 1-year-olds $\ge 80$.
-* GDP, Diphtheria, Development Status and Polio are next influential predictors according to the variable importance graph.
-* `Thin_1_9`, `Percent_exp`, `Total_exp`, `Thin_5_9`, `Hepatitis B` and `Alcohol` are less important.
+From the plot, the most important variables we get are `under-five deaths`, `infant deaths`, `Schooling`, `HIV/AIDS`, `Adult mortality`, `HDI`, `BMI`, and `High Polio` (Percentage of Polio immunization coverage among 1-year-olds $\ge 80$. GDP, Diphtheria, Development Status and Polio are next influential predictors according to the variable importance graph. Lastly, `Thin_1_9`, `Percent_exp`, `Total_exp`, `Thin_5_9`, `Hepatitis B` and `Alcohol` are less important.
 
-```{r}
-Lasso_lm <- lm(le ~ status_Developed + adult_mort + infantdeaths + alcohol + percent_exp + hepatitis_b_high + bmi + under_five + polio_high + total_exp + diphtheria_high + hiv_aids + gdp + thin_1_19 + thin_5_9 + HDI + schooling, data = le_df)
+## **Diagnostics**
+
+In order to validate our model and assess its goodness of fit, we perform regression diagnostics to evaluate our model assumptions of ordinary least squares (OLS).
+
+```{r, message=FALSE, warning=FALSE}
 check_model(Lasso_lm, check = c("linearity", "outliers", "qq", "normality"))
-
 ```
 
-* From the QQ plot, we can say that the residuals are skewed with thick tails on both end. The residual vs. fitted plot suggests non-constant variance.
+**Linearity:** If a linear model has been properly specified, the error term accounts for the variation in the dependent variable that the independent variables do not explain, the average value of the error term must equal zero and uncorrelated with the fitted values y^s. The line of best fit of the residuals regressed on the fitted values should have an intercept and slope of zero. The Linearity plot shows the data roughly satisfy this assumption.
 
+**Homoscedasticity:** By definition, OLS regression gives equal weight to all observations, we would expect the variance of the errors should be consistent for all observations (fitted values). From the top-left graph, we can see that the residuals tend to be dispersed about the reference line.
+
+**Normality:** To test the normality of our residuals, looking at the bottom left plot which illustrates a strong linear trend. We can say that the residuals are roughly normal, but with thick tails on both end. In addition, the distribution of the residuals in the bottom-right graph closely follows a normal distribution centered at zero. Thus, the normality assumption is satisfy.
+
+**Influential Observations/Outliers:** Outliers are unavoidable in large samples, but we checking no single outlier contributes too much variation by itself is crucial. According to the Influential Observations plot, we see that all of the points fall within the contour lines.
+
+Overall, our model seems to be appropriate for the data. 
 
 <br>
 <hr>

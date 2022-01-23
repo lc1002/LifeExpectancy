@@ -771,11 +771,7 @@ best_lasso_lambda = cv_lasso_model$lambda.min
 best_lasso_model = glmnet(x, y, alpha = 1, lambda = best_lasso_lambda)
 
 new_x = data.matrix(le_df[, c(&#39;status_Developed&#39;, &#39;adult_mort&#39;, &#39;infantdeaths&#39;, &#39;alcohol&#39;, &#39;percent_exp&#39;, &#39;hepatitis_b_high&#39;, &#39;bmi&#39;, &#39;under_five&#39;, &#39;polio_high&#39;, &#39;total_exp&#39;, &#39;diphtheria_high&#39;, &#39;hiv_aids&#39;, &#39;gdp&#39;, &#39;thin_1_19&#39;, &#39;thin_5_9&#39;, &#39;HDI&#39;, &#39;schooling&#39;)])</code></pre>
-<<<<<<< HEAD
 <p>The lambda value that minimizes the test MSE turns out to be 0.0016575.</p>
-=======
-<p>The lambda value that minimizes the test MSE turns out to be 0.003489.</p>
->>>>>>> f0cf6f3d726abffcecd460f1210834b446ef5005
 <pre class="r"><code>#produce plot of test MSE by lambda value
 plot(cv_lasso_model) + title(&quot;Plot of MSE by Lambda value&quot;,line = 2.5)</code></pre>
 <p><img src="regression_files/figure-html/unnamed-chunk-14-1.png" width="80%" /></p>
@@ -783,7 +779,6 @@ plot(cv_lasso_model) + title(&quot;Plot of MSE by Lambda value&quot;,line = 2.5)
 <pre class="r"><code>coef(best_lasso_model) </code></pre>
 <pre><code>## 20 x 1 sparse Matrix of class &quot;dgCMatrix&quot;
 ##                             s0
-<<<<<<< HEAD
 ## (Intercept)       5.686219e+01
 ## status_Developed  1.432139e+00
 ## adult_mort       -1.676946e-02
@@ -804,28 +799,6 @@ plot(cv_lasso_model) + title(&quot;Plot of MSE by Lambda value&quot;,line = 2.5)
 ## thin_5_9         -2.119315e-02
 ## HDI               6.248119e+00
 ## schooling         6.699518e-01</code></pre>
-=======
-## (Intercept)       5.681863e+01
-## status_Developed  1.430978e+00
-## adult_mort       -1.678470e-02
-## infantdeaths      8.592883e-02
-## alcohol           8.484722e-03
-## percent_exp       5.070890e-05
-## hepatitis_b_high  4.482229e-02
-## measles          -5.057143e-09
-## bmi               3.957832e-02
-## under_five       -6.398781e-02
-## polio_high        1.860788e+00
-## total_exp         3.502150e-02
-## diphtheria_high   1.147423e+00
-## hiv_aids         -4.935099e-01
-## gdp               4.828201e-05
-## population        1.038695e-10
-## thin_1_19        -5.142361e-02
-## thin_5_9         -1.963396e-02
-## HDI               6.284552e+00
-## schooling         6.712439e-01</code></pre>
->>>>>>> f0cf6f3d726abffcecd460f1210834b446ef5005
 <p>The coefficients of the predictor <code>measles</code> and <code>population</code> was shrunk all the way to zero, which means it was completely removed from the model since it wasn’t influential.</p>
 <br> <br>
 <hr>
@@ -968,15 +941,9 @@ Model_comparison_table </code></pre>
 </tr>
 <tr class="odd">
 <td align="left">Lasso Model</td>
-<<<<<<< HEAD
 <td align="right">3.840213</td>
 <td align="right">0.8378628</td>
 <td align="right">2.873417</td>
-=======
-<td align="right">3.841472</td>
-<td align="right">0.8377574</td>
-<td align="right">2.873705</td>
->>>>>>> f0cf6f3d726abffcecd460f1210834b446ef5005
 </tr>
 </tbody>
 </table>
@@ -987,150 +954,77 @@ Model_comparison_table </code></pre>
 <div id="results" class="section level2">
 <h2><strong>Results</strong></h2>
 <p>Based on performance measures among all models Lasso regression shows least Mean Absolute Error (MAE = 2.873414) and Root Mean Square Error (RMSE = 3.840274), and highest R-square value of 0.8378577. Thus, Lasso regression is considered as the best model to predict Life expectancy.</p>
-<p>The coefficients for the best model we obtain are as follows:</p>
-<pre class="r"><code>lasso_coeff &lt;- coef(best_lasso_model)
-
-data.frame(name = lasso_coeff@Dimnames[[1]][lasso_coeff@i + 1], coefficient = lasso_coeff@x) %&gt;% 
-<<<<<<< HEAD
-  as_tibble()</code></pre>
-<pre><code>## # A tibble: 18 x 2
-##    name             coefficient
-##    &lt;chr&gt;                  &lt;dbl&gt;
-##  1 (Intercept)       56.9      
-##  2 status_Developed   1.43     
-##  3 adult_mort        -0.0168   
-##  4 infantdeaths       0.0912   
-##  5 alcohol            0.0107   
-##  6 percent_exp        0.0000507
-##  7 hepatitis_b_high   0.0564   
-##  8 bmi                0.0395   
-##  9 under_five        -0.0678   
-## 10 polio_high         1.85     
-## 11 total_exp          0.0353   
-## 12 diphtheria_high    1.13     
-## 13 hiv_aids          -0.493    
-## 14 gdp                0.0000486
-## 15 thin_1_19         -0.0510   
-## 16 thin_5_9          -0.0212   
-## 17 HDI                6.25     
-## 18 schooling          0.670</code></pre>
-=======
-  knitr::kable(
-    caption     = &quot;Coefficients of the best model (Lasso Model)&quot;,
-    col.names   = c(&quot;Coefficient&quot;, &quot;Estimate&quot;))</code></pre>
-<table>
-<caption>Coefficients of the best model (Lasso Model)</caption>
-<thead>
-<tr class="header">
-<th align="left">Coefficient</th>
-<th align="right">Estimate</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">(Intercept)</td>
-<td align="right">56.8186287</td>
-</tr>
-<tr class="even">
-<td align="left">status_Developed</td>
-<td align="right">1.4309776</td>
-</tr>
-<tr class="odd">
-<td align="left">adult_mort</td>
-<td align="right">-0.0167847</td>
-</tr>
-<tr class="even">
-<td align="left">infantdeaths</td>
-<td align="right">0.0859288</td>
-</tr>
-<tr class="odd">
-<td align="left">alcohol</td>
-<td align="right">0.0084847</td>
-</tr>
-<tr class="even">
-<td align="left">percent_exp</td>
-<td align="right">0.0000507</td>
-</tr>
-<tr class="odd">
-<td align="left">hepatitis_b_high</td>
-<td align="right">0.0448223</td>
-</tr>
-<tr class="even">
-<td align="left">measles</td>
-<td align="right">0.0000000</td>
-</tr>
-<tr class="odd">
-<td align="left">bmi</td>
-<td align="right">0.0395783</td>
-</tr>
-<tr class="even">
-<td align="left">under_five</td>
-<td align="right">-0.0639878</td>
-</tr>
-<tr class="odd">
-<td align="left">polio_high</td>
-<td align="right">1.8607879</td>
-</tr>
-<tr class="even">
-<td align="left">total_exp</td>
-<td align="right">0.0350215</td>
-</tr>
-<tr class="odd">
-<td align="left">diphtheria_high</td>
-<td align="right">1.1474232</td>
-</tr>
-<tr class="even">
-<td align="left">hiv_aids</td>
-<td align="right">-0.4935099</td>
-</tr>
-<tr class="odd">
-<td align="left">gdp</td>
-<td align="right">0.0000483</td>
-</tr>
-<tr class="even">
-<td align="left">population</td>
-<td align="right">0.0000000</td>
-</tr>
-<tr class="odd">
-<td align="left">thin_1_19</td>
-<td align="right">-0.0514236</td>
-</tr>
-<tr class="even">
-<td align="left">thin_5_9</td>
-<td align="right">-0.0196340</td>
-</tr>
-<tr class="odd">
-<td align="left">HDI</td>
-<td align="right">6.2845519</td>
-</tr>
-<tr class="even">
-<td align="left">schooling</td>
-<td align="right">0.6712439</td>
-</tr>
-</tbody>
-</table>
->>>>>>> f0cf6f3d726abffcecd460f1210834b446ef5005
 <pre class="r"><code>plot(lasso_model, xvar = &quot;lambda&quot;) + title(&quot;Lasso trace plot&quot;,line = 2.5)</code></pre>
 <p><img src="regression_files/figure-html/unnamed-chunk-19-1.png" width="80%" /></p>
 <pre><code>## integer(0)</code></pre>
+<p>The trace plot illustrates how the predictors go into the model in the order of their magnitude of true linear regression coefficients.The coefficient path of each variables with respect to <span class="math inline">\(\sum_{i} |\beta_{i}|\)</span> only changes when a new predictor enters the model. When a new predictor enters the model, it affects the slope of the coefficient path of all predictors that are already in the model in a deterministic way as shown.</p>
+<p>The coefficients for the best model we obtain from lasso regression are as follows:</p>
+<pre class="r"><code>lasso_coeff &lt;- as.data.frame(as.matrix(coef(best_lasso_model))) %&gt;% 
+  knitr::kable()
+
+Lasso_lm &lt;- glm(le ~ status_Developed + adult_mort + infantdeaths + alcohol + percent_exp + hepatitis_b_high + bmi + under_five + polio_high + total_exp + diphtheria_high + hiv_aids + gdp + thin_1_19 + thin_5_9 + HDI + schooling, data = le_df)
+summary(Lasso_lm) </code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = le ~ status_Developed + adult_mort + infantdeaths + 
+##     alcohol + percent_exp + hepatitis_b_high + bmi + under_five + 
+##     polio_high + total_exp + diphtheria_high + hiv_aids + gdp + 
+##     thin_1_19 + thin_5_9 + HDI + schooling, data = le_df)
+## 
+## Deviance Residuals: 
+##      Min        1Q    Median        3Q       Max  
+## -20.4827   -2.1414    0.0047    2.2624   16.7343  
+## 
+## Coefficients:
+##                    Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)       5.694e+01  4.562e-01 124.827  &lt; 2e-16 ***
+## status_Developed  1.435e+00  2.583e-01   5.557 3.00e-08 ***
+## adult_mort       -1.674e-02  7.685e-04 -21.784  &lt; 2e-16 ***
+## infantdeaths      1.001e-01  7.830e-03  12.782  &lt; 2e-16 ***
+## alcohol           1.427e-02  2.423e-02   0.589  0.55590    
+## percent_exp       4.930e-05  7.960e-05   0.619  0.53577    
+## hepatitis_b_high  7.112e-02  2.430e-01   0.293  0.76977    
+## bmi               3.926e-02  4.704e-03   8.346  &lt; 2e-16 ***
+## under_five       -7.438e-02  5.772e-03 -12.887  &lt; 2e-16 ***
+## polio_high        1.836e+00  3.069e-01   5.982 2.48e-09 ***
+## total_exp         3.553e-02  3.105e-02   1.144  0.25261    
+## diphtheria_high   1.106e+00  3.407e-01   3.248  0.00118 ** 
+## hiv_aids         -4.920e-01  1.673e-02 -29.406  &lt; 2e-16 ***
+## gdp               4.913e-05  1.221e-05   4.025 5.84e-05 ***
+## thin_1_19        -5.028e-02  4.620e-02  -1.088  0.27653    
+## thin_5_9         -2.402e-02  4.560e-02  -0.527  0.59845    
+## HDI               6.184e+00  5.926e-01  10.436  &lt; 2e-16 ***
+## schooling         6.679e-01  3.869e-02  17.263  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for gaussian family taken to be 14.86579)
+## 
+##     Null deviance: 265978  on 2937  degrees of freedom
+## Residual deviance:  43408  on 2920  degrees of freedom
+## AIC: 16287
+## 
+## Number of Fisher Scoring iterations: 2</code></pre>
+<p>When we compare the coefficients with the OLS, the coefficients are pretty similar since the penalization, <span class="math inline">\(\lambda\)</span>, was low.</p>
 <pre class="r"><code>optimal_model = train(le ~ status_Developed + adult_mort + infantdeaths + alcohol + percent_exp + hepatitis_b_high + bmi + under_five + polio_high + total_exp + diphtheria_high + hiv_aids + gdp + thin_1_19 + thin_5_9 + HDI + schooling, data = training(initial_split(le_df, prop = 0.75))[,-1], trControl=trainControl(method=&quot;cv&quot;, number = 5), method=&quot;glmnet&quot;, preProcess = c(&quot;center&quot;, &quot;scale&quot;),tuneGrid = expand.grid(alpha = 1, lambda = best_lasso_lambda))
 
 ggplot(varImp(optimal_model)) + 
   labs( 
     title = &quot;Most important variables from elastic CV&quot;,
     x = &quot;Predictors&quot;) </code></pre>
-<p><img src="regression_files/figure-html/unnamed-chunk-20-1.png" width="80%" /></p>
-<ul>
-<li>The most important variables we get from this are <code>under-five deaths</code>, <code>infant deaths</code>, <code>Schooling</code>, <code>HIV/AIDS</code>, <code>Adult mortality</code>, <code>HDI</code>, <code>BMI</code>, and <code>High Polio</code> (Percentage of Polio immunization coverage among 1-year-olds <span class="math inline">\(\ge 80\)</span>.</li>
-<li>GDP, Diphtheria, Development Status and Polio are next influential predictors according to the variable importance graph.</li>
-<li><code>Thin_1_9</code>, <code>Percent_exp</code>, <code>Total_exp</code>, <code>Thin_5_9</code>, <code>Hepatitis B</code> and <code>Alcohol</code> are less important.</li>
-</ul>
-<pre class="r"><code>Lasso_lm &lt;- lm(le ~ status_Developed + adult_mort + infantdeaths + alcohol + percent_exp + hepatitis_b_high + bmi + under_five + polio_high + total_exp + diphtheria_high + hiv_aids + gdp + thin_1_19 + thin_5_9 + HDI + schooling, data = le_df)
-check_model(Lasso_lm, check = c(&quot;linearity&quot;, &quot;outliers&quot;, &quot;qq&quot;, &quot;normality&quot;))</code></pre>
 <p><img src="regression_files/figure-html/unnamed-chunk-21-1.png" width="80%" /></p>
-<ul>
-<li>From the QQ plot, we can say that the residuals are skewed with thick tails on both end. The residual vs. fitted plot suggests non-constant variance.</li>
-</ul>
+<p>From the plot, the most important variables we get are <code>under-five deaths</code>, <code>infant deaths</code>, <code>Schooling</code>, <code>HIV/AIDS</code>, <code>Adult mortality</code>, <code>HDI</code>, <code>BMI</code>, and <code>High Polio</code> (Percentage of Polio immunization coverage among 1-year-olds <span class="math inline">\(\ge 80\)</span>. GDP, Diphtheria, Development Status and Polio are next influential predictors according to the variable importance graph. Lastly, <code>Thin_1_9</code>, <code>Percent_exp</code>, <code>Total_exp</code>, <code>Thin_5_9</code>, <code>Hepatitis B</code> and <code>Alcohol</code> are less important.</p>
+</div>
+<div id="diagnostics" class="section level2">
+<h2><strong>Diagnostics</strong></h2>
+<p>In order to validate our model and assess its goodness of fit, we perform regression diagnostics to evaluate our model assumptions of ordinary least squares (OLS).</p>
+<pre class="r"><code>check_model(Lasso_lm, check = c(&quot;linearity&quot;, &quot;outliers&quot;, &quot;qq&quot;, &quot;normality&quot;))</code></pre>
+<p><img src="regression_files/figure-html/unnamed-chunk-22-1.png" width="80%" /></p>
+<p><strong>Linearity:</strong> If a linear model has been properly specified, the error term accounts for the variation in the dependent variable that the independent variables do not explain, the average value of the error term must equal zero and uncorrelated with the fitted values y^s. The line of best fit of the residuals regressed on the fitted values should have an intercept and slope of zero. The Linearity plot shows the data roughly satisfy this assumption.</p>
+<p><strong>Homoscedasticity:</strong> By definition, OLS regression gives equal weight to all observations, we would expect the variance of the errors should be consistent for all observations (fitted values). From the top-left graph, we can see that the residuals tend to be dispersed about the reference line.</p>
+<p><strong>Normality:</strong> To test the normality of our residuals, looking at the bottom left plot which illustrates a strong linear trend. We can say that the residuals are roughly normal, but with thick tails on both end. In addition, the distribution of the residuals in the bottom-right graph closely follows a normal distribution centered at zero. Thus, the normality assumption is satisfy.</p>
+<p><strong>Influential Observations/Outliers:</strong> Outliers are unavoidable in large samples, but we checking no single outlier contributes too much variation by itself is crucial. According to the Influential Observations plot, we see that all of the points fall within the contour lines.</p>
+<p>Overall, our model seems to be appropriate for the data.</p>
 <br>
 <hr>
 <center>
