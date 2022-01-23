@@ -36,6 +36,8 @@
 <script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
@@ -458,230 +460,509 @@ corrplot(cor(cm_df), type = &quot;upper&quot;, diag = FALSE, method = &quot;squa
      knitr::kable()</code></pre>
 <table>
 <thead>
-<tr class="header">
-<th align="left"></th>
-<th align="left">1</th>
-<th align="left">2</th>
-<th align="left">3</th>
-<th align="left">4</th>
-<th align="left">5</th>
-<th align="left">6</th>
-<th align="left">7</th>
-<th align="left">8</th>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+1
+</th>
+<th style="text-align:left;">
+2
+</th>
+<th style="text-align:left;">
+3
+</th>
+<th style="text-align:left;">
+4
+</th>
+<th style="text-align:left;">
+5
+</th>
+<th style="text-align:left;">
+6
+</th>
+<th style="text-align:left;">
+7
+</th>
+<th style="text-align:left;">
+8
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td align="left">status_Developed</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
+<tr>
+<td style="text-align:left;">
+status_Developed
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
 </tr>
-<tr class="even">
-<td align="left">adult_mort</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">*</td>
-<td align="left">*</td>
-<td align="left">*</td>
-<td align="left">*</td>
-<td align="left">*</td>
-<td align="left">*</td>
+<tr>
+<td style="text-align:left;">
+adult_mort
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+<ul>
+<li></td>
+<td style="text-align:left;">
+<ul>
+<li></td>
+<td style="text-align:left;">
+<ul>
+<li></td>
+<td style="text-align:left;">
+<ul>
+<li></td>
+<td style="text-align:left;">
+<ul>
+<li></td>
+<td style="text-align:left;">
+<ul>
+<li></td>
 </tr>
-<tr class="odd">
-<td align="left">infantdeaths</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">*</td>
+<tr>
+<td style="text-align:left;">
+infantdeaths
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+<ul>
+<li></td>
 </tr>
-<tr class="even">
-<td align="left">alcohol</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
+<tr>
+<td style="text-align:left;">
+alcohol
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
 </tr>
-<tr class="odd">
-<td align="left">percent_exp</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
+<tr>
+<td style="text-align:left;">
+percent_exp
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
 </tr>
-<tr class="even">
-<td align="left">hepatitis_b_high</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
+<tr>
+<td style="text-align:left;">
+hepatitis_b_high
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
 </tr>
-<tr class="odd">
-<td align="left">measles</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
+<tr>
+<td style="text-align:left;">
+measles
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
 </tr>
-<tr class="even">
-<td align="left">bmi</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">*</td>
-<td align="left">*</td>
-<td align="left"></td>
+<tr>
+<td style="text-align:left;">
+bmi
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+<ul>
+<li></td>
+<td style="text-align:left;">
+<ul>
+<li></td>
+<td style="text-align:left;">
+</td>
 </tr>
-<tr class="odd">
-<td align="left">under_five</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">*</td>
+<tr>
+<td style="text-align:left;">
+under_five
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+<ul>
+<li></td>
 </tr>
-<tr class="even">
-<td align="left">polio_high</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">*</td>
-<td align="left">*</td>
-<td align="left">*</td>
-<td align="left">*</td>
-<td align="left">*</td>
+<tr>
+<td style="text-align:left;">
+polio_high
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+<ul>
+<li></td>
+<td style="text-align:left;">
+<ul>
+<li></td>
+<td style="text-align:left;">
+<ul>
+<li></td>
+<td style="text-align:left;">
+<ul>
+<li></td>
+<td style="text-align:left;">
+<ul>
+<li></td>
 </tr>
-<tr class="odd">
-<td align="left">total_exp</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
+<tr>
+<td style="text-align:left;">
+total_exp
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
 </tr>
-<tr class="even">
-<td align="left">diphtheria_high</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
+<tr>
+<td style="text-align:left;">
+diphtheria_high
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
 </tr>
-<tr class="odd">
-<td align="left">hiv_aids</td>
-<td align="left"></td>
-<td align="left">*</td>
-<td align="left">*</td>
-<td align="left">*</td>
-<td align="left">*</td>
-<td align="left">*</td>
-<td align="left">*</td>
-<td align="left">*</td>
+<tr>
+<td style="text-align:left;">
+hiv_aids
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+<ul>
+<li></td>
+<td style="text-align:left;">
+<ul>
+<li></td>
+<td style="text-align:left;">
+<ul>
+<li></td>
+<td style="text-align:left;">
+<ul>
+<li></td>
+<td style="text-align:left;">
+<ul>
+<li></td>
+<td style="text-align:left;">
+<ul>
+<li></td>
+<td style="text-align:left;">
+<ul>
+<li></td>
 </tr>
-<tr class="even">
-<td align="left">gdp</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">*</td>
-<td align="left">*</td>
+<tr>
+<td style="text-align:left;">
+gdp
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+<ul>
+<li></td>
+<td style="text-align:left;">
+<ul>
+<li></td>
 </tr>
-<tr class="odd">
-<td align="left">population</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
+<tr>
+<td style="text-align:left;">
+population
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
 </tr>
-<tr class="even">
-<td align="left">thin_1_19</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
+<tr>
+<td style="text-align:left;">
+thin_1_19
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
 </tr>
-<tr class="odd">
-<td align="left">thin_5_9</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
+<tr>
+<td style="text-align:left;">
+thin_5_9
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
 </tr>
-<tr class="even">
-<td align="left">HDI</td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left"></td>
-<td align="left">*</td>
-<td align="left">*</td>
-<td align="left">*</td>
-<td align="left">*</td>
+<tr>
+<td style="text-align:left;">
+HDI
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+<ul>
+<li></td>
+<td style="text-align:left;">
+<ul>
+<li></td>
+<td style="text-align:left;">
+<ul>
+<li></td>
+<td style="text-align:left;">
+<ul>
+<li></td>
 </tr>
-<tr class="odd">
-<td align="left">schooling</td>
-<td align="left">*</td>
-<td align="left">*</td>
-<td align="left">*</td>
-<td align="left">*</td>
-<td align="left">*</td>
-<td align="left">*</td>
-<td align="left">*</td>
-<td align="left">*</td>
+<tr>
+<td style="text-align:left;">
+schooling
+</td>
+<td style="text-align:left;">
+<ul>
+<li></td>
+<td style="text-align:left;">
+<ul>
+<li></td>
+<td style="text-align:left;">
+<ul>
+<li></td>
+<td style="text-align:left;">
+<ul>
+<li></td>
+<td style="text-align:left;">
+<ul>
+<li></td>
+<td style="text-align:left;">
+<ul>
+<li></td>
+<td style="text-align:left;">
+<ul>
+<li></td>
+<td style="text-align:left;">
+<ul>
+<li></td>
 </tr>
 </tbody>
-</table>
+</table></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
 <p><br></p>
 <p>Since best subset regression did not specify the best model among the models generated, we will need to compare the model selection criteria to determine the final best subset model. Here is a plot that compares the model selection criteria across all models generated from the best subset regression:</p>
 <p><br></p>
@@ -771,7 +1052,7 @@ best_lasso_lambda = cv_lasso_model$lambda.min
 best_lasso_model = glmnet(x, y, alpha = 1, lambda = best_lasso_lambda)
 
 new_x = data.matrix(le_df[, c(&#39;status_Developed&#39;, &#39;adult_mort&#39;, &#39;infantdeaths&#39;, &#39;alcohol&#39;, &#39;percent_exp&#39;, &#39;hepatitis_b_high&#39;, &#39;bmi&#39;, &#39;under_five&#39;, &#39;polio_high&#39;, &#39;total_exp&#39;, &#39;diphtheria_high&#39;, &#39;hiv_aids&#39;, &#39;gdp&#39;, &#39;thin_1_19&#39;, &#39;thin_5_9&#39;, &#39;HDI&#39;, &#39;schooling&#39;)])</code></pre>
-<p>The lambda value that minimizes the test MSE turns out to be 0.0016575.</p>
+<p>The lambda value that minimizes the test MSE turns out to be 0.003489.</p>
 <pre class="r"><code>#produce plot of test MSE by lambda value
 plot(cv_lasso_model) + title(&quot;Plot of MSE by Lambda value&quot;,line = 2.5)</code></pre>
 <p><img src="regression_files/figure-html/unnamed-chunk-14-1.png" width="80%" /></p>
@@ -779,26 +1060,26 @@ plot(cv_lasso_model) + title(&quot;Plot of MSE by Lambda value&quot;,line = 2.5)
 <pre class="r"><code>coef(best_lasso_model)</code></pre>
 <pre><code>## 20 x 1 sparse Matrix of class &quot;dgCMatrix&quot;
 ##                             s0
-## (Intercept)       5.686219e+01
-## status_Developed  1.432139e+00
-## adult_mort       -1.676946e-02
-## infantdeaths      9.115129e-02
-## alcohol           1.073753e-02
-## percent_exp       5.065888e-05
-## hepatitis_b_high  5.635705e-02
-## measles           .           
-## bmi               3.949487e-02
-## under_five       -6.781075e-02
-## polio_high        1.851516e+00
-## total_exp         3.530760e-02
-## diphtheria_high   1.131401e+00
-## hiv_aids         -4.930447e-01
-## gdp               4.855340e-05
-## population        .           
-## thin_1_19        -5.095772e-02
-## thin_5_9         -2.119315e-02
-## HDI               6.248119e+00
-## schooling         6.699518e-01</code></pre>
+## (Intercept)       5.681863e+01
+## status_Developed  1.430978e+00
+## adult_mort       -1.678470e-02
+## infantdeaths      8.592883e-02
+## alcohol           8.484722e-03
+## percent_exp       5.070890e-05
+## hepatitis_b_high  4.482229e-02
+## measles          -5.057143e-09
+## bmi               3.957832e-02
+## under_five       -6.398781e-02
+## polio_high        1.860788e+00
+## total_exp         3.502150e-02
+## diphtheria_high   1.147423e+00
+## hiv_aids         -4.935099e-01
+## gdp               4.828201e-05
+## population        1.038695e-10
+## thin_1_19        -5.142361e-02
+## thin_5_9         -1.963396e-02
+## HDI               6.284552e+00
+## schooling         6.712439e-01</code></pre>
 <p>The coefficients of the predictor <code>measles</code> and <code>population</code> was shrunk all the way to zero, which means it was completely removed from the model since it wasn’t influential.</p>
 <br> <br>
 <hr>
@@ -907,43 +1188,91 @@ Model_comparison_table =
 Model_comparison_table </code></pre>
 <table>
 <thead>
-<tr class="header">
-<th align="left">model</th>
-<th align="right">mean_rmse</th>
-<th align="right">mean_rsq</th>
-<th align="right">mean_mae</th>
+<tr>
+<th style="text-align:left;">
+model
+</th>
+<th style="text-align:right;">
+mean_rmse
+</th>
+<th style="text-align:right;">
+mean_rsq
+</th>
+<th style="text-align:right;">
+mean_mae
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td align="left">Research Model</td>
-<td align="right">4.209394</td>
-<td align="right">0.8053251</td>
-<td align="right">3.091406</td>
+<tr>
+<td style="text-align:left;">
+Research Model
+</td>
+<td style="text-align:right;">
+4.209394
+</td>
+<td style="text-align:right;">
+0.8053251
+</td>
+<td style="text-align:right;">
+3.091406
+</td>
 </tr>
-<tr class="even">
-<td align="left">Stepwise Model</td>
-<td align="right">3.970951</td>
-<td align="right">0.8267516</td>
-<td align="right">2.964913</td>
+<tr>
+<td style="text-align:left;">
+Stepwise Model
+</td>
+<td style="text-align:right;">
+3.970951
+</td>
+<td style="text-align:right;">
+0.8267516
+</td>
+<td style="text-align:right;">
+2.964913
+</td>
 </tr>
-<tr class="odd">
-<td align="left">BestSub Model</td>
-<td align="right">4.073934</td>
-<td align="right">0.8176339</td>
-<td align="right">3.012049</td>
+<tr>
+<td style="text-align:left;">
+BestSub Model
+</td>
+<td style="text-align:right;">
+4.073934
+</td>
+<td style="text-align:right;">
+0.8176339
+</td>
+<td style="text-align:right;">
+3.012049
+</td>
 </tr>
-<tr class="even">
-<td align="left">Ridge Model</td>
-<td align="right">3.946632</td>
-<td align="right">0.8287651</td>
-<td align="right">2.957489</td>
+<tr>
+<td style="text-align:left;">
+Ridge Model
+</td>
+<td style="text-align:right;">
+3.946632
+</td>
+<td style="text-align:right;">
+0.8287651
+</td>
+<td style="text-align:right;">
+2.957489
+</td>
 </tr>
-<tr class="odd">
-<td align="left">Lasso Model</td>
-<td align="right">3.840213</td>
-<td align="right">0.8378628</td>
-<td align="right">2.873417</td>
+<tr>
+<td style="text-align:left;">
+Lasso Model
+</td>
+<td style="text-align:right;">
+3.841472
+</td>
+<td style="text-align:right;">
+0.8377574
+</td>
+<td style="text-align:right;">
+2.873705
+</td>
 </tr>
 </tbody>
 </table>
@@ -958,28 +1287,189 @@ Model_comparison_table </code></pre>
 <pre class="r"><code>lasso_coeff &lt;- coef(best_lasso_model)
 
 data.frame(name = lasso_coeff@Dimnames[[1]][lasso_coeff@i + 1], coefficient = lasso_coeff@x) %&gt;% 
-  as_tibble()</code></pre>
-<pre><code>## # A tibble: 18 × 2
-##    name             coefficient
-##    &lt;chr&gt;                  &lt;dbl&gt;
-##  1 (Intercept)       56.9      
-##  2 status_Developed   1.43     
-##  3 adult_mort        -0.0168   
-##  4 infantdeaths       0.0912   
-##  5 alcohol            0.0107   
-##  6 percent_exp        0.0000507
-##  7 hepatitis_b_high   0.0564   
-##  8 bmi                0.0395   
-##  9 under_five        -0.0678   
-## 10 polio_high         1.85     
-## 11 total_exp          0.0353   
-## 12 diphtheria_high    1.13     
-## 13 hiv_aids          -0.493    
-## 14 gdp                0.0000486
-## 15 thin_1_19         -0.0510   
-## 16 thin_5_9          -0.0212   
-## 17 HDI                6.25     
-## 18 schooling          0.670</code></pre>
+  kbl(
+    caption     = &quot;Coefficients for the best model (Lasso Model)&quot;,
+    col.names   = c(&quot;Coefficient&quot;, &quot;Estimate&quot;)
+  ) %&gt;%
+  kable_paper(&quot;striped&quot;, full_width = F) %&gt;% 
+  column_spec(1, bold = T)</code></pre>
+<table class=" lightable-paper lightable-striped" style="font-family: &quot;Arial Narrow&quot;, arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+Coefficients for the best model (Lasso Model)
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Coefficient
+</th>
+<th style="text-align:right;">
+Estimate
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+56.8186287
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+status_Developed
+</td>
+<td style="text-align:right;">
+1.4309776
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+adult_mort
+</td>
+<td style="text-align:right;">
+-0.0167847
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+infantdeaths
+</td>
+<td style="text-align:right;">
+0.0859288
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+alcohol
+</td>
+<td style="text-align:right;">
+0.0084847
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+percent_exp
+</td>
+<td style="text-align:right;">
+0.0000507
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+hepatitis_b_high
+</td>
+<td style="text-align:right;">
+0.0448223
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+measles
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+bmi
+</td>
+<td style="text-align:right;">
+0.0395783
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+under_five
+</td>
+<td style="text-align:right;">
+-0.0639878
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+polio_high
+</td>
+<td style="text-align:right;">
+1.8607879
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+total_exp
+</td>
+<td style="text-align:right;">
+0.0350215
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+diphtheria_high
+</td>
+<td style="text-align:right;">
+1.1474232
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+hiv_aids
+</td>
+<td style="text-align:right;">
+-0.4935099
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+gdp
+</td>
+<td style="text-align:right;">
+0.0000483
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+population
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+thin_1_19
+</td>
+<td style="text-align:right;">
+-0.0514236
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+thin_5_9
+</td>
+<td style="text-align:right;">
+-0.0196340
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+HDI
+</td>
+<td style="text-align:right;">
+6.2845519
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;">
+schooling
+</td>
+<td style="text-align:right;">
+0.6712439
+</td>
+</tr>
+</tbody>
+</table>
 <pre class="r"><code>plot(lasso_model, xvar = &quot;lambda&quot;) + title(&quot;Lasso trace plot&quot;,line = 2.5)</code></pre>
 <p><img src="regression_files/figure-html/unnamed-chunk-19-1.png" width="80%" /></p>
 <pre><code>## integer(0)</code></pre>

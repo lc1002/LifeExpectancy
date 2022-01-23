@@ -40,6 +40,7 @@ library(patchwork)
 library(Metrics)
 library(MASS)
 library(glmnet)
+library(kableExtra)
 
 knitr::opts_chunk$set(
   echo = TRUE,
@@ -333,7 +334,7 @@ The lambda value that minimizes the test MSE turns out to be `r best_lasso_lambd
 #produce plot of test MSE by lambda value
 plot(cv_lasso_model) + title("Plot of MSE by Lambda value",line = 2.5)
 
-coef(best_lasso_model)
+coef(best_lasso_model) 
 ```
 
 The coefficients of the predictor `measles` and `population` was shrunk all the way to zero, which means it was completely removed from the model since it wasn’t influential.
@@ -511,7 +512,12 @@ The coefficients for the best model we obtain are as follows:
 lasso_coeff <- coef(best_lasso_model)
 
 data.frame(name = lasso_coeff@Dimnames[[1]][lasso_coeff@i + 1], coefficient = lasso_coeff@x) %>% 
-  as_tibble()
+  kbl(
+    caption     = "Coefficients for the best model (Lasso Model)",
+    col.names   = c("Coefficient", "Estimate")
+  ) %>%
+  kable_paper("striped", full_width = F) %>% 
+  column_spec(1, bold = T)
 
 plot(lasso_model, xvar = "lambda") + title("Lasso trace plot",line = 2.5)
 ```
