@@ -82,17 +82,12 @@ corrplot(cor(cm_df), type = "upper", diag = FALSE, method = "square", addCoef.co
 
 <br>
 
-* From the correlation matrix, we can see that life expectancy has a high positive correlation with `HDI` and `schooling`, and a high negative correlation with `adult_mort` and moderate negative correlation with `hiv_aids`. Indeed,  we would expect the outcome variable, life expectancy, to be highly impacted by these predictors.
+From the correlation matrix, we can see that life expectancy has a high positive correlation with `HDI` and `schooling`, and a high negative correlation with `adult_mort` and moderate negative correlation with `hiv_aids`. Indeed,  we would expect the outcome variable, life expectancy, to be highly impacted by these predictors.
 
-* We can also see that many of our variables are moderately correlated with each other. `HDI` highly correlated with `schooling` and moderately correlated with multiple variables. It is positively associated with `alcohol`, `percent_exp`, `bmi`, `gdp`, `status_Developing`, `polio_low`,  `hepatitis_b_low` and `diphtheria_low` , and negatively associated with `adult_mort`, `status_Developed`, `thin_1_19`, `thin_5_9`,`polio_high`,  `hepatitis_b_high` and `diphtheria_high`. 
+We can also see that many of our variables are moderately correlated with each other. `HDI` highly correlated with `schooling` and moderately correlated with multiple variables. It is positively associated with `alcohol`, `percent_exp`, `bmi`, `gdp`, `status_Developing`, `polio_low`,  `hepatitis_b_low` and `diphtheria_low` , and negatively associated with `adult_mort`, `status_Developed`, `thin_1_19`, `thin_5_9`,`polio_high`,  `hepatitis_b_high` and `diphtheria_high`. 
 
-* Some of our variables are also highly correlated with each other. For example, `gdp` has a strong positive correlation with `percent_exp`. 
-
-* The variable `infant deaths` and `under-five deaths` are highly correlated. 
-
-* `thin_1_19` and `thin_5_9` are highly correlated.
-
-* In addition, dummy variables created from the same categorical variable are also highly correlated (e.g. `status_Developed` and `status_Developing`). Therefore, multicollinearity must be taken into consideration when selecting our model.
+Some of our variables are also highly correlated with each other. For example, `gdp` has a strong positive correlation with `percent_exp`. The variable `infant deaths` and `under-five deaths` are highly correlated. 
+Furthermore, `thin_1_19` and `thin_5_9` also have strong correlation with each other. In addition, dummy variables created from the same categorical variable are highly correlated as well (e.g. `status_Developed` and `status_Developing`). Therefore, multicollinearity must be taken into consideration when selecting our model.
 
 (For a detailed analysis of the predictors in our dataset, please visit [statistical analysis]( https://lc1002.github.io/LifeExpectancy/statistical.html) page.)
 
@@ -142,10 +137,6 @@ full_model = lm(le ~ status_Developed + adult_mort + infantdeaths + alcohol + pe
 ```
 
 <br>
-
-<center>
-$Life \ Expectancy = \beta_{0} + \beta_{1}*(Developed \ Status) + \beta_{2}*(Adult \ Mortality) + \beta_{3}*(Infant \ Deaths) + \beta_{4}*(Alcohol) + \beta_{5}*(Percent \ Expenditure) + \beta_{6}*(High \ Hepatitis \ B) + \beta_{7}*(Measles) + \beta_{8}*(BMI) + \beta_{9}*(Under-five \ Deaths) + \beta_{10}*(High \ Polio) + \beta_{11}*(Total \ Expenditure) + \beta_{12}*(High \ Diphtheria) + \beta_{13}*(HIV/AIDS) + \beta_{14}*(GDP) + \beta_{15}*(Population) + \beta_{16}*(Prevalence \ of \ thinness 10-19) + \beta_{17}*(Prevalence \ of \ thinness 5-9) + \beta_{18}*(HDI) + \beta_{19}*(Schooling)$
-</center>
 
 #### **Stepwise Regression:**
 
@@ -255,7 +246,7 @@ Model_comparison
 
 <br>
 
-Based on the results shown above, the model contains 8 predictors has the highest adjusted R squared and relative standard error (RSE), and the lowest bayesian Information criterion(BIC), Mallow’s Cp value, and residual sum of squares (RSS). Therefore, it is the best-fitting best subset model among all candidate models.
+Based on the results shown above, the model contains 8 predictors has the highest adjusted R squared and relative standard error (RSE), and the lowest bayesian Information criterion (BIC), Mallow’s Cp value, and residual sum of squares (RSS). Therefore, it is the best-fitting best subset model among all candidate models.
 
 After removing high correlation variables from the resulted models, we obtained our final best subsets model. 
 
@@ -355,7 +346,7 @@ The coefficients of the predictor `measles` and `population` was shrunk all the 
 
 Cross-validation is a statistical model evaluation method used to compare the prediction accuracy of competing models using the regression model accuracy metrics. In this section, we will use the `modelr` package to perform the cross validation process and compare the regression model accuracy metrics, including the root mean square deviation (RMSE), R-squared (R^2), and mean absolute error (MAE), across all models proposed from the **Model building** section above. 
 
-First, we will use `crossv_mc()` to generate 100 random partitions by performing the training/testing split. Indeed, 80% of the random partitions will be the training datasets, and 20% will be the testing datasets. Then, we will fit all candidate models to the training data and obtain the corresponding RMSE, R^2 and MAE for the testing data using `map()` and `map2_dbl()`. Finally, we will plot the distribution of RMSE, R^2 and MAE of all models using violin plots, and visualize and compare the performance of the candidate models.
+First, we will use `crossv_mc()` to generate 100 random partitions by performing the training/testing split (i.e., 80% of the random partitions will be the training datasets, and 20% will be the testing datasets). Then, we will fit all candidate models to each of our training data and obtain the corresponding RMSE, R^2 and MAE for the testing data using `map()` and `map2_dbl()`. The corresponding RMSE, R^2 and MAE will be used as a measure of our model's prediction accuracy on the testing dataset. Finally, we will visualize the distribution of RMSE, R^2 and MAE of all models using `geom_violin()` from `ggplot`, and compare the performance of the candidate models based on the regression model accuracy metrics.
 
 
 ```{r}

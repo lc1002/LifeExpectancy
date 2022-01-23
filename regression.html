@@ -403,14 +403,9 @@ h1.title {
 corrplot(cor(cm_df), type = &quot;upper&quot;, diag = FALSE, method = &quot;square&quot;, addCoef.col = &quot;black&quot;, number.cex = .3, tl.col = &quot;black&quot;, tl.cex = .7)</code></pre>
 <p><img src="regression_files/figure-html/unnamed-chunk-3-1.png" width="80%" /></p>
 <p><br></p>
-<ul>
-<li><p>From the correlation matrix, we can see that life expectancy has a high positive correlation with <code>HDI</code> and <code>schooling</code>, and a high negative correlation with <code>adult_mort</code> and moderate negative correlation with <code>hiv_aids</code>. Indeed, we would expect the outcome variable, life expectancy, to be highly impacted by these predictors.</p></li>
-<li><p>We can also see that many of our variables are moderately correlated with each other. <code>HDI</code> highly correlated with <code>schooling</code> and moderately correlated with multiple variables. It is positively associated with <code>alcohol</code>, <code>percent_exp</code>, <code>bmi</code>, <code>gdp</code>, <code>status_Developing</code>, <code>polio_low</code>, <code>hepatitis_b_low</code> and <code>diphtheria_low</code> , and negatively associated with <code>adult_mort</code>, <code>status_Developed</code>, <code>thin_1_19</code>, <code>thin_5_9</code>,<code>polio_high</code>, <code>hepatitis_b_high</code> and <code>diphtheria_high</code>.</p></li>
-<li><p>Some of our variables are also highly correlated with each other. For example, <code>gdp</code> has a strong positive correlation with <code>percent_exp</code>.</p></li>
-<li><p>The variable <code>infant deaths</code> and <code>under-five deaths</code> are highly correlated.</p></li>
-<li><p><code>thin_1_19</code> and <code>thin_5_9</code> are highly correlated.</p></li>
-<li><p>In addition, dummy variables created from the same categorical variable are also highly correlated (e.g. <code>status_Developed</code> and <code>status_Developing</code>). Therefore, multicollinearity must be taken into consideration when selecting our model.</p></li>
-</ul>
+<p>From the correlation matrix, we can see that life expectancy has a high positive correlation with <code>HDI</code> and <code>schooling</code>, and a high negative correlation with <code>adult_mort</code> and moderate negative correlation with <code>hiv_aids</code>. Indeed, we would expect the outcome variable, life expectancy, to be highly impacted by these predictors.</p>
+<p>We can also see that many of our variables are moderately correlated with each other. <code>HDI</code> highly correlated with <code>schooling</code> and moderately correlated with multiple variables. It is positively associated with <code>alcohol</code>, <code>percent_exp</code>, <code>bmi</code>, <code>gdp</code>, <code>status_Developing</code>, <code>polio_low</code>, <code>hepatitis_b_low</code> and <code>diphtheria_low</code> , and negatively associated with <code>adult_mort</code>, <code>status_Developed</code>, <code>thin_1_19</code>, <code>thin_5_9</code>,<code>polio_high</code>, <code>hepatitis_b_high</code> and <code>diphtheria_high</code>.</p>
+<p>Some of our variables are also highly correlated with each other. For example, <code>gdp</code> has a strong positive correlation with <code>percent_exp</code>. The variable <code>infant deaths</code> and <code>under-five deaths</code> are highly correlated. Furthermore, <code>thin_1_19</code> and <code>thin_5_9</code> also have strong correlation with each other. In addition, dummy variables created from the same categorical variable are highly correlated as well (e.g. <code>status_Developed</code> and <code>status_Developing</code>). Therefore, multicollinearity must be taken into consideration when selecting our model.</p>
 <p>(For a detailed analysis of the predictors in our dataset, please visit <a href="https://lc1002.github.io/LifeExpectancy/statistical.html">statistical analysis</a> page.)</p>
 <br> <br>
 <hr>
@@ -435,9 +430,6 @@ corrplot(cor(cm_df), type = &quot;upper&quot;, diag = FALSE, method = &quot;squa
 <h3>Models Based on Automated Model Selection</h3>
 <p>Automated selection procedures are often used when there are many potential variables available in the data, and there are uncertainties in selecting the most appropriate variables for a reliable prediction. Using automated model selection performed in R, we have generated four models. Outlined below are the four automated model selection procedures performed: <strong>stepwise selection</strong>,<strong>backward/forward selection</strong>, <strong>best subsets selection</strong>, <strong>lasso regression</strong> and <strong>ridge regression</strong>.</p>
 <p><br></p>
-<center>
-<span class="math inline">\(Life \ Expectancy = \beta_{0} + \beta_{1}*(Developed \ Status) + \beta_{2}*(Adult \ Mortality) + \beta_{3}*(Infant \ Deaths) + \beta_{4}*(Alcohol) + \beta_{5}*(Percent \ Expenditure) + \beta_{6}*(High \ Hepatitis \ B) + \beta_{7}*(Measles) + \beta_{8}*(BMI) + \beta_{9}*(Under-five \ Deaths) + \beta_{10}*(High \ Polio) + \beta_{11}*(Total \ Expenditure) + \beta_{12}*(High \ Diphtheria) + \beta_{13}*(HIV/AIDS) + \beta_{14}*(GDP) + \beta_{15}*(Population) + \beta_{16}*(Prevalence \ of \ thinness 10-19) + \beta_{17}*(Prevalence \ of \ thinness 5-9) + \beta_{18}*(HDI) + \beta_{19}*(Schooling)\)</span>
-</center>
 <div id="stepwise-regression" class="section level4">
 <h4><strong>Stepwise Regression:</strong></h4>
 <p>Stepwise model selection was performed using <code>stepAIC()</code> from the <code>MASS</code> package. High correlation variables and insignificant variables were detected using <code>check.collinearity()</code> from the <code>performance</code> package and <code>summary()</code> from base R, respectively. Below is the final model obtained using stepwise selection.</p>
@@ -719,7 +711,7 @@ corrplot(cor(cm_df), type = &quot;upper&quot;, diag = FALSE, method = &quot;squa
 Model_comparison</code></pre>
 <p><img src="regression_files/figure-html/unnamed-chunk-10-1.png" width="80%" /></p>
 <p><br></p>
-<p>Based on the results shown above, the model contains 8 predictors has the highest adjusted R squared and relative standard error (RSE), and the lowest bayesian Information criterion(BIC), Mallow’s Cp value, and residual sum of squares (RSS). Therefore, it is the best-fitting best subset model among all candidate models.</p>
+<p>Based on the results shown above, the model contains 8 predictors has the highest adjusted R squared and relative standard error (RSE), and the lowest bayesian Information criterion (BIC), Mallow’s Cp value, and residual sum of squares (RSS). Therefore, it is the best-fitting best subset model among all candidate models.</p>
 <p>After removing high correlation variables from the resulted models, we obtained our final best subsets model.</p>
 <p><br></p>
 <p><strong>Best Subsets Model:</strong></p>
@@ -779,7 +771,7 @@ best_lasso_lambda = cv_lasso_model$lambda.min
 best_lasso_model = glmnet(x, y, alpha = 1, lambda = best_lasso_lambda)
 
 new_x = data.matrix(le_df[, c(&#39;status_Developed&#39;, &#39;adult_mort&#39;, &#39;infantdeaths&#39;, &#39;alcohol&#39;, &#39;percent_exp&#39;, &#39;hepatitis_b_high&#39;, &#39;bmi&#39;, &#39;under_five&#39;, &#39;polio_high&#39;, &#39;total_exp&#39;, &#39;diphtheria_high&#39;, &#39;hiv_aids&#39;, &#39;gdp&#39;, &#39;thin_1_19&#39;, &#39;thin_5_9&#39;, &#39;HDI&#39;, &#39;schooling&#39;)])</code></pre>
-<p>The lambda value that minimizes the test MSE turns out to be 0.0018192.</p>
+<p>The lambda value that minimizes the test MSE turns out to be 0.0016575.</p>
 <pre class="r"><code>#produce plot of test MSE by lambda value
 plot(cv_lasso_model) + title(&quot;Plot of MSE by Lambda value&quot;,line = 2.5)</code></pre>
 <p><img src="regression_files/figure-html/unnamed-chunk-14-1.png" width="80%" /></p>
@@ -787,26 +779,26 @@ plot(cv_lasso_model) + title(&quot;Plot of MSE by Lambda value&quot;,line = 2.5)
 <pre class="r"><code>coef(best_lasso_model)</code></pre>
 <pre><code>## 20 x 1 sparse Matrix of class &quot;dgCMatrix&quot;
 ##                             s0
-## (Intercept)       5.685836e+01
-## status_Developed  1.432009e+00
-## adult_mort       -1.677072e-02
-## infantdeaths      9.071023e-02
-## alcohol           1.054538e-02
-## percent_exp       5.066224e-05
-## hepatitis_b_high  5.535325e-02
+## (Intercept)       5.686219e+01
+## status_Developed  1.432139e+00
+## adult_mort       -1.676946e-02
+## infantdeaths      9.115129e-02
+## alcohol           1.073753e-02
+## percent_exp       5.065888e-05
+## hepatitis_b_high  5.635705e-02
 ## measles           .           
-## bmi               3.950266e-02
-## under_five       -6.748620e-02
-## polio_high        1.852337e+00
-## total_exp         3.528072e-02
-## diphtheria_high   1.132755e+00
-## hiv_aids         -4.930851e-01
-## gdp               4.853011e-05
+## bmi               3.949487e-02
+## under_five       -6.781075e-02
+## polio_high        1.851516e+00
+## total_exp         3.530760e-02
+## diphtheria_high   1.131401e+00
+## hiv_aids         -4.930447e-01
+## gdp               4.855340e-05
 ## population        .           
-## thin_1_19        -5.099266e-02
-## thin_5_9         -2.106267e-02
-## HDI               6.251284e+00
-## schooling         6.700695e-01</code></pre>
+## thin_1_19        -5.095772e-02
+## thin_5_9         -2.119315e-02
+## HDI               6.248119e+00
+## schooling         6.699518e-01</code></pre>
 <p>The coefficients of the predictor <code>measles</code> and <code>population</code> was shrunk all the way to zero, which means it was completely removed from the model since it wasn’t influential.</p>
 <br> <br>
 <hr>
@@ -816,7 +808,7 @@ plot(cv_lasso_model) + title(&quot;Plot of MSE by Lambda value&quot;,line = 2.5)
 <div id="cross-validation" class="section level2">
 <h2><strong>Cross Validation</strong></h2>
 <p>Cross-validation is a statistical model evaluation method used to compare the prediction accuracy of competing models using the regression model accuracy metrics. In this section, we will use the <code>modelr</code> package to perform the cross validation process and compare the regression model accuracy metrics, including the root mean square deviation (RMSE), R-squared (R^2), and mean absolute error (MAE), across all models proposed from the <strong>Model building</strong> section above.</p>
-<p>First, we will use <code>crossv_mc()</code> to generate 100 random partitions by performing the training/testing split. Indeed, 80% of the random partitions will be the training datasets, and 20% will be the testing datasets. Then, we will fit all candidate models to the training data and obtain the corresponding RMSE, R^2 and MAE for the testing data using <code>map()</code> and <code>map2_dbl()</code>. Finally, we will plot the distribution of RMSE, R^2 and MAE of all models using violin plots, and visualize and compare the performance of the candidate models.</p>
+<p>First, we will use <code>crossv_mc()</code> to generate 100 random partitions by performing the training/testing split (i.e., 80% of the random partitions will be the training datasets, and 20% will be the testing datasets). Then, we will fit all candidate models to each of our training data and obtain the corresponding RMSE, R^2 and MAE for the testing data using <code>map()</code> and <code>map2_dbl()</code>. The corresponding RMSE, R^2 and MAE will be used as a measure of our model’s prediction accuracy on the testing dataset. Finally, we will visualize the distribution of RMSE, R^2 and MAE of all models using <code>geom_violin()</code> from <code>ggplot</code>, and compare the performance of the candidate models based on the regression model accuracy metrics.</p>
 <pre class="r"><code>set.seed(2)
 
 cv_df = 
@@ -949,9 +941,9 @@ Model_comparison_table </code></pre>
 </tr>
 <tr class="odd">
 <td align="left">Lasso Model</td>
-<td align="right">3.840274</td>
-<td align="right">0.8378577</td>
-<td align="right">2.873414</td>
+<td align="right">3.840213</td>
+<td align="right">0.8378628</td>
+<td align="right">2.873417</td>
 </tr>
 </tbody>
 </table>
@@ -967,25 +959,25 @@ Model_comparison_table </code></pre>
 
 data.frame(name = lasso_coeff@Dimnames[[1]][lasso_coeff@i + 1], coefficient = lasso_coeff@x) %&gt;% 
   as_tibble()</code></pre>
-<pre><code>## # A tibble: 18 x 2
+<pre><code>## # A tibble: 18 × 2
 ##    name             coefficient
 ##    &lt;chr&gt;                  &lt;dbl&gt;
 ##  1 (Intercept)       56.9      
 ##  2 status_Developed   1.43     
 ##  3 adult_mort        -0.0168   
-##  4 infantdeaths       0.0907   
-##  5 alcohol            0.0105   
+##  4 infantdeaths       0.0912   
+##  5 alcohol            0.0107   
 ##  6 percent_exp        0.0000507
-##  7 hepatitis_b_high   0.0554   
+##  7 hepatitis_b_high   0.0564   
 ##  8 bmi                0.0395   
-##  9 under_five        -0.0675   
+##  9 under_five        -0.0678   
 ## 10 polio_high         1.85     
 ## 11 total_exp          0.0353   
 ## 12 diphtheria_high    1.13     
 ## 13 hiv_aids          -0.493    
-## 14 gdp                0.0000485
+## 14 gdp                0.0000486
 ## 15 thin_1_19         -0.0510   
-## 16 thin_5_9          -0.0211   
+## 16 thin_5_9          -0.0212   
 ## 17 HDI                6.25     
 ## 18 schooling          0.670</code></pre>
 <pre class="r"><code>plot(lasso_model, xvar = &quot;lambda&quot;) + title(&quot;Lasso trace plot&quot;,line = 2.5)</code></pre>
