@@ -40,7 +40,6 @@ library(patchwork)
 library(Metrics)
 library(MASS)
 library(glmnet)
-library(kableExtra)
 
 knitr::opts_chunk$set(
   echo = TRUE,
@@ -512,12 +511,9 @@ The coefficients for the best model we obtain are as follows:
 lasso_coeff <- coef(best_lasso_model)
 
 data.frame(name = lasso_coeff@Dimnames[[1]][lasso_coeff@i + 1], coefficient = lasso_coeff@x) %>% 
-  kbl(
-    caption     = "Coefficients for the best model (Lasso Model)",
-    col.names   = c("Coefficient", "Estimate")
-  ) %>%
-  kable_paper("striped", full_width = F) %>% 
-  column_spec(1, bold = T)
+  knitr::kable(
+    caption     = "Coefficients of the best model (Lasso Model)",
+    col.names   = c("Coefficient", "Estimate"))
 
 plot(lasso_model, xvar = "lambda") + title("Lasso trace plot",line = 2.5)
 ```
