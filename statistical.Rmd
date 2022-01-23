@@ -294,6 +294,7 @@ C = exp_underfive %>%
        x = "Healthcare Expedicture (% of Total Expenditure)",
        y = "Under-five Deaths") 
 
+dev.off()
 gridExtra::grid.arrange(B, C, nrow = 1)
 ```
 

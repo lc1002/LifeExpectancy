@@ -779,7 +779,7 @@ best_lasso_lambda = cv_lasso_model$lambda.min
 best_lasso_model = glmnet(x, y, alpha = 1, lambda = best_lasso_lambda)
 
 new_x = data.matrix(le_df[, c(&#39;status_Developed&#39;, &#39;adult_mort&#39;, &#39;infantdeaths&#39;, &#39;alcohol&#39;, &#39;percent_exp&#39;, &#39;hepatitis_b_high&#39;, &#39;bmi&#39;, &#39;under_five&#39;, &#39;polio_high&#39;, &#39;total_exp&#39;, &#39;diphtheria_high&#39;, &#39;hiv_aids&#39;, &#39;gdp&#39;, &#39;thin_1_19&#39;, &#39;thin_5_9&#39;, &#39;HDI&#39;, &#39;schooling&#39;)])</code></pre>
-<p>The lambda value that minimizes the test MSE turns out to be 0.0018192.</p>
+<p>The lambda value that minimizes the test MSE turns out to be 0.0016575.</p>
 <pre class="r"><code>#produce plot of test MSE by lambda value
 plot(cv_lasso_model) + title(&quot;Plot of MSE by Lambda value&quot;,line = 2.5)</code></pre>
 <p><img src="regression_files/figure-html/unnamed-chunk-14-1.png" width="80%" /></p>
@@ -787,26 +787,26 @@ plot(cv_lasso_model) + title(&quot;Plot of MSE by Lambda value&quot;,line = 2.5)
 <pre class="r"><code>coef(best_lasso_model)</code></pre>
 <pre><code>## 20 x 1 sparse Matrix of class &quot;dgCMatrix&quot;
 ##                             s0
-## (Intercept)       5.685836e+01
-## status_Developed  1.432009e+00
-## adult_mort       -1.677072e-02
-## infantdeaths      9.071023e-02
-## alcohol           1.054538e-02
-## percent_exp       5.066224e-05
-## hepatitis_b_high  5.535325e-02
+## (Intercept)       5.686219e+01
+## status_Developed  1.432139e+00
+## adult_mort       -1.676946e-02
+## infantdeaths      9.115129e-02
+## alcohol           1.073753e-02
+## percent_exp       5.065888e-05
+## hepatitis_b_high  5.635705e-02
 ## measles           .           
-## bmi               3.950266e-02
-## under_five       -6.748620e-02
-## polio_high        1.852337e+00
-## total_exp         3.528072e-02
-## diphtheria_high   1.132755e+00
-## hiv_aids         -4.930851e-01
-## gdp               4.853011e-05
+## bmi               3.949487e-02
+## under_five       -6.781075e-02
+## polio_high        1.851516e+00
+## total_exp         3.530760e-02
+## diphtheria_high   1.131401e+00
+## hiv_aids         -4.930447e-01
+## gdp               4.855340e-05
 ## population        .           
-## thin_1_19        -5.099266e-02
-## thin_5_9         -2.106267e-02
-## HDI               6.251284e+00
-## schooling         6.700695e-01</code></pre>
+## thin_1_19        -5.095772e-02
+## thin_5_9         -2.119315e-02
+## HDI               6.248119e+00
+## schooling         6.699518e-01</code></pre>
 <p>The coefficients of the predictor <code>measles</code> and <code>population</code> was shrunk all the way to zero, which means it was completely removed from the model since it wasn’t influential.</p>
 <br> <br>
 <hr>
@@ -949,9 +949,9 @@ Model_comparison_table </code></pre>
 </tr>
 <tr class="odd">
 <td align="left">Lasso Model</td>
-<td align="right">3.840274</td>
-<td align="right">0.8378577</td>
-<td align="right">2.873414</td>
+<td align="right">3.840213</td>
+<td align="right">0.8378628</td>
+<td align="right">2.873417</td>
 </tr>
 </tbody>
 </table>
@@ -973,19 +973,19 @@ data.frame(name = lasso_coeff@Dimnames[[1]][lasso_coeff@i + 1], coefficient = la
 ##  1 (Intercept)       56.9      
 ##  2 status_Developed   1.43     
 ##  3 adult_mort        -0.0168   
-##  4 infantdeaths       0.0907   
-##  5 alcohol            0.0105   
+##  4 infantdeaths       0.0912   
+##  5 alcohol            0.0107   
 ##  6 percent_exp        0.0000507
-##  7 hepatitis_b_high   0.0554   
+##  7 hepatitis_b_high   0.0564   
 ##  8 bmi                0.0395   
-##  9 under_five        -0.0675   
+##  9 under_five        -0.0678   
 ## 10 polio_high         1.85     
 ## 11 total_exp          0.0353   
 ## 12 diphtheria_high    1.13     
 ## 13 hiv_aids          -0.493    
-## 14 gdp                0.0000485
+## 14 gdp                0.0000486
 ## 15 thin_1_19         -0.0510   
-## 16 thin_5_9          -0.0211   
+## 16 thin_5_9          -0.0212   
 ## 17 HDI                6.25     
 ## 18 schooling          0.670</code></pre>
 <pre class="r"><code>plot(lasso_model, xvar = &quot;lambda&quot;) + title(&quot;Lasso trace plot&quot;,line = 2.5)</code></pre>

@@ -589,8 +589,10 @@ C = exp_underfive %&gt;%
        x = &quot;Healthcare Expedicture (% of Total Expenditure)&quot;,
        y = &quot;Under-five Deaths&quot;) 
 
-gridExtra::grid.arrange(B, C, nrow = 1)</code></pre>
-<p><img src="statistical_files/figure-html/unnamed-chunk-16-2.png" width="80%" /></p>
+dev.off()</code></pre>
+<pre><code>## null device 
+##           1</code></pre>
+<pre class="r"><code>gridExtra::grid.arrange(B, C, nrow = 1)</code></pre>
 <ul>
 <li>Our dataset also shows evidence that expenditure spend on health is positively associated (r = 0.22) with life expectancy and negatively associated with infant (r = -0.16) and under-five (r = -0.16) deaths.</li>
 </ul>
