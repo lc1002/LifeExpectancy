@@ -320,7 +320,7 @@ ggplotly(gdp_le)
 
 <center>
 
-<font size="2"> Contributors: AnMei Chen and Lynn Chen</font><br>
+<font size="2"> Contributors: AnMei Chen and Lynn Chen.</font><br>
 <font size="2">The Github repository for this website can be found [here ](https://github.com/lc1002/LifeExpectancy), and the corresponding Github repository for this project is located [here](https://github.com/lc1002/LifeExpectancyAnalysis). </font> 
 <img src="image/mailman.png" alt="logo" style="width:30%; height:20%; ">
 </center>

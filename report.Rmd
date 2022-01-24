@@ -19,7 +19,7 @@ h1.title {
 
 <br>
 <hr>
-## Project Motivation
+## **Project Motivation**
 
 We all know someone who is “obsessed” with astrology or another popular way to interpret one’s characters and predict the future. Palmistry is the practice of fortune-telling and evaluating aspects of a person’s life through the study of the palm. The association between the lifeline in palm reading and longevity resembles life expectancy, which reflects the quality of our health and physical vitality at a given time. Similarly, life expectancy is a statistical measure of the average number of years a person of a given age expects to live and the key for accessing population health. 
 
@@ -28,7 +28,7 @@ Unsurprisingly, life expectancy around the world has fallen dramatically. Accord
 <br>
 <hr>
 
-### Related Work 
+### **Related Work**
 
 Following are resources that have inspired this project:
 
@@ -47,7 +47,7 @@ Following are resources that have inspired this project:
 <br>
 <hr>
 
-## Research Questions
+## **Research Questions**
 
 In this data science project, we analyzed the Life expectancy dataset to have a bettering understanding on the trends and effects of life expectancy and related factors. In reality, life expectancy is  affected by a variety of socioeconomic, demographic and health factors. Therefore, we would like to conduct this study to investigate and better understand the measure of life expectancy. We intend to provide an in-depth observation with an exploratory data analysis, visualizations (plots, interactive map, correlation matrix), in addition to statistical analysis and modeling. 
 
@@ -64,7 +64,7 @@ Nevertheless, our ultimate goal is to determine the most significant factors whi
 
 <br>
 <hr>
-## Data
+## **Data**
 
 ### Data Sources
 
@@ -78,6 +78,8 @@ In addition to the Life Expectancy dataset we also incorporated [country-to-cont
 <hr>
 ### Data Cleaning
 
+<br>
+<br>
 
 
 ### Variables of Interest
@@ -111,31 +113,127 @@ In addition to the Life Expectancy dataset we also incorporated [country-to-cont
 <br>
 <hr>
 
-## Analysis
+## **Analyses**
+
+### Exploratory Analysis
+
+Initial data investigation was performed to discover the patterns of our data, detect anomalies, and test correlations between variables using tables and graphic visualizations. Specifically, we first examined the distribution and global trend of life expectancy, both by country and continent.
+Then, we looked at the distribution of a country’s development status among continents. After realizing there might be potential linkage between development status and life expectancy, we also explored the correlation between development status and life expectancy using violin plots. Finally, we analyzed the correlation between life expectancy, GDP per capita, and population. 
+
+(For a detailed exploratory analysis, please visit [exploratory analysis]( https://lc1002.github.io/LifeExpectancy/exploratory.html) page.)
+
+<br>
+
+### Statistical analysis
+
+In order to further investigate the variables and potential factors correlated with individual’s life expectancy, hypothesis testing was performed in this page. 
+
+**Development Status:** A two-sample t-test was conducted to test the difference between the mean life expectancy of developing countries and developed countries. The results prove that the life expectancy of developed countries is greater than developing countries.
+
+**Income composition of resources (HDI):** A scatter plot was used to visualize the relationship between mean HDI and mean life expectancy. Indeed, it shows a significant positive correlation between life expectancy and HDI.
+
+**Infant deaths and Under-five deaths:** We compared the proportions of the `infant deaths` and `under-five` using the two-proportions z-test, and the results show no difference in the two independent proportions.
+
+**Alcohol:** Using scatter plots, we explored the correlation between alcohol consumption and life expectancy. We also explore the correlation between adult mortality and alcohol consumption. The scatter plots demonstrate that alcohol consumption has a positive correlation with life expectancy and a negative correlation with adult mortality.
+
+**Correlation between immunization and other health-related factors:** A t-test was performed to examine the differences between the proportion of high life expectancy countries’ government expenditure on healthcare and the proportion of low life expectancy countries’ government expenditure on healthcare. The results show that countries with low life expectancy spend less of their government expenditure on health.
+
+**Correlation between socioeconomic and behavioral factors:** Linear regression was conducted based on socioeconomic and behavioral factors such as `alcohol`, `percent_exp`, `total_exp`, `bmi`, `population`, `HDI`, `schooling`, and `GDP`,  to have a deeper understanding on how these factors influence the life expectancy of a country. Based on the resulted model, we notice that `total_exp` and `population` are insignificant in predicting life expectancy. We also notice that many variables, such as `percent_exp` and `gdp` are highly correlated with each other in this model. In addition, a t-test was performed to test the impact of education level on life expectancy. The results of the t-test prove that the average number of years in school has a significant impact on life expectancy.
+
+(For a detailed statistical analysis, please visit [statistical analysis]( https://lc1002.github.io/LifeExpectancy/statistical.html) page.)
+
+<br>
+
+### Modeling
+
+To understand the relationship between life expectancy and variables that might affect an individual’s life span, we have built a predictive model for life expectancy using existing data. First we examined the correlation between life expectancy and potential predictors in our dataset. Using **correlation matrix**, we have identified multiple predictor variables that are highly correlated to each other. This concerns us that the variables in our dataset might not provide unique or independent information in the regression models. Therefore, in addition to multiple linear regression models, we also applied regularization method to resolve multicollinearity issues. Below is a summary of the models we proposed based on prior research and automated model selection:
+
+<br>
+
+#### *Multiple linear regression models:*
+
+**Research Model:**
+
+$Life \ Expectancy = \beta_{0} + \beta_{1}*(Developed \ Status) +         \beta_{2}*(Percent \ Expenditure) + \beta_{3}*(HDI)$
+$+ \beta_{4}*(Adult \ Mortality) + \beta_{5}*(Infant \ Deaths) + \beta_{6}*(Schooling) + \beta_{7}*(HIV/AIDS)$
+$+ \beta_{8}*(GDP * Percent \ Expenditure)$
+
+<br>
+
+**Stepwise Model:**
+
+$Life \ Expectancy = \beta_{0} + \beta_{1}*(Developed \ Status) + \beta_{2}*(Adult \ Mortality) + \beta_{3}*(BMI)$
+$+ \beta_{4}*(High \ Polio) + \beta_{5}*(High \ Diphtheria) + \beta_{6}*(HIV/AIDS) + \beta_{7}*(GDP)$ 
+$+ \beta_{8}*(Prevalence \ of \ thinness 10-19) + \beta_{9}*(HDI) + \beta_{10}*(Schooling)$
+
+<br>
+
+**Best Subsets Model:**
+
+$Life \ Expectancy = \beta_{0} + \beta_{1}*(Adult \ Mortality) + \beta_{2}*(Under-five\ Deaths) + \beta_{3}*(High \ Polio)$
+$+ \beta_{4}*(HIV/AIDS) + \beta_{5}*(GDP) + \beta_{6}*(HDI) + \beta_{7}*(Schooling)$
+
+<br>
+
+#### *Regularized regression models:*
+
+**Ridge Model (Mathematical Equation):**
+
+$\sum_{i=1}^n{(y_{i} - \beta_{0} - \sum_{j=1}^{p}{\beta_{i}x_{ij}})^2} + \lambda \sum_{j=1}^{p}{\beta_{j}^2} = RSS + \lambda \sum_{j=1}^{p}{\beta_{j}^2}$
+
+<br>
+
+**Lasso Model (Mathematical Equation):**
+
+$\sum_{i=1}^n{(y_{i} - \beta_{0} - \sum_{j=1}^{p}{\beta_{i}x_{ij}})^2} + \lambda \sum_{j=1}^{p}{|\beta_{j}|} = RSS + \lambda \sum_{j=1}^{p}{|\beta_{j}|}$
+
+<br>
+
+Next, we evaluated and compared the performance of each of the models with metrics of evaluation (i.e., root mean square deviation (RMSE), R-squared (R^2), and mean absolute error (MAE) ) using cross-validation. Based on the results, we concluded that the model generated from Lasso Regression is the best-fitted model among the five candidate models.
+
+(For a detailed model building process, please visit [modeling]( https://lc1002.github.io/LifeExpectancy/regression.html) page.)
 
 <br>
 <hr>
 
-## Key Findings
+## **Key Findings**
+
+*	The world’s life expectancy gradually increase from 2000 to 2015.
+*	Majority of the people across the world have a life expectancy between 65 and 80 years.
+* Sub-Saharan African countries have the lowest life expectancy while countries in Europe, North America, and Australia are among the highest.
+* Japan has the world’s highest life expectancy of 82.54 years, while Sierra Leone has the world’s lowest life expectancy of 46.11 years.
+* There was a dramatic increase in the life expectancy of Africa in the 20th century, but the life expectancy gap between Africa and other continents remains enormous.
+*	Africa is the only continent that consists of only developing countries.
+* On average, individuals living in developed countries tend to live almost a decade longer than individuals living in developing countries. 
+* Generally, countries with higher life expectancy spend a higher proportion of their resources on human development (i.e., health, education, and standard of living).
+* Countries with higher GDP per capita (i.e., a measure of a country’s economic output per person) tend to have a higher life expectancy.
+* Alcohol consumption has a positive correlation with life expectancy, while it has a negative correlation with adult mortality.
+* Countries with high life expectancy generally spend a higher proportion of their government expenditure on healthcare than countries with low life expectancy.
+* Individuals with high education levels usually have a higher life expectancy than those with low education levels.
+
+<br>
+<hr>
+
+## **Discussion/Conclusion**
 
 
 <br>
 <hr>
 
-## Discussions
+## **Reference**
 
-
-<br>
-<hr>
-
-## Conclusion
-
+* How does U.S. life expectancy compare to other countries? (2021, September 28). Peterson-KFF Health System Tracker. https://www.healthsystemtracker.org/chart-collection/u-s-life-expectancy-compare-countries/
+* Piet A van den Brandt, Lloyd Brandts, Alcohol consumption in later life and reaching longevity: the Netherlands Cohort Study, Age and Ageing, Volume 49, Issue 3, May 2020, Pages 395–402, https://doi.org/10.1093/ageing/afaa003
+* Li, Y., Pan, A., Wang, D. D., Liu, X., Dhana, K., Franco, O. H., Kaptoge, S., Di Angelantonio, E., Stampfer, M., Willett, W. C., & Hu, F. B. (2018). Impact of Healthy Lifestyle Factors on Life Expectancies in the US Population. Circulation, 138(4), 345–355. https://doi.org/10.1161/CIRCULATIONAHA.117.032047
+* Bein, M. A., Unlucan, D., Olowu, G., & Kalifa, W. (2017). Healthcare spending and health outcomes: evidence from selected East African countries. African health sciences, 17(1), 247–254. https://doi.org/10.4314/ahs.v17i1.30
+* Chetty, R., Stepner, M., Abraham, S., Lin, S., Scuderi, B., Turner, N., Bergeron, A., & Cutler, D. (2016). The Association Between Income and Life Expectancy in the United States, 2001-2014. JAMA, 315(16), 1750–1766. https://doi.org/10.1001/jama.2016.4226
+* Singh, G. K., & Lee, H. (2021). Marked Disparities in Life Expectancy by Education, Poverty Level, Occupation, and Housing Tenure in the United States, 1997-2014. International Journal of Maternal and Child Health and AIDS, 10(1), 7–18. https://doi.org/10.21106/ijma.402
 
 <br>
 <hr>
 
 <center>
-<font size="2"> Contributors: AnMei Chen and Lynn Chen</font><br>
+<font size="2"> Contributors: AnMei Chen and Lynn Chen.</font><br>
 <font size="2">The Github repository for this website can be found [here ](https://github.com/lc1002/LifeExpectancy), and the corresponding Github repository for this project is located [here](https://github.com/lc1002/LifeExpectancyAnalysis). </font> 
 
 <img src="image/mailman.png" alt="logo" style="width:30%; height:20%; ">

@@ -114,9 +114,9 @@ Based on prior research and analyses, we proposed the following model using soci
 
 **Research Model:**
 
-<center>
-$Life \ Expectancy = \beta_{0} + \beta_{1}*(Developed \ Status) + \beta_{2}*(Percent \ Expenditure) + \beta_{3}*(HDI) + \beta_{4}*(Adult \ Mortality) + \beta_{5}*(Infant \ Deaths) + \beta_{6}*(Schooling) + \beta_{7}*(HIV/AIDS) + \beta_{8}*(GDP * Percent \ Expenditure)$
-</center>
+$Life \ Expectancy = \beta_{0} + \beta_{1}*(Developed \ Status) +         \beta_{2}*(Percent \ Expenditure)$
+$+ \beta_{3}*(HDI) + \beta_{4}*(Adult \ Mortality) + \beta_{5}*(Infant \ Deaths)$
+$+ \beta_{6}*(Schooling) + \beta_{7}*(HIV/AIDS) + \beta_{8}*(GDP * Percent \ Expenditure)$
 
 ```{r include=FALSE}
 mod_1 = lm(le ~ status_Developed + percent_exp + HDI + adult_mort + infantdeaths + schooling + gdp + hiv_aids + gdp * percent_exp, data = le_df)
@@ -155,10 +155,9 @@ mod_2 = lm(le ~ status_Developed + adult_mort + bmi + polio_high + diphtheria_hi
 
 **Stepwise Model:**
 
-<center>
-$Life \ Expectancy = \beta_{0} + \beta_{1}*(Developed \ Status) + \beta_{2}*(Adult \ Mortality) + \beta_{3}*(BMI) + \beta_{4}*(High \ Polio) + \beta_{5}*(High \ Diphtheria) + \beta_{6}*(HIV/AIDS) + \beta_{7}*(GDP) + \beta_{8}*(Prevalence \ of \ thinness 10-19) + \beta_{9}*(HDI) + \beta_{10}*(Schooling)$
-
-</center>
+$Life \ Expectancy = \beta_{0} + \beta_{1}*(Developed \ Status) + \beta_{2}*(Adult \ Mortality)$
+$+ \beta_{3}*(BMI) + \beta_{4}*(High \ Polio) + \beta_{5}*(High \ Diphtheria)$ $+ \beta_{6}*(HIV/AIDS) + \beta_{7}*(GDP) + \beta_{8}*(Prevalence \ of \ thinness 10-19)$
+$+ \beta_{9}*(HDI) + \beta_{10}*(Schooling)$
 
 <br>
 <br>
@@ -258,9 +257,9 @@ mod_3 = lm(le ~ adult_mort + under_five + polio_high + hiv_aids + gdp + HDI + sc
 
 **Best Subsets Model:**
 
-<center>
-$Life \ Expectancy = \beta_{0} + \beta_{1}*(Adult \ Mortality) + \beta_{2}*(Under-five Deaths) + \beta_{3}*(High \ Polio) + \beta_{4}*(HIV/AIDS) + \beta_{5}*(GDP) + \beta_{6}*(HDI) + \beta_{7}*(Schooling)$
-</center>
+$Life \ Expectancy = \beta_{0} + \beta_{1}*(Adult \ Mortality) + \beta_{2}*(Under-five \ Deaths)$
+$+ \beta_{3}*(High \ Polio) + \beta_{4}*(HIV/AIDS) + \beta_{5}*(GDP)$
+$+ \beta_{6}*(HDI) + \beta_{7}*(Schooling)$
 
 <br>
 <br>
@@ -555,7 +554,7 @@ Overall, our model seems to be appropriate for the data.
 <hr>
 
 <center>
-<font size="2"> Contributors: AnMei Chen and Lynn Chen</font><br>
+<font size="2"> Contributors: AnMei Chen and Lynn Chen.</font><br>
 <font size="2">The Github repository for this website can be found [here ](https://github.com/lc1002/LifeExpectancy), and the corresponding Github repository for this project is located [here](https://github.com/lc1002/LifeExpectancyAnalysis). </font> 
 
 <img src="image/mailman.png" alt="logo" style="width:30%; height:20%; ">

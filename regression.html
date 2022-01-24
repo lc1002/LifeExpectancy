@@ -421,9 +421,7 @@ corrplot(cor(cm_df), type = &quot;upper&quot;, diag = FALSE, method = &quot;squa
 <p>Based on prior research and analyses, we proposed the following model using socioeconomic and health-related variables from our dataset:</p>
 <p><br></p>
 <p><strong>Research Model:</strong></p>
-<center>
-<span class="math inline">\(Life \ Expectancy = \beta_{0} + \beta_{1}*(Developed \ Status) + \beta_{2}*(Percent \ Expenditure) + \beta_{3}*(HDI) + \beta_{4}*(Adult \ Mortality) + \beta_{5}*(Infant \ Deaths) + \beta_{6}*(Schooling) + \beta_{7}*(HIV/AIDS) + \beta_{8}*(GDP * Percent \ Expenditure)\)</span>
-</center>
+<p><span class="math inline">\(Life \ Expectancy = \beta_{0} + \beta_{1}*(Developed \ Status) + \beta_{2}*(Percent \ Expenditure)\)</span> <span class="math inline">\(+ \beta_{3}*(HDI) + \beta_{4}*(Adult \ Mortality) + \beta_{5}*(Infant \ Deaths)\)</span> <span class="math inline">\(+ \beta_{6}*(Schooling) + \beta_{7}*(HIV/AIDS) + \beta_{8}*(GDP * Percent \ Expenditure)\)</span></p>
 <p><br> <br></p>
 </div>
 <div id="models-based-on-automated-model-selection" class="section level3">
@@ -435,9 +433,7 @@ corrplot(cor(cm_df), type = &quot;upper&quot;, diag = FALSE, method = &quot;squa
 <p>Stepwise model selection was performed using <code>stepAIC()</code> from the <code>MASS</code> package. High correlation variables and insignificant variables were detected using <code>check.collinearity()</code> from the <code>performance</code> package and <code>summary()</code> from base R, respectively. Below is the final model obtained using stepwise selection.</p>
 <p><br></p>
 <p><strong>Stepwise Model:</strong></p>
-<center>
-<p><span class="math inline">\(Life \ Expectancy = \beta_{0} + \beta_{1}*(Developed \ Status) + \beta_{2}*(Adult \ Mortality) + \beta_{3}*(BMI) + \beta_{4}*(High \ Polio) + \beta_{5}*(High \ Diphtheria) + \beta_{6}*(HIV/AIDS) + \beta_{7}*(GDP) + \beta_{8}*(Prevalence \ of \ thinness 10-19) + \beta_{9}*(HDI) + \beta_{10}*(Schooling)\)</span></p>
-</center>
+<p><span class="math inline">\(Life \ Expectancy = \beta_{0} + \beta_{1}*(Developed \ Status) + \beta_{2}*(Adult \ Mortality)\)</span> <span class="math inline">\(+ \beta_{3}*(BMI) + \beta_{4}*(High \ Polio) + \beta_{5}*(High \ Diphtheria)\)</span> <span class="math inline">\(+ \beta_{6}*(HIV/AIDS) + \beta_{7}*(GDP) + \beta_{8}*(Prevalence \ of \ thinness 10-19)\)</span> <span class="math inline">\(+ \beta_{9}*(HDI) + \beta_{10}*(Schooling)\)</span></p>
 <p><br> <br></p>
 </div>
 <div id="forwardbackward-selection" class="section level4">
@@ -715,9 +711,7 @@ Model_comparison</code></pre>
 <p>After removing high correlation variables from the resulted models, we obtained our final best subsets model.</p>
 <p><br></p>
 <p><strong>Best Subsets Model:</strong></p>
-<center>
-<span class="math inline">\(Life \ Expectancy = \beta_{0} + \beta_{1}*(Adult \ Mortality) + \beta_{2}*(Under-five Deaths) + \beta_{3}*(High \ Polio) + \beta_{4}*(HIV/AIDS) + \beta_{5}*(GDP) + \beta_{6}*(HDI) + \beta_{7}*(Schooling)\)</span>
-</center>
+<p><span class="math inline">\(Life \ Expectancy = \beta_{0} + \beta_{1}*(Adult \ Mortality) + \beta_{2}*(Under-five \ Deaths)\)</span> <span class="math inline">\(+ \beta_{3}*(High \ Polio) + \beta_{4}*(HIV/AIDS) + \beta_{5}*(GDP)\)</span> <span class="math inline">\(+ \beta_{6}*(HDI) + \beta_{7}*(Schooling)\)</span></p>
 <p><br> <br></p>
 <p>When developing regression models for our dataset, one problem that rises to our attention is the multicollinearity, our dataset contains multiple predictor variables that are highly correlated to each other, which concerns us that they might not provide unique or independent information in the regression models.Thus, in addition to the multiple linear regression models above, we also applied regularization method to resolve multicollinearity issues using ridge regression and lasso regression.</p>
 <p><br></p>
@@ -1028,7 +1022,7 @@ ggplot(varImp(optimal_model)) +
 <br>
 <hr>
 <center>
-<p><font size="2"> Contributors: AnMei Chen and Lynn Chen</font><br> <font size="2">The Github repository for this website can be found <a href="https://github.com/lc1002/LifeExpectancy">here</a>, and the corresponding Github repository for this project is located <a href="https://github.com/lc1002/LifeExpectancyAnalysis">here</a>. </font></p>
+<p><font size="2"> Contributors: AnMei Chen and Lynn Chen.</font><br> <font size="2">The Github repository for this website can be found <a href="https://github.com/lc1002/LifeExpectancy">here</a>, and the corresponding Github repository for this project is located <a href="https://github.com/lc1002/LifeExpectancyAnalysis">here</a>. </font></p>
 <img src="image/mailman.png" alt="logo" style="width:30%; height:20%; ">
 </center>
 </div>
