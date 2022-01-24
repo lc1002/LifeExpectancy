@@ -78,6 +78,27 @@ In addition to the Life Expectancy dataset we also incorporated [country-to-cont
 <hr>
 ### Data Cleaning
 
+As mentioned, our primary dataset is the Life Expectancy data obtained from WHO. The dataset contains 22 columns and 2938 observations with 20 predicting variables. Our initial inspection of the data showed a total 2563 missing values. We decided to use interpolation technique to handled these missing values using R. Most of the missing data was for variable `population`, `Hepatitis_B`, `GDP`, and alcohol, and majority was from small countries like Tonga, Cabo Verde, Vanuatu, and etc. Thus, We approached imputation using MICE package with probable data values which were drawn from a distribution designed for each missing data. The dataset contains variables such as country, year, status, life expectancy, etc. All variables was divided into categories: Demographic, socioeconomic, mortality, and immunization related factors. 
+
+In order to have a better visualization of the data by regions, we merged an external data based on countries and continents. We also created necessary dummy variables. A new dummy variable was created for variable `status` such that 1 indicates country is developed and 0 means a country is developing. In addition, when exploring the summary statistics of the variables, we realized variables `Hepatitis_B`, `Polio`, `Diphtheria` have a wide range between minimum value and the 1st Quartile, which we decided to manipulated these variables into categorical variables, with 2 value: “Under 80% Covered” being Low (`1`) and “Covered by 80% or More” being High (`0`). By converting these variables, we hope to get a better view on the immunization impact on life expectancy.
+
+<br>
+
+The interactive data table below displays the final dataset:
+
+```{r, include=FALSE}
+library(tidyverse)
+
+le_df = read.csv("data/Dummy_Data.CSV")
+```
+
+```{r}
+le_df %>%
+  DT::datatable(., class = 'compact',
+              rownames = FALSE,
+              caption = 'Table')
+```
+
 <br>
 <br>
 
