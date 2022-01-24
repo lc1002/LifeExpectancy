@@ -1,6 +1,6 @@
 ---
 title: "Project Report"
-subtitle: "Life Expectancy"
+subtitle: "Global Life Expectancy Analysis"
 output: 
   html_document:
     toc: true
@@ -28,7 +28,7 @@ Unsurprisingly, life expectancy around the world has fallen dramatically. Accord
 <br>
 <hr>
 
-### **Related Work**
+### Related Work
 
 Following are resources that have inspired this project:
 
@@ -231,6 +231,7 @@ Next, we evaluated and compared the performance of each of the models with metri
 * Alcohol consumption has a positive correlation with life expectancy, while it has a negative correlation with adult mortality.
 * Countries with high life expectancy generally spend a higher proportion of their government expenditure on healthcare than countries with low life expectancy.
 * Individuals with high education levels usually have a higher life expectancy than those with low education levels.
+* Mortality factors (i.e., number of deaths in children aged under 5 years old per 1000 population and adult mortality rates of both sexes) and socioeconomic factors (i.e., number of years of schooling, average body mass index of entire population and HDI) are the most important factors in predicting life expectancy worldwide.
 
 <br>
 <hr>
