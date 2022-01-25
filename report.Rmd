@@ -240,20 +240,23 @@ Next, we evaluated and compared the performance of each of the models with metri
 <br>
 <hr>
 
-## **Discussion/Conclusion**
+## **Discussion**
 
 
 <br>
 <hr>
 
 ## **Reference**
-
-* How does U.S. life expectancy compare to other countries? (2021, September 28). Peterson-KFF Health System Tracker. https://www.healthsystemtracker.org/chart-collection/u-s-life-expectancy-compare-countries/
-* Piet A van den Brandt, Lloyd Brandts, Alcohol consumption in later life and reaching longevity: the Netherlands Cohort Study, Age and Ageing, Volume 49, Issue 3, May 2020, Pages 395–402, https://doi.org/10.1093/ageing/afaa003
-* Li, Y., Pan, A., Wang, D. D., Liu, X., Dhana, K., Franco, O. H., Kaptoge, S., Di Angelantonio, E., Stampfer, M., Willett, W. C., & Hu, F. B. (2018). Impact of Healthy Lifestyle Factors on Life Expectancies in the US Population. Circulation, 138(4), 345–355. https://doi.org/10.1161/CIRCULATIONAHA.117.032047
 * Bein, M. A., Unlucan, D., Olowu, G., & Kalifa, W. (2017). Healthcare spending and health outcomes: evidence from selected East African countries. African health sciences, 17(1), 247–254. https://doi.org/10.4314/ahs.v17i1.30
+* Carshon-Marsh, R., Aimone, A., Ansumana, R., Swaray, I. B., Assalif, A., Musa, A., Meh, C., Smart, F., Fu, S. H., Newcombe, L., Kamadod, R., Saikia, N., Gelband, H., Jambai, A., & Jha, P. (2022). Child, maternal, and adult mortality in Sierra Leone: nationally representative mortality survey 2018–20. The Lancet Global Health, 10(1), e114–e123. https://doi.org/10.1016/S2214-109X(21)00459-9
 * Chetty, R., Stepner, M., Abraham, S., Lin, S., Scuderi, B., Turner, N., Bergeron, A., & Cutler, D. (2016). The Association Between Income and Life Expectancy in the United States, 2001-2014. JAMA, 315(16), 1750–1766. https://doi.org/10.1001/jama.2016.4226
+* How does U.S. life expectancy compare to other countries? (2021, September 28). Peterson-KFF Health System Tracker. https://www.healthsystemtracker.org/chart-collection/u-s-life-expectancy-compare-countries/
+* Kruk, M. E., Gage, A. D., Joseph, N. T., Danaei, G., García-Saisó, S., & Salomon, J. A. (2018). Mortality due to low-quality health systems in the universal health coverage era: a systematic analysis of amenable deaths in 137 countries. The Lancet, 392(10160), 2203–2212. https://doi.org/10.1016/s0140-6736(18)31668-4
+* Li, Y., Pan, A., Wang, D. D., Liu, X., Dhana, K., Franco, O. H., Kaptoge, S., Di Angelantonio, E., Stampfer, M., Willett, W. C., & Hu, F. B. (2018). Impact of Healthy Lifestyle Factors on Life Expectancies in the US Population. Circulation, 138(4), 345–355. https://doi.org/10.1161/CIRCULATIONAHA.117.032047
+* Lin, RT., Chen, YM., Chien, LC. et al. Political and social determinants of life expectancy in less developed countries: a longitudinal study. BMC Public Health 12, 85 (2012). https://doi.org/10.1186/1471-2458-12-85
+* Piet A van den Brandt, Lloyd Brandts, Alcohol consumption in later life and reaching longevity: the Netherlands Cohort Study, Age and Ageing, Volume 49, Issue 3, May 2020, Pages 395–402, https://doi.org/10.1093/ageing/afaa003
 * Singh, G. K., & Lee, H. (2021). Marked Disparities in Life Expectancy by Education, Poverty Level, Occupation, and Housing Tenure in the United States, 1997-2014. International Journal of Maternal and Child Health and AIDS, 10(1), 7–18. https://doi.org/10.21106/ijma.402
+* Tsugane, S. Why has Japan become the world’s most long-lived country: insights from a food and nutrition perspective. Eur J Clin Nutr 75, 921–928 (2021). https://doi.org/10.1038/s41430-020-0677-5
 
 <br>
 <hr>
