@@ -383,6 +383,13 @@ cv_df =
     rsq_3 = map2_dbl(mod_3, test, ~modelr::rsquare(model = .x, data = .y)),
     rsq_4 = map2_dbl(mod_4, test, ~modelr::rsquare(model = .x, data = .y)),
     rsq_5 = map2_dbl(mod_5, test, ~modelr::rsquare(model = .x, data = .y))
+    ) %>% 
+    mutate(
+    mse_1 = map2_dbl(mod_1, test, ~modelr::mse(model = .x, data = .y)),
+    mse_2 = map2_dbl(mod_2, test, ~modelr::mse(model = .x, data = .y)),
+    mse_3 = map2_dbl(mod_3, test, ~modelr::mse(model = .x, data = .y)),
+    mse_4 = map2_dbl(mod_4, test, ~modelr::mse(model = .x, data = .y)),
+    mse_5 = map2_dbl(mod_5, test, ~modelr::mse(model = .x, data = .y))
     )
 ```
 
@@ -430,6 +437,20 @@ mae_table =
                                    "BestSub Model" = "3",
                                    "Ridge Model" = "4",
                                    "Lasso Model" = "5" ))
+
+mse_table = 
+  cv_df %>% 
+  pivot_longer(
+    mse_1:mse_5,
+    names_to = "model", 
+    values_to = "mse",
+    names_prefix = "mse_") %>% 
+  mutate(model = fct_inorder(model),
+         model = fct_recode(model, "Research Model" = "1",
+                                   "Stepwise Model" = "2",
+                                   "BestSub Model" = "3",
+                                   "Ridge Model" = "4",
+                                   "Lasso Model" = "5" ))
 ```
 
 
@@ -464,7 +485,17 @@ mae_plot =
   theme(legend.position = 'none',
         plot.title = element_text(hjust = 0.5))
 
-rmse_plot/rsq_plot/mae_plot
+mse_plot =
+  mse_table %>% 
+  ggplot(aes(x = model, y = mse, fill = model)) + 
+  geom_violin() + 
+  labs(x = "",
+       y = "MSE") +
+  scale_fill_brewer(type = 'seq', palette = 'Set2') +
+  theme(legend.position = 'none',
+        plot.title = element_text(hjust = 0.5))
+
+rmse_plot/rsq_plot/mae_plot/mse_plot
 ```
 
 <br>
@@ -490,8 +521,13 @@ mean_rsquare =
   group_by(model) %>% 
   summarize(mean_rsq = mean(rsq))
 
+mean_mse = 
+  mse_table %>% 
+  group_by(model) %>% 
+  summarize(mean_mse = mean(mse))
+
 Model_comparison_table =
-  full_join(inner_join(mean_rmse, mean_rsquare), mean_mae) %>% 
+  full_join(full_join(inner_join(mean_rmse, mean_rsquare), mean_mae), mean_mse) %>% 
   knitr::kable()
 
 Model_comparison_table 
@@ -549,6 +585,34 @@ check_model(Lasso_lm, check = c("linearity", "outliers", "qq", "normality"))
 **Influential Observations/Outliers:** Outliers are unavoidable in large samples, but we checking no single outlier contributes too much variation by itself is crucial. According to the Influential Observations plot, we see that all of the points fall within the contour lines.
 
 Overall, our model seems to be appropriate for the data. 
+
+
+```{r}
+newd = data.frame(status_Developed = 1,
+                  adult_mort = 13,
+                  infantdeaths = 23,
+                  alcohol = 5.29,
+                  percent_exp = 0,
+                  hepatitis_b_high = 1,
+                  bmi = 69.6,
+                  under_five = 26,
+                  polio_high = 1,
+                  total_exp = 17,
+                  diphtheria_high = 1,
+                  hiv_aids = 0.1,
+                  gdp = 419.3677,
+                  thin_1_19 = 0.8,
+                  thin_5_9 = 0.6,
+                  HDI = 0.738,
+                  schooling = 14
+                  ) 
+predict(object = optimal_model, newdata = newd) 
+```
+We can see that having values as following `status_Developed` = 1, `adult_mort` = 13, `infantdeaths` = 23, `alcohol` = 5.29, `percent_exp` = 0, `hepatitis_b_high` = 1, `bmi` = 69.6, `under_five` = 26, `polio_high` = 1, `total_exp` = 17, `diphtheria_high` = 1, `hiv_aids` = 0.1, `gdp` = 419.3677, `thin_1_19` = 0.8, `thin_5_9` = 0.6, `HDI` = 0.738, `schooling` = 14, gives a result of 78.65103 for our response variable life expectancy. The original value of life Expectancy from the given dataset was 79.3 in United States in 2015. 
+
+## **Model Conclusion**
+Our final best regression model selected is Lasso Regression. In addition,
+`under-five deaths`, `infant deaths`, `Schooling`, `HIV/AIDS`, `Adult mortality`, and `HDI` are all good predictors for predicting life expectancy of a country.
 
 <br>
 <hr>

@@ -765,7 +765,7 @@ best_lasso_lambda = cv_lasso_model$lambda.min
 best_lasso_model = glmnet(x, y, alpha = 1, lambda = best_lasso_lambda)
 
 new_x = data.matrix(le_df[, c(&#39;status_Developed&#39;, &#39;adult_mort&#39;, &#39;infantdeaths&#39;, &#39;alcohol&#39;, &#39;percent_exp&#39;, &#39;hepatitis_b_high&#39;, &#39;bmi&#39;, &#39;under_five&#39;, &#39;polio_high&#39;, &#39;total_exp&#39;, &#39;diphtheria_high&#39;, &#39;hiv_aids&#39;, &#39;gdp&#39;, &#39;thin_1_19&#39;, &#39;thin_5_9&#39;, &#39;HDI&#39;, &#39;schooling&#39;)])</code></pre>
-<p>The lambda value that minimizes the test MSE turns out to be 0.003489.</p>
+<p>The lambda value that minimizes the test MSE turns out to be 0.0028966.</p>
 <pre class="r"><code>#produce plot of test MSE by lambda value
 plot(cv_lasso_model) + title(&quot;Plot of MSE by Lambda value&quot;,line = 2.5)</code></pre>
 <p><img src="regression_files/figure-html/unnamed-chunk-14-1.png" width="80%" /></p>
@@ -773,26 +773,26 @@ plot(cv_lasso_model) + title(&quot;Plot of MSE by Lambda value&quot;,line = 2.5)
 <pre class="r"><code>coef(best_lasso_model) </code></pre>
 <pre><code>## 20 x 1 sparse Matrix of class &quot;dgCMatrix&quot;
 ##                             s0
-## (Intercept)       5.681863e+01
-## status_Developed  1.430978e+00
-## adult_mort       -1.678470e-02
-## infantdeaths      8.592883e-02
-## alcohol           8.484722e-03
-## percent_exp       5.070890e-05
-## hepatitis_b_high  4.482229e-02
-## measles          -5.057144e-09
-## bmi               3.957832e-02
-## under_five       -6.398781e-02
-## polio_high        1.860788e+00
-## total_exp         3.502150e-02
-## diphtheria_high   1.147423e+00
-## hiv_aids         -4.935099e-01
-## gdp               4.828201e-05
-## population        1.038695e-10
-## thin_1_19        -5.142361e-02
-## thin_5_9         -1.963396e-02
-## HDI               6.284552e+00
-## schooling         6.712439e-01</code></pre>
+## (Intercept)       5.683270e+01
+## status_Developed  1.431348e+00
+## adult_mort       -1.677970e-02
+## infantdeaths      8.762769e-02
+## alcohol           9.216143e-03
+## percent_exp       5.069173e-05
+## hepatitis_b_high  4.856443e-02
+## measles           .           
+## bmi               3.955150e-02
+## under_five       -6.523079e-02
+## polio_high        1.857784e+00
+## total_exp         3.511414e-02
+## diphtheria_high   1.142209e+00
+## hiv_aids         -4.933594e-01
+## gdp               4.837013e-05
+## population        6.589138e-11
+## thin_1_19        -5.126987e-02
+## thin_5_9         -2.013977e-02
+## HDI               6.272751e+00
+## schooling         6.708289e-01</code></pre>
 <p>The coefficients of the predictor <code>measles</code> and <code>population</code> was shrunk all the way to zero, which means it was completely removed from the model since it wasn’t influential.</p>
 <br> <br>
 <hr>
@@ -837,6 +837,13 @@ cv_df =
     rsq_3 = map2_dbl(mod_3, test, ~modelr::rsquare(model = .x, data = .y)),
     rsq_4 = map2_dbl(mod_4, test, ~modelr::rsquare(model = .x, data = .y)),
     rsq_5 = map2_dbl(mod_5, test, ~modelr::rsquare(model = .x, data = .y))
+    ) %&gt;% 
+    mutate(
+    mse_1 = map2_dbl(mod_1, test, ~modelr::mse(model = .x, data = .y)),
+    mse_2 = map2_dbl(mod_2, test, ~modelr::mse(model = .x, data = .y)),
+    mse_3 = map2_dbl(mod_3, test, ~modelr::mse(model = .x, data = .y)),
+    mse_4 = map2_dbl(mod_4, test, ~modelr::mse(model = .x, data = .y)),
+    mse_5 = map2_dbl(mod_5, test, ~modelr::mse(model = .x, data = .y))
     )</code></pre>
 <p><br></p>
 <div id="cross-validating-with-violin-plots" class="section level3">
@@ -871,7 +878,17 @@ mae_plot =
   theme(legend.position = &#39;none&#39;,
         plot.title = element_text(hjust = 0.5))
 
-rmse_plot/rsq_plot/mae_plot</code></pre>
+mse_plot =
+  mse_table %&gt;% 
+  ggplot(aes(x = model, y = mse, fill = model)) + 
+  geom_violin() + 
+  labs(x = &quot;&quot;,
+       y = &quot;MSE&quot;) +
+  scale_fill_brewer(type = &#39;seq&#39;, palette = &#39;Set2&#39;) +
+  theme(legend.position = &#39;none&#39;,
+        plot.title = element_text(hjust = 0.5))
+
+rmse_plot/rsq_plot/mae_plot/mse_plot</code></pre>
 <p><img src="regression_files/figure-html/unnamed-chunk-17-1.png" width="80%" /></p>
 <p><br></p>
 <p>In addition, we also create a table that displays the mean RMSE, mean R^2 and mean MAE of all models.</p>
@@ -894,8 +911,13 @@ mean_rsquare =
   group_by(model) %&gt;% 
   summarize(mean_rsq = mean(rsq))
 
+mean_mse = 
+  mse_table %&gt;% 
+  group_by(model) %&gt;% 
+  summarize(mean_mse = mean(mse))
+
 Model_comparison_table =
-  full_join(inner_join(mean_rmse, mean_rsquare), mean_mae) %&gt;% 
+  full_join(full_join(inner_join(mean_rmse, mean_rsquare), mean_mae), mean_mse) %&gt;% 
   knitr::kable()
 
 Model_comparison_table </code></pre>
@@ -906,6 +928,7 @@ Model_comparison_table </code></pre>
 <th align="right">mean_rmse</th>
 <th align="right">mean_rsq</th>
 <th align="right">mean_mae</th>
+<th align="right">mean_mse</th>
 </tr>
 </thead>
 <tbody>
@@ -914,30 +937,35 @@ Model_comparison_table </code></pre>
 <td align="right">4.209394</td>
 <td align="right">0.8053251</td>
 <td align="right">3.091406</td>
+<td align="right">17.74159</td>
 </tr>
 <tr class="even">
 <td align="left">Stepwise Model</td>
 <td align="right">3.970951</td>
 <td align="right">0.8267516</td>
 <td align="right">2.964913</td>
+<td align="right">15.78537</td>
 </tr>
 <tr class="odd">
 <td align="left">BestSub Model</td>
 <td align="right">4.073934</td>
 <td align="right">0.8176339</td>
 <td align="right">3.012049</td>
+<td align="right">16.61678</td>
 </tr>
 <tr class="even">
 <td align="left">Ridge Model</td>
 <td align="right">3.946632</td>
 <td align="right">0.8287651</td>
 <td align="right">2.957489</td>
+<td align="right">15.59285</td>
 </tr>
 <tr class="odd">
 <td align="left">Lasso Model</td>
-<td align="right">3.841472</td>
-<td align="right">0.8377574</td>
-<td align="right">2.873705</td>
+<td align="right">3.840994</td>
+<td align="right">0.8377975</td>
+<td align="right">2.873524</td>
+<td align="right">14.76999</td>
 </tr>
 </tbody>
 </table>
@@ -1019,6 +1047,31 @@ ggplot(varImp(optimal_model)) +
 <p><strong>Normality:</strong> To test the normality of our residuals, looking at the bottom left plot which illustrates a strong linear trend. We can say that the residuals are roughly normal, but with thick tails on both end. In addition, the distribution of the residuals in the bottom-right graph closely follows a normal distribution centered at zero. Thus, the normality assumption is satisfy.</p>
 <p><strong>Influential Observations/Outliers:</strong> Outliers are unavoidable in large samples, but we checking no single outlier contributes too much variation by itself is crucial. According to the Influential Observations plot, we see that all of the points fall within the contour lines.</p>
 <p>Overall, our model seems to be appropriate for the data.</p>
+<pre class="r"><code>newd = data.frame(status_Developed = 1,
+                  adult_mort = 13,
+                  infantdeaths = 23,
+                  alcohol = 5.29,
+                  percent_exp = 0,
+                  hepatitis_b_high = 1,
+                  bmi = 69.6,
+                  under_five = 26,
+                  polio_high = 1,
+                  total_exp = 17,
+                  diphtheria_high = 1,
+                  hiv_aids = 0.1,
+                  gdp = 419.3677,
+                  thin_1_19 = 0.8,
+                  thin_5_9 = 0.6,
+                  HDI = 0.738,
+                  schooling = 14
+                  ) 
+predict(object = optimal_model, newdata = newd) </code></pre>
+<pre><code>## [1] 78.64302</code></pre>
+<p>We can see that having values as following <code>status_Developed</code> = 1, <code>adult_mort</code> = 13, <code>infantdeaths</code> = 23, <code>alcohol</code> = 5.29, <code>percent_exp</code> = 0, <code>hepatitis_b_high</code> = 1, <code>bmi</code> = 69.6, <code>under_five</code> = 26, <code>polio_high</code> = 1, <code>total_exp</code> = 17, <code>diphtheria_high</code> = 1, <code>hiv_aids</code> = 0.1, <code>gdp</code> = 419.3677, <code>thin_1_19</code> = 0.8, <code>thin_5_9</code> = 0.6, <code>HDI</code> = 0.738, <code>schooling</code> = 14, gives a result of 78.65103 for our response variable life expectancy. The original value of life Expectancy from the given dataset was 79.3 in United States in 2015.</p>
+</div>
+<div id="model-conclusion" class="section level2">
+<h2><strong>Model Conclusion</strong></h2>
+<p>Our final best regression model selected is Lasso Regression. In addition, <code>under-five deaths</code>, <code>infant deaths</code>, <code>Schooling</code>, <code>HIV/AIDS</code>, <code>Adult mortality</code>, and <code>HDI</code> are all good predictors for predicting life expectancy of a country.</p>
 <br>
 <hr>
 <center>
